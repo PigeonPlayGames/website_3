@@ -1,127 +1,90 @@
-/* Reset some default styles */
+/* Enhancements for a more visually appealing design */
 body, html {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f0f0;
 }
 
 header {
-    background-color: #333;
-    color: #fff;
-    padding: 20px;
-    position: relative;
-}
-
-.hamburger-menu {
-    display: none;
-    font-size: 30px;
-    cursor: pointer;
-}
-
-nav ul {
-    list-style-type: none;
-    padding: 0;
+    background-color: #222;
+    color: white;
+    padding: 1em 2em;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
 }
 
-nav ul li {
-    display: inline;
-    margin-right: 20px;
+header nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
 }
 
-nav ul li a {
-    color: #fff;
+header nav ul li {
+    margin: 0 15px;
+}
+
+header nav ul li a {
+    color: white;
     text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+header nav ul li a:hover, header nav ul li a:focus {
+    color: #ffcc00;
 }
 
 #featured-games, #game-gallery {
-    padding: 20px;
-}
-
-h2 {
-    color: #333;
-}
-
-.game-slider {
-    display: flex;
-    overflow: hidden;
-    position: relative;
-}
-
-.game-slide {
-    display: none; /* Hide slides by default */
-    width: 100%;
-}
-
-.game-slide.active {
-    display: block; /* Show the active slide */
+    text-align: center;
+    padding: 2em 0;
 }
 
 .games {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+    padding: 0 2em;
 }
 
 .games div {
-    border: 1px solid #ccc;
+    background-color: #fff;
+    border: 1px solid #ddd;
     padding: 10px;
-    transition: transform 0.2s ease-in-out;
+    transition: transform 0.3s ease;
 }
 
 .games div:hover {
-    transform: scale(1.05);
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
 footer {
-    background-color: #333;
-    color: #fff;
+    background-color: #222;
+    color: white;
     text-align: center;
-    padding: 20px;
-    position: fixed;
+    padding: 1em 0;
+    position: relative;
     bottom: 0;
     width: 100%;
 }
 
-/* Responsive design adjustments */
 @media (max-width: 768px) {
-    .hamburger-menu {
-        display: block;
-        position: absolute;
-        right: 20px;
-        top: 20px;
-    }
-
-    nav ul {
+    header nav ul {
         flex-direction: column;
-        display: none;
-        position: absolute;
-        background-color: #333;
-        right: 0;
-        top: 60px;
-        width: 100%;
-        padding-left: 0;
+        margin-top: 0.5em;
     }
 
-    nav ul.show {
-        display: flex;
+    header nav ul li {
+        margin: 5px 0;
     }
+}
 
-    nav ul li {
-        display: block;
-        text-align: center;
-        margin: 10px 0;
-    }
 
-    header nav ul li a {
-        display: block;
-        padding: 10px;
-    }
-
-    .games {
-        flex-direction: column;
-        align-items: center;
+.games {
+    flex-direction: column;
+    align-items: center;
+    
     }
 }
