@@ -54,3 +54,40 @@ footer {
     bottom: 0;
     width: 100%;
 }
+
+/* Additional styles for enhanced UI */
+.games div:hover {
+    transform: scale(1.05);
+    transition: transform 0.2s ease-in-out;
+}
+
+.game-slider {
+    display: flex;
+    overflow: hidden;
+    position: relative;
+}
+
+.game-slide {
+    display: none;
+    width: 100%;
+}
+
+.game-slide.active {
+    display: block;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+    header nav ul {
+        padding: 0;
+        text-align: center;
+    }
+    header nav ul li {
+        display: block;
+        margin: 10px 0;
+    }
+    .games {
+        flex-direction: column;
+        align-items: center;
+    }
+}
