@@ -88,8 +88,8 @@ footer {
     background-color: #0056b3;
 }
 
-.img {
-    display: center;
+.logo {
+    display: inline-block;
     padding: 50px 50px;
     margin-top: 5px;
     margin-bottom: 50px;
