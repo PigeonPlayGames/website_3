@@ -1,4 +1,4 @@
-/* style.css */
+/* Reset some default styles */
 body, html {
     margin: 0;
     padding: 0;
@@ -9,19 +9,29 @@ header {
     background-color: #333;
     color: #fff;
     padding: 20px;
+    position: relative;
 }
 
-header nav ul {
+.hamburger-menu {
+    display: none;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+nav ul {
     list-style-type: none;
     padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-header nav ul li {
+nav ul li {
     display: inline;
     margin-right: 20px;
 }
 
-header nav ul li a {
+nav ul li a {
     color: #fff;
     text-decoration: none;
 }
@@ -34,15 +44,35 @@ h2 {
     color: #333;
 }
 
+.game-slider {
+    display: flex;
+    overflow: hidden;
+    position: relative;
+}
+
+.game-slide {
+    display: none; /* Hide slides by default */
+    width: 100%;
+}
+
+.game-slide.active {
+    display: block; /* Show the active slide */
+}
+
 .games {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
 }
 
-.game-slider, .games div {
+.games div {
     border: 1px solid #ccc;
     padding: 10px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.games div:hover {
+    transform: scale(1.05);
 }
 
 footer {
@@ -55,37 +85,41 @@ footer {
     width: 100%;
 }
 
-/* Additional styles for enhanced UI */
-.games div:hover {
-    transform: scale(1.05);
-    transition: transform 0.2s ease-in-out;
-}
-
-.game-slider {
-    display: flex;
-    overflow: hidden;
-    position: relative;
-}
-
-.game-slide {
-    display: none;
-    width: 100%;
-}
-
-.game-slide.active {
-    display: block;
-}
-
-/* Responsive design for smaller screens */
+/* Responsive design adjustments */
 @media (max-width: 768px) {
-    header nav ul {
-        padding: 0;
-        text-align: center;
-    }
-    header nav ul li {
+    .hamburger-menu {
         display: block;
+        position: absolute;
+        right: 20px;
+        top: 20px;
+    }
+
+    nav ul {
+        flex-direction: column;
+        display: none;
+        position: absolute;
+        background-color: #333;
+        right: 0;
+        top: 60px;
+        width: 100%;
+        padding-left: 0;
+    }
+
+    nav ul.show {
+        display: flex;
+    }
+
+    nav ul li {
+        display: block;
+        text-align: center;
         margin: 10px 0;
     }
+
+    header nav ul li a {
+        display: block;
+        padding: 10px;
+    }
+
     .games {
         flex-direction: column;
         align-items: center;
