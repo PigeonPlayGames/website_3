@@ -44,7 +44,7 @@ window.onload = function() {
     board = document.getElementById("board");
     board.height = boardHeight;
     board.width = boardWidth;
-    context = board.getContext("2d"); // Used for drawing on the board
+    context = board.getContext("2d");
 
     doodlerRightImg = new Image();
     doodlerRightImg.src = "./doodler-right.png";
@@ -64,29 +64,48 @@ window.onload = function() {
     requestAnimationFrame(update);
     document.addEventListener("keydown", moveDoodler);
 
-    // On-screen controls
+    // Add touch event listeners for mobile controls
     document.getElementById("leftBtn").addEventListener("touchstart", function(e) {
         e.preventDefault(); // Prevent scrolling or other default actions
-        moveDoodlerLeft();
+        moveDoodler({ code: "ArrowLeft" });
     }, false);
 
     document.getElementById("rightBtn").addEventListener("touchstart", function(e) {
         e.preventDefault();
-        moveDoodlerRight();
+        moveDoodler({ code: "ArrowRight" });
     }, false);
 
-    document.getElementById("restart").addEventListener("click", function() {
+    document.getElementById("restart").addEventListener("click", function(e) {
         if (gameOver) {
             restartGame();
         }
     }, false);
+
+    // Ensure the restart button is correctly shown or hidden
+    updateGameOverUI();
 };
 
-function update() {
-    requestAnimationFrame(update);
+function restartGame() {
+    doodler.x = doodlerX;
+    doodler.y = doodlerY;
+    velocityX = 0;
+    velocityY = initialVelocityY;
+    score = 0;
+    maxScore = 0;
+    gameOver = false;
+    platformArray = [];
+    placePlatforms();
+    updateGameOverUI();
+}
+
+function updateGameOverUI() {
     if (gameOver) {
-        return;
+        document.getElementById("restartBtn").style.display = "block";
+    } else {
+        document.getElementById("restartBtn").style.display = "none";
     }
+}
+
     context.clearRect(0, 0, board.width, board.height);
 
     // Movement and boundary checks
