@@ -18,78 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let level = 1;
     let powerUpActive = false;
 
-    // Brick configuration
-    let bricks = [];
-    let brickRowCount = 3;
-    let brickColumnCount = 5;
-    let brickWidth = 75;
-    let brickHeight = 20;
-    let brickPadding = 10;
-    let brickOffsetTop = 30;
-    let brickOffsetLeft = 30;
-
-    // Initialize bricks
-    function initBricks() {
-        bricks = [];
-        for (let c = 0; c < brickColumnCount; c++) {
-            bricks[c] = [];
-            for (let r = 0; r < brickRowCount; r++) {
-                let brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
-                let brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
-                bricks[c][r] = { x: brickX, y: brickY, status: 1 };
-            }
-        }
-    }
-
-    // Draw bricks
-    function drawBricks() {
-        for (let c = 0; c < brickColumnCount; c++) {
-            for (let r = 0; r < brickRowCount; r++) {
-                if (bricks[c][r].status == 1) {
-                    let brickElement = document.createElement('div');
-                    brickElement.style.position = 'absolute';
-                    brickElement.style.left = `${bricks[c][r].x}px`;
-                    brickElement.style.top = `${bricks[c][r].y}px`;
-                    brickElement.style.width = `${brickWidth}px`;
-                    brickElement.style.height = `${brickHeight}px`;
-                    brickElement.style.backgroundColor = 'blue';
-                    brickElement.classList.add('brick');
-                    gameArea.appendChild(brickElement);
-                }
-            }
-        }
-    }
-
-    // Check collision with bricks
-    function collisionDetection() {
-        for (let c = 0; c < brickColumnCount; c++) {
-            for (let r = 0; r < brickRowCount; r++) {
-                let b = bricks[c][r];
-                if (b.status == 1) {
-                    if (ballX > b.x && ballX < b.x + brickWidth && ballY > b.y && ballY < b.y + brickHeight) {
-                        dy = -dy;
-                        b.status = 0;
-                        score++;
-                        if (score == brickRowCount * brickColumnCount * level) { // Adjust for level progression
-                            alert("Congratulations! Proceeding to next level.");
-                            level++;
-                            brickRowCount += 1; // Increase difficulty
-                            initLevel(); // Initialize next level
-                        }
-                        updateScoreAndLevel();
-                    }
-                }
-            }
-        }
-    }
-
-    // Initialize the next level
-    function initLevel() {
-        initBricks();
-        drawBricks();
-        // Optionally reset or adjust game settings for new level
-    }
-
     // Styling for score and level display
     scoreDisplay.style.color = 'white';
     scoreDisplay.style.position = 'absolute';
@@ -105,23 +33,72 @@ document.addEventListener('DOMContentLoaded', () => {
         levelDisplay.textContent = `Level: ${level}`;
     }
 
-    // Initialize game
-    initBricks();
-    drawBricks();
+    // Initialize score and level
     updateScoreAndLevel();
 
-    // Existing event listeners...
+    window.addEventListener('resize', () => {
+        gameWidth = gameArea.clientWidth;
+        paddleWidth = paddle.offsetWidth;
+        paddleX = Math.min(paddleX, gameWidth - paddleWidth);
+        ballX = Math.min(ballX, gameWidth - ball.offsetWidth);
+        paddle.style.left = `${paddleX}px`;
+        ball.style.left = `${ballX}px`;
+    });
+
+    gameArea.addEventListener('touchmove', function(e) {
+        e.preventDefault();
+        const touchX = e.touches[0].clientX;
+        const gameAreaRect = gameArea.getBoundingClientRect();
+        paddleX = touchX - gameAreaRect.left - paddleWidth / 2;
+        if (paddleX < 0) paddleX = 0;
+        if (paddleX + paddleWidth > gameWidth) paddleX = gameWidth - paddleWidth;
+        paddle.style.left = `${paddleX}px`;
+    }, { passive: false });
+
+    function activatePowerUp() {
+        if (!powerUpActive) {
+            powerUpActive = true;
+            paddle.style.width = '150px'; // Increase paddle size
+            paddleWidth = 150;
+            setTimeout(() => {
+                paddle.style.width = '100px'; // Reset paddle size
+                paddleWidth = 100;
+                powerUpActive = false;
+            }, 10000); // Power-up lasts for 10 seconds
+        }
+    }
 
     function updateGame() {
-        // Existing game update logic...
+        ballX += dx;
+        ballY += dy;
 
-        collisionDetection(); // Added collision detection with bricks
+        let ballBottom = ballY + ball.offsetHeight;
+        let paddleTop = paddle.offsetTop;
+        let paddleLeft = paddle.offsetLeft;
+        let paddleRight = paddleLeft + paddle.offsetWidth;
 
-        // Existing rendering and game logic...
+        if (ballX <= 0 || ballX + ball.offsetWidth >= gameWidth) dx = -dx;
+        if (ballY <= 0) {
+            dy = -dy;
+        } else if (ballBottom >= paddleTop && ballY <= paddleTop && ballX + ball.offsetWidth >= paddleLeft && ballX <= paddleRight) {
+            dy = -dy;
+            score += 10; // Increase score when the ball hits the paddle
+            updateScoreAndLevel(); // Update score display
+            // Optional: activate power-up on certain conditions
+            // activatePowerUp();
+        }
+
+        if (ballBottom > gameArea.offsetHeight) {
+            alert("Game Over!");
+            document.location.reload();
+        }
+
+        ball.style.left = `${ballX}px`;
+        ball.style.top = `${ballY}px`;
 
         requestAnimationFrame(updateGame);
     }
 
     updateGame(); // Start the game loop
 });
-        
+    
