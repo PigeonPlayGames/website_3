@@ -1,53 +1,8 @@
-<style>
-    body {
-        text-align: center;
-        margin: 0;
-        padding: 0;
-        overflow: hidden; /* Prevents scrolling if the canvas or buttons are larger than the viewport */
-    }
+body {
+    text-align: center;
+}
 
-    #board {
-        margin: auto;
-        display: block;
-        background-image: url("./doodlejumpbg.png");
-        width: 360px; /* Match your JavaScript boardWidth */
-        height: 576px; /* Match your JavaScript boardHeight */
-    }
-
-    #controls {
-        position: fixed;
-        bottom: 10px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 1;
-    }
-
-    #controls button {
-        width: 80px;
-        height: 40px;
-        margin: 0 10px;
-        font-size: 16px; /* Makes it easier to read the button text */
-    }
-
-    #restartBtn {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 1; /* Ensures the restart button is above other elements */
-        display: none; /* Hidden by default, shown when game is over */
-    }
-
-    /* Additional styling for better button appearance */
-    button {
-        cursor: pointer;
-        background-color: #4CAF50; /* A nice green */
-        color: white;
-        border: none;
-        border-radius: 5px;
-    }
-
-    button:hover {
-        background-color: #45a049;
-    }
-</style>
+#board {
+    /* background-color: green; */
+    background-image: url("./doodlejumpbg.png");
+}
