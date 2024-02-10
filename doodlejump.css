@@ -2,6 +2,26 @@ body {
     text-align: center;
 }
 
+<style>
+    #controls {
+        position: fixed;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    #controls button {
+        width: 80px;
+        height: 40px;
+        margin: 0 10px;
+    }
+    #restartBtn {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+</style>
+
 #board {
     /* background-color: green; */
     background-image: url("./doodlejumpbg.png");
