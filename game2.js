@@ -39,18 +39,30 @@ document.addEventListener('DOMContentLoaded', () => {
         // Update ball position
         ballX += dx;
         ballY += dy;
+
         // Collision detection with walls
         if (ballX <= 0 || ballX + ball.offsetWidth >= gameWidth) dx = -dx;
         if (ballY <= 0) dy = -dy;
-        // Game over condition (ball misses paddle)
-        if (ballY + ball.offsetHeight >= gameArea.offsetHeight) {
+
+        // Improved collision detection with the paddle
+        let ballBottom = ballY + ball.offsetHeight;
+        let paddleTop = paddle.offsetTop;
+        let paddleLeft = paddle.offsetLeft;
+        let paddleRight = paddleLeft + paddle.offsetWidth;
+
+        // Check for collision with the paddle
+        if (ballBottom >= paddleTop && ballY <= paddleTop && ballX + ball.offsetWidth >= paddleLeft && ballX <= paddleRight) {
+            dy = -dy; // Reverse the ball's Y-direction
+            // Adjust the ball's Y position to prevent it from "sticking" to the paddle
+            ballY = paddleTop - ball.offsetHeight;
+        }
+
+        // Game over condition adjustment
+        if (ballBottom > gameArea.offsetHeight) {
             alert("Game Over!");
             document.location.reload(); // Reset the game for simplicity
         }
-        // Collision detection with the paddle
-        if (ballX > paddleX && ballX < paddleX + paddleWidth && ballY + ball.offsetHeight >= paddle.offsetTop) {
-            dy = -dy;
-        }
+
         // Update ball element position
         ball.style.left = `${ballX}px`;
         ball.style.top = `${ballY}px`;
