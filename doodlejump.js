@@ -35,19 +35,24 @@ let platformImg;
 let score = 0;
 let maxScore = 0;
 let gameOver = false;
-// Global touch start position
-let touchStartX = 0;
 
 window.onload = function() {
     board = document.getElementById("board");
     board.height = boardHeight;
     board.width = boardWidth;
-    context = board.getContext("2d");
+    context = board.getContext("2d"); //used for drawing on the board
 
-    // Load images
+    //draw doodler
+    // context.fillStyle = "green";
+    // context.fillRect(doodler.x, doodler.y, doodler.width, doodler.height);
+
+    //load images
     doodlerRightImg = new Image();
     doodlerRightImg.src = "./doodler-right.png";
     doodler.img = doodlerRightImg;
+    doodlerRightImg.onload = function() {
+        context.drawImage(doodler.img, doodler.x, doodler.y, doodler.width, doodler.height);
+    }
 
     doodlerLeftImg = new Image();
     doodlerLeftImg.src = "./doodler-left.png";
@@ -57,75 +62,9 @@ window.onload = function() {
 
     velocityY = initialVelocityY;
     placePlatforms();
-
-    // Event listeners for movement and game restart
-    document.addEventListener("keydown", moveDoodler);
-    document.addEventListener("touchstart", handleTouchStart, false);
-    document.addEventListener("touchmove", handleTouchMove, false);
-
-    doodlerRightImg.onload = function() {
-        // Ensure the doodler is drawn after the image is loaded
-        requestAnimationFrame(update);
-    }
-}
-
-function handleTouchStart(e) {
-    touchStartX = e.touches[0].clientX; // Record the start position of the touch
-}
-
-function handleTouchMove(e) {
-    const touchEndX = e.touches[0].clientX;
-    const diffX = touchEndX - touchStartX;
-
-    if (diffX > 5) { // Swipe right
-        moveDoodlerRight();
-    } else if (diffX < -5) { // Swipe left
-        moveDoodlerLeft();
-    }
-}
-
-function moveDoodlerRight() {
-    velocityX = 4;
-    doodler.img = doodlerRightImg;
-}
-
-function moveDoodlerLeft() {
-    velocityX = -4;
-    doodler.img = doodlerLeftImg;
-}
-
-function moveDoodler(e) {
-    if (e.code == "ArrowRight" || e.code == "KeyD") {
-        moveDoodlerRight();
-    } else if (e.code == "ArrowLeft" || e.code == "KeyA") {
-        moveDoodlerLeft();
-    } else if (e.code == "Space" && gameOver) {
-        restartGame();
-    }
-}
-
-function restartGame() {
-    doodler = {
-        img: doodlerRightImg,
-        x: doodlerX,
-        y: doodlerY,
-        width: doodlerWidth,
-        height: doodlerHeight
-    };
-
-    velocityX = 0;
-    velocityY = initialVelocityY;
-    score = 0;
-    maxScore = 0;
-    gameOver = false;
-    platformArray = [];
-    placePlatforms();
     requestAnimationFrame(update);
+    document.addEventListener("keydown", moveDoodler);
 }
-
-// Continue with the rest of your functions: placePlatforms, update, newPlatform, detectCollision, updateScore
-
-
 
 function update() {
     requestAnimationFrame(update);
@@ -178,6 +117,25 @@ function update() {
         context.fillText("Game Over: Press 'Space' to Restart", boardWidth/7, boardHeight*7/8);
     }
 }
+
+function moveDoodler(e) {
+    if (e.code == "ArrowRight" || e.code == "KeyD") { //move right
+        velocityX = 4;
+        doodler.img = doodlerRightImg;
+    }
+    else if (e.code == "ArrowLeft" || e.code == "KeyA") { //move left
+        velocityX = -4;
+        doodler.img = doodlerLeftImg;
+    }
+    else if (e.code == "Space" && gameOver) {
+        //reset
+        doodler = {
+            img : doodlerRightImg,
+            x : doodlerX,
+            y : doodlerY,
+            width : doodlerWidth,
+            height : doodlerHeight
+        }
 
         velocityX = 0;
         velocityY = initialVelocityY;
@@ -256,4 +214,4 @@ function updateScore() {
     else if (velocityY >= 0) {
         maxScore -= points;
     }
-}
+        }
