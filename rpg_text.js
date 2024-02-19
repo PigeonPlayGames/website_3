@@ -213,26 +213,30 @@ function sellWeapon() {
 // All other functions remain as you defined them, ensuring they call updateImage when appropriate.
 
 // Example: Modify fightSlime, fightBeast, and fightDragon to update the image when fighting specific monsters.
+// Specific fight initiation functions
 function fightSlime() {
   fighting = 0;
-  goFight();
+  prepareFight();
 }
 
 function fightBeast() {
   fighting = 1;
-  goFight();
+  prepareFight();
 }
 
 function fightDragon() {
   fighting = 2;
-  goFight();
+  prepareFight();
 }
-function goFight() {
-  update(locations[3]);
-  monsterHealth = monsters[fighting].health;
+
+function prepareFight() {
+  const monster = monsters[fighting];
+  monsterHealth = monster.health;
+  monsterName.innerText = monster.name;
+  monsterHealthText.innerText = monster.health.toString();
   monsterStats.style.display = "block";
-  monsterName.innerText = monsters[fighting].name;
-  monsterHealthText.innerText = monsterHealth;
+  update(locations[3]); // Assuming this is the generic fight location
+  updateImage(monster.name); // Directly use the monster's name to pick the image
 }
 
 function attack() {
