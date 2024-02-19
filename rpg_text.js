@@ -149,9 +149,17 @@ function goFight() {
   update(locations[3]);
   let imageKey = '';
   switch (monsters[fighting].name) {
-    case 'slime': imageKey = 'slime'; break;
-    case 'fanged beast': imageKey = 'beast'; break;
-    case 'dragon': imageKey = 'dragon'; break;
+    case 'slime':
+      imageKey = 'slime'; // Key matches the image filename for slime
+      break;
+    case 'fanged beast':
+      imageKey = 'beast'; // Adjusted to match the image filename for beast
+      break;
+    case 'dragon':
+      imageKey = 'dragon'; // Key matches the image filename for dragon
+      break;
+    default:
+      console.log("No matching monster found for images.");
   }
   updateImage(imageKey);
   monsterHealth = monsters[fighting].health;
