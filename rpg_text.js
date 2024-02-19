@@ -19,11 +19,11 @@ const monsterHealthText = document.querySelector("#monsterHealth");
 
 const images = {
   townSquare: 'village_square.png',
-  store: 'path/to/store.png',
-  cave: 'path/to/cave.png',
-  slime: 'path/to/slime.png',
-  beast: 'path/to/fanged_beast.png',
-  dragon: 'path/to/dragon.png'
+  store: 'shop.png',
+  cave: 'cavey.png',
+  slime: 'slime.png',
+  beast: 'beast.png',
+  dragon: 'dragon.png'
   // Add more as needed
 };
 
