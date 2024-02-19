@@ -18,7 +18,7 @@ const monsterName = document.querySelector("#monsterName");
 const monsterHealthText = document.querySelector("#monsterHealth");
 
 const images = {
-  townSquare: 'town_square.png',
+  townSquare: 'village_square.png',
   store: 'path/to/store.png',
   cave: 'path/to/cave.png',
   slime: 'path/to/slime.png',
