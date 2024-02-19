@@ -1,4 +1,4 @@
-let xp = 0;
+ let xp = 0;
 let health = 100;
 let gold = 50;
 let currentWeapon = 0;
@@ -41,7 +41,7 @@ const monsters = [
     health: 15
   },
   {
-    name: "fanged beast",
+    name: "beast",
     level: 8,
     health: 60
   },
@@ -144,23 +144,6 @@ function goCave() {
   update(locations[2]);
   updateImage('cave');
 }
-
-function goFight() {
-  update(locations[3]);
-  let imageKey = '';
-  switch (monsters[fighting].name) {
-    case 'slime':
-      imageKey = 'slime'; // Key matches the image filename for slime
-      break;
-    case 'fanged beast':
-      imageKey = 'beast'; // Adjusted to match the image filename for beast
-      break;
-    case 'dragon':
-      imageKey = 'dragon'; // Key matches the image filename for dragon
-      break;
-    default:
-      console.log("No matching monster found for images.");
-  }
   updateImage(imageKey);
   monsterHealth = monsters[fighting].health;
   monsterStats.style.display = "block";
@@ -217,16 +200,19 @@ function sellWeapon() {
 function fightSlime() {
   fighting = 0;
   prepareFight();
+  goFight();
 }
 
 function fightBeast() {
   fighting = 1;
   prepareFight();
+  goFight();
 }
 
 function fightDragon() {
   fighting = 2;
   prepareFight();
+  goFight();
 }
 
 function prepareFight() {
@@ -237,6 +223,13 @@ function prepareFight() {
   monsterStats.style.display = "block";
   update(locations[3]); // Assuming this is the generic fight location
   updateImage(monster.name); // Directly use the monster's name to pick the image
+}
+function goFight() {
+  update(locations[3]);
+  monsterHealth = monsters[fighting].health;
+  monsterStats.style.display = "block";
+  monsterName.innerText = monsters[fighting].name;
+  monsterHealthText.innerText = monsterHealth;
 }
 
 function attack() {
