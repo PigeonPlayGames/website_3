@@ -28,6 +28,7 @@ const images = {
     win: 'win_small.png',
     lose: 'dead_small.png',
     easterEgg: 'gambler_small.png'
+    victory: 'victory_small.png'
 };
 
 const weapons = [
@@ -291,7 +292,8 @@ function defeatMonster() {
   xp += monsters[fighting].level;
   goldText.innerText = gold;
   xpText.innerText = xp;
-  update(locations[4]);
+  gameImage.src = images.victory; // Display the victory image
+  update(locations[4]); // This assumes that your locations[4] is the post-victory state
 }
 
 function lose() {
