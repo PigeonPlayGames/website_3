@@ -16,6 +16,13 @@ body {
   margin: 30px auto 0px;
   padding: 10px;
 }
+#gameImage {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  height: auto;
+  border: 2px solid #000; /* Example border */
+}
 
 #controls,
 #stats {
