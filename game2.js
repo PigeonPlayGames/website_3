@@ -2,8 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameArea = document.getElementById('gameArea');
     const paddle = document.getElementById('paddle');
     const ball = document.getElementById('ball');
-    let scoreDisplay = document.createElement('div');
-    let levelDisplay = document.createElement('div');
+    const scoreDisplay = document.createElement('div');
+    const levelDisplay = document.createElement('div');
     gameArea.appendChild(scoreDisplay);
     gameArea.appendChild(levelDisplay);
 
@@ -18,43 +18,43 @@ document.addEventListener('DOMContentLoaded', () => {
     let level = 1;
     let powerUpActive = false;
 
-    // Styling for score and level display
-    scoreDisplay.style.color = 'white';
-    scoreDisplay.style.position = 'absolute';
-    scoreDisplay.style.top = '10px';
-    scoreDisplay.style.left = '10px';
-    levelDisplay.style.color = 'white';
-    levelDisplay.style.position = 'absolute';
-    levelDisplay.style.top = '10px';
-    levelDisplay.style.right = '10px';
+    // Apply initial styles for score and level displays
+    applyStyles(scoreDisplay, { color: 'white', position: 'absolute', top: '10px', left: '10px' });
+    applyStyles(levelDisplay, { color: 'white', position: 'absolute', top: '10px', right: '10px' });
 
+    function applyStyles(element, styles) {
+        for (const property in styles) {
+            element.style[property] = styles[property];
+        }
+    }
+
+    // Updates the score and level display
     function updateScoreAndLevel() {
         scoreDisplay.textContent = `Score: ${score}`;
         levelDisplay.textContent = `Level: ${level}`;
     }
-
-    // Initialize score and level
     updateScoreAndLevel();
 
+    // Adjust game elements on window resize
     window.addEventListener('resize', () => {
         gameWidth = gameArea.clientWidth;
-        paddleWidth = paddle.offsetWidth;
         paddleX = Math.min(paddleX, gameWidth - paddleWidth);
-        ballX = Math.min(ballX, gameWidth - ball.offsetWidth);
+        ballX = paddleX + paddleWidth / 2 - ball.offsetWidth / 2;
         paddle.style.left = `${paddleX}px`;
         ball.style.left = `${ballX}px`;
     });
 
+    // Handle touch move for paddle control
     gameArea.addEventListener('touchmove', function(e) {
         e.preventDefault();
-        const touchX = e.touches[0].clientX;
-        const gameAreaRect = gameArea.getBoundingClientRect();
-        paddleX = touchX - gameAreaRect.left - paddleWidth / 2;
+        const touchX = e.touches[0].clientX - gameArea.getBoundingClientRect().left;
+        paddleX = touchX - paddleWidth / 2;
         if (paddleX < 0) paddleX = 0;
         if (paddleX + paddleWidth > gameWidth) paddleX = gameWidth - paddleWidth;
         paddle.style.left = `${paddleX}px`;
     }, { passive: false });
 
+    // Power-up activation
     function activatePowerUp() {
         if (!powerUpActive) {
             powerUpActive = true;
@@ -68,27 +68,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Game update loop
     function updateGame() {
         ballX += dx;
         ballY += dy;
 
-        let ballBottom = ballY + ball.offsetHeight;
-        let paddleTop = paddle.offsetTop;
-        let paddleLeft = paddle.offsetLeft;
-        let paddleRight = paddleLeft + paddle.offsetWidth;
-
+        // Ball collision with walls
         if (ballX <= 0 || ballX + ball.offsetWidth >= gameWidth) dx = -dx;
         if (ballY <= 0) {
             dy = -dy;
-        } else if (ballBottom >= paddleTop && ballY <= paddleTop && ballX + ball.offsetWidth >= paddleLeft && ballX <= paddleRight) {
+        } else if (ballY + ball.offsetHeight >= paddle.offsetTop &&
+                   ballX + ball.offsetWidth >= paddle.offsetLeft &&
+                   ballX <= paddle.offsetLeft + paddle.offsetWidth) {
             dy = -dy;
             score += 10; // Increase score when the ball hits the paddle
-            updateScoreAndLevel(); // Update score display
-            // Optional: activate power-up on certain conditions
-            // activatePowerUp();
+            updateScoreAndLevel();
+            activatePowerUp(); // Uncomment to activate power-up
         }
 
-        if (ballBottom > gameArea.offsetHeight) {
+        // Ball falls below paddle
+        if (ballY + ball.offsetHeight > gameArea.offsetHeight) {
             alert("Game Over!");
             document.location.reload();
         }
@@ -101,4 +100,3 @@ document.addEventListener('DOMContentLoaded', () => {
 
     updateGame(); // Start the game loop
 });
-    
