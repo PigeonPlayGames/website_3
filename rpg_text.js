@@ -16,6 +16,7 @@ const goldText = document.querySelector("#goldText");
 const monsterStats = document.querySelector("#monsterStats");
 const monsterName = document.querySelector("#monsterName");
 const monsterHealthText = document.querySelector("#monsterHealth");
+const monsterImage = document.querySelector("#monsterImage"); // Ensure this ID is correct in your HTML
 const weapons = [
   { name: 'stick', power: 5 },
   { name: 'dagger', power: 30 },
@@ -26,19 +27,23 @@ const monsters = [
   {
     name: "slime",
     level: 2,
-    health: 15
+    health: 15,
+    image: 'path/to/slime.png'
   },
   {
     name: "fanged beast",
     level: 8,
-    health: 60
+    health: 60,
+    image: 'path/to/beast.png'
   },
   {
     name: "dragon",
     level: 20,
-    health: 300
+    health: 300,
+    image: 'path/to/dragon.png'
   }
 ]
+
 const locations = [
   {
     name: "town square",
@@ -173,14 +178,24 @@ function fightDragon() {
   fighting = 2;
   goFight();
 }
-
 function goFight() {
   update(locations[3]);
   monsterHealth = monsters[fighting].health;
   monsterStats.style.display = "block";
   monsterName.innerText = monsters[fighting].name;
   monsterHealthText.innerText = monsterHealth;
+  updateMonsterImage(monsters[fighting].image); // Call the function to update the image
 }
+
+function updateMonsterImage(imagePath) {
+  monsterImage.src = imagePath;
+  monsterImage.style.display = 'block';
+  // Resize the image if needed, this is just an example
+  monsterImage.style.maxWidth = '150px'; // Set the maximum width
+  monsterImage.style.maxHeight = '150px'; // Set the maximum height
+}
+
+// Include all other functions and game logic as before
 
 function attack() {
   text.innerText = "The " + monsters[fighting].name + " attacks.";
@@ -283,4 +298,3 @@ function pick(guess) {
       lose();
     }
   }
-}
