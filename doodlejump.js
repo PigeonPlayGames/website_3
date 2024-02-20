@@ -38,12 +38,43 @@ window.onload = function() {
     requestAnimationFrame(update);
 
     document.addEventListener('touchstart', handleTouchStart, false);
-    document.addEventListener('touchmove', handleTouchMove, false);
+    document.addEventListener('touchmove', handleTouchMove, {passive: false});
     document.addEventListener('touchend', handleTouchEnd, false);
 };
 
+function handleTouchStart(event) {
+    touchStartX = event.touches[0].clientX;
+}
+
+function handleTouchMove(event) {
+    event.preventDefault(); // Prevent scrolling on touch move
+    touchEndX = event.touches[0].clientX;
+}
+
+function handleTouchEnd() {
+    if (touchEndX < touchStartX - 30) { // Swipe Left
+        moveDoodlerLeft();
+    } else if (touchEndX > touchStartX + 30) { // Swipe Right
+        moveDoodlerRight();
+    }
+    touchEndX = 0; // Reset for the next swipe
+}
+
+function moveDoodlerRight() {
+    velocityX = 4;
+    doodler.img = doodlerRightImg;
+}
+
+function moveDoodlerLeft() {
+    velocityX = -4;
+    doodler.img = doodlerLeftImg;
+}
+
 function update() {
-    if (gameOver) return;
+    if (gameOver) {
+        displayGameOver();
+        return;
+    }
 
     context.clearRect(0, 0, board.width, board.height);
     doodler.x += velocityX;
@@ -53,38 +84,60 @@ function update() {
 
     if (doodler.y > board.height) {
         gameOver = true;
-        context.fillText("Game Over", 50, 50); // Display game over message
         return;
     }
 
     context.drawImage(doodler.img, doodler.x, doodler.y, doodler.width, doodler.height);
     platformArray.forEach(platform => {
+        if (detectCollision(doodler, platform) && velocityY >= 0) {
+            velocityY = initialVelocityY;
+        }
         context.drawImage(platform.img, platform.x, platform.y, platform.width, platform.height);
     });
 
+    updatePlatforms();
     updateScore();
     requestAnimationFrame(update);
 }
 
+// Include all other functions (updateScore, wrapDoodler, detectCollision, updatePlatforms, newPlatform, placePlatforms, displayGameOver, restartGame, setupGame, loadImages) as previously defined
+
+function displayGameOver() {
+    context.fillStyle = "red";
+    context.font = "30px Arial";
+    context.fillText("Game Over", boardWidth / 2 - 100, boardHeight / 2);
+    context.fillText("Score: " + score, boardWidth / 2 - 50, boardHeight / 2 + 40);
+    context.fillText("Tap to Restart", boardWidth / 2 - 110, boardHeight / 2 + 80);
+    board.addEventListener('touchstart', restartGame, { once: true });
+}
+
+function restartGame() {
+    gameOver = false;
+    score = 0;
+    maxScore = 0;
+    platformArray = [];
+    doodler.x = doodlerX;
+    doodler.y = doodlerY;
+    velocityX = 0;
+    velocityY = initialVelocityY;
+    placePlatforms();
+    requestAnimationFrame(update);
+}
+
 function updateScore() {
-    // This simplistic scoring system increases score based on the doodler's jumps
-    let points = Math.floor(50 * Math.random()); // Random points for each jump
-    if (velocityY < 0) { // If moving up, increase score
+    let points = Math.floor(50 * Math.random());
+    if (velocityY < 0) { // Going up
         maxScore += points;
         if (score < maxScore) {
             score = maxScore;
         }
-    } else if (velocityY >= 0) { // If moving down, no change in score
-        // Optional: Decrease score if you want a penalty for falling
     }
-    // Display the score
     context.fillStyle = "black";
     context.font = "16px Arial";
     context.fillText("Score: " + score, 10, 20);
 }
 
 function wrapDoodler() {
-    // Wraps doodler to the opposite side of the screen when it goes off one side
     if (doodler.x < -doodler.width) {
         doodler.x = boardWidth;
     } else if (doodler.x > boardWidth) {
@@ -93,7 +146,6 @@ function wrapDoodler() {
 }
 
 function detectCollision(doodler, platform) {
-    // Simple AABB collision detection
     return doodler.x < platform.x + platform.width &&
            doodler.x + doodler.width > platform.x &&
            doodler.y < platform.y + platform.height &&
@@ -102,24 +154,15 @@ function detectCollision(doodler, platform) {
 
 function updatePlatforms() {
     platformArray.forEach(platform => {
-        // Move platforms down to simulate the doodler's upward movement
         if (doodler.y < boardHeight / 2 && velocityY < 0) {
             platform.y -= velocityY;
         }
-
-        // Check for collision with platforms
-        if (detectCollision(doodler, platform) && velocityY > 0) {
-            velocityY = initialVelocityY; // Cause the doodler to jump
-        }
-
-        // Draw the platform
-        context.drawImage(platform.img, platform.x, platform.y, platform.width, platform.height);
     });
 
     // Remove platforms that have moved off screen and add new ones at the top
-    if (platformArray[0].y > boardHeight) {
-        platformArray.shift(); // Remove the first platform
-        newPlatform(); // Add a new platform at the top
+    while (platformArray.length > 0 && platformArray[0].y > boardHeight) {
+        platformArray.shift();
+        newPlatform();
     }
 }
 
@@ -127,7 +170,7 @@ function newPlatform() {
     let newPlatformPosition = {
         img: platformImg,
         x: Math.floor(Math.random() * (boardWidth - platformWidth)),
-        y: platformArray[platformArray.length - 1].y - (boardHeight / platformArray.length),
+        y: -platformHeight, // Start just above the screen
         width: platformWidth,
         height: platformHeight
     };
@@ -135,7 +178,6 @@ function newPlatform() {
 }
 
 function placePlatforms() {
-    // Initially place platforms on the screen
     platformArray = [];
     for (let i = 0; i < 5; i++) {
         let platformPosition = {
@@ -149,107 +191,13 @@ function placePlatforms() {
     }
 }
 
-function displayGameOver() {
-    // Show game over message and score
-    context.fillStyle = "red";
-    context.font = "24px Arial";
-    context.fillText("Game Over", boardWidth / 2 - 70, boardHeight / 2);
-    context.fillText("Final Score: " + score, boardWidth / 2 - 70, boardHeight / 2 + 30);
-    // Optionally, add a restart feature here
-}
-
-function adjustDoodlerDirection() {
-    if (movingRight) {
-        velocityX = 4;
-        doodler.img = doodlerRightImg;
-    } else if (movingLeft) {
-        velocityX = -4;
-        doodler.img = doodlerLeftImg;
-    } else {
-        velocityX = 0; // Stop the doodler when there's no touch movement
-    }
-}
-
-function update() {
-    context.clearRect(0, 0, boardWidth, boardHeight); // Clear the canvas
-
-    // Movement and drawing logic for doodler
-    doodler.x += velocityX;
-    wrapDoodler();
-    doodler.y += velocityY;
-    velocityY += gravity; // Apply gravity to the doodler's vertical velocity
-    context.drawImage(doodler.img, doodler.x, doodler.y, doodler.width, doodler.height);
-
-    // Update platforms
-    updatePlatforms();
-
-    // Check for game over condition
-    if (doodler.y > boardHeight) {
-        gameOver = true;
-        displayGameOver();
-        return; // Stop the game loop
-    }
-
-    // Update and display score
-    updateScore();
-
-    // Continue the animation loop
-    requestAnimationFrame(update);
-}
-
-function displayGameOver() {
-    // Display game over message
-    context.fillStyle = "red";
-    context.font = "30px Arial";
-    context.fillText("Game Over", boardWidth / 2 - 100, boardHeight / 2);
-    context.fillText("Score: " + score, boardWidth / 2 - 50, boardHeight / 2 + 40);
-    context.fillText("Tap to Restart", boardWidth / 2 - 110, boardHeight / 2 + 80);
-
-    // Listen for a tap to restart the game
-    board.addEventListener('touchstart', restartGame, { once: true });
-}
-
-function restartGame() {
-    // Reset game state
-    doodler.x = doodlerX;
-    doodler.y = doodlerY;
-    velocityY = initialVelocityY;
-    score = 0;
-    maxScore = 0;
-    gameOver = false;
-    platformArray = []; // Clear existing platforms
-    placePlatforms(); // Place new platforms
-    requestAnimationFrame(update); // Restart the game loop
-}
-
-// Initial game setup
-window.onload = function() {
-    setupGame();
-};
-
-function setupGame() {
-    board = document.getElementById("board");
-    board.height = boardHeight;
-    board.width = boardWidth;
-    context = board.getContext("2d");
-
-    // Load images and then start the game
-    loadImages().then(() => {
-        placePlatforms();
-        requestAnimationFrame(update); // Start the game loop
-    });
-}
-
 async function loadImages() {
-    // Helper function to load an image
-    function loadImage(src) {
-        return new Promise((resolve, reject) => {
-            const img = new Image();
-            img.onload = () => resolve(img);
-            img.onerror = reject;
-            img.src = src;
-        });
-    }
+    const loadImage = (src) => new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = src;
+    });
 
     try {
         doodlerRightImg = await loadImage('skater_right.png');
@@ -261,3 +209,70 @@ async function loadImages() {
     }
 }
 
+function setupGame() {
+    board = document.getElementById("board");
+    board.height = boardHeight;
+    board.width = boardWidth;
+    context = board.getContext("2d");
+
+    loadImages().then(() => {
+        placePlatforms();
+        requestAnimationFrame(update); // Start the game loop
+    });
+}
+
+// Note: The restartGame function logic remains the same as previously defined.
+
+// Restart Game functionality
+function restartGame() {
+    gameOver = false; // Reset gameOver to false to restart the game
+    score = 0; // Reset score
+    maxScore = 0; // Reset maxScore
+    platformArray = []; // Clear existing platforms
+    placePlatforms(); // Initialize new platforms for the restarted game
+    doodler.x = doodlerX; // Reset doodler's position to the starting X
+    doodler.y = doodlerY; // Reset doodler's position to the starting Y
+    velocityX = 0; // Reset horizontal velocity
+    velocityY = initialVelocityY; // Reset vertical velocity to start the jump
+
+    // Remove previous event listener to avoid multiple restarts stacking
+    board.removeEventListener('touchstart', restartGame);
+
+    // Start the game loop again
+    requestAnimationFrame(update);
+}
+
+// Complete setupGame function to initialize or reset the game
+function setupGame() {
+    board = document.getElementById("board");
+    board.height = boardHeight;
+    board.width = boardWidth;
+    context = board.getContext("2d");
+
+    loadImages().then(() => {
+        doodler.img = doodlerRightImg; // Initial doodler image set after images are loaded
+        placePlatforms();
+        requestAnimationFrame(update); // Start the game loop
+    });
+}
+
+// Ensuring that loadImages is fully defined for image preloading
+async function loadImages() {
+    const loadImage = (src) => new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = () => reject(new Error(`Failed to load image at ${src}`));
+        img.src = src;
+    });
+
+    try {
+        doodlerRightImg = await loadImage('skater_right.png');
+        doodlerLeftImg = await loadImage('skater_left.png');
+        platformImg = await loadImage('platform.png');
+    } catch (error) {
+        console.error("Error loading images:", error);
+    }
+}
+
+// Initialization on window load
+window.onload = setupGame;
