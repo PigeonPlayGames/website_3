@@ -27,8 +27,7 @@ const images = {
     fight: 'beast_small.png', // This can remain as a default or fallback image
     win: 'win_small.png',
     lose: 'dead_small.png',
-    easterEgg: 'gambler_small.png',
-    victory: 'victory_small.png'
+    easterEgg: 'gambler_small.png'
 };
 
 const weapons = [
@@ -245,10 +244,6 @@ function goFight() {
     default:
       gameImage.src = images.fight; // Fallback image if needed
   }
-    if (monsters[fighting].health <= 0) {
-        gameImage.src = images.victory;
-        break;
-    default:
 }
 
 function attack() {
