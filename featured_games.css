@@ -1,14 +1,26 @@
+:root {
+    --primary-bg-color: #333;
+    --secondary-bg-color: #f0f0f0;
+    --accent-color: #007bff;
+    --hover-accent-color: #0056b3;
+    --text-color: white;
+    --font-family: 'Segoe UI', Arial, sans-serif;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
 body, html {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
+    font-family: var(--font-family);
+    background-color: var(--secondary-bg-color);
+    color: #333; /* Improved text color for better contrast */
 }
 
 header {
-    background-color: #333;
-    color: white;
+    background-color: var(--primary-bg-color);
+    color: var(--text-color);
     padding: 20px;
+    box-shadow: var(--box-shadow);
 }
 
 header nav ul {
@@ -24,8 +36,9 @@ header nav ul li {
 }
 
 header nav ul li a {
-    color: white;
+    color: var(--text-color);
     text-decoration: none;
+    font-weight: bold; /* Make navigation items stand out more */
 }
 
 main {
@@ -39,28 +52,31 @@ main {
 }
 
 .game {
-    background-color: white;
+    background-color: var(--text-color);
+    color: #333; /* Ensure text is readable on the white background */
     margin: 20px;
     padding: 20px;
     width: calc(33% - 40px);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    transition: transform 0.2s;
+    box-shadow: var(--box-shadow);
+    transition: transform 0.3s ease-out; /* Smooth out the hover effect */
 }
 
 .game:hover {
-    transform: translateY(-5px);
+    transform: scale(1.03); /* Slightly enlarge games on hover for a subtle effect */
 }
 
 .game img {
     max-width: 100%;
     height: auto;
+    display: block; /* Ensure images are properly aligned */
 }
 
 footer {
-    background-color: #333;
-    color: white;
+    background-color: var(--primary-bg-color);
+    color: var(--text-color);
     text-align: center;
     padding: 20px;
+    box-shadow: var(--box-shadow) upwards; /* Add shadow to top of footer for depth */
 }
 
 @media (max-width: 768px) {
@@ -70,30 +86,30 @@ footer {
     }
 
     .game {
-        width: 80%;
+        width: 90%; /* Slightly increase width for better use of space on small screens */
     }
 }
 
 .play-button {
     display: inline-block;
-    background-color: #007bff;
-    color: white;
+    background-color: var(--accent-color);
+    color: var(--text-color);
     padding: 10px 20px;
     text-decoration: none;
     border-radius: 5px;
     margin-top: 10px;
+    transition: background-color 0.2s; /* Smooth transition for hover effect */
 }
 
 .play-button:hover, .play-button:focus {
-    background-color: #0056b3;
+    background-color: var(--hover-accent-color);
+    outline: none; /* Remove focus outline and replace with box-shadow */
+    box-shadow: 0 0 0 2px var(--hover-accent-color);
 }
 
 .logo {
     display: inline-block;
-    padding: 10px 10px;
+    padding: 10px;
     margin-top: 5px;
     margin-bottom: 5px;
 }
-    
-
-
