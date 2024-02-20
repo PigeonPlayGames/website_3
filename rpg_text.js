@@ -16,12 +16,24 @@ const goldText = document.querySelector("#goldText");
 const monsterStats = document.querySelector("#monsterStats");
 const monsterName = document.querySelector("#monsterName");
 const monsterHealthText = document.querySelector("#monsterHealth");
+const gameImage = document.getElementById('gameImage'); // Reference to the image element
+const images = {
+    townSquare: 'village_square.png',
+    store: 'shop.png',
+    cave: 'cavey.png',
+    fight: 'beast.png', // Generic fight image, replace with specific if needed
+    win: 'win.png',
+    lose: 'dead.png',
+    easterEgg: 'dragon.png'
+};
+
 const weapons = [
   { name: 'stick', power: 5 },
   { name: 'dagger', power: 30 },
   { name: 'claw hammer', power: 50 },
   { name: 'sword', power: 100 }
 ];
+
 const monsters = [
   {
     name: "slime",
@@ -38,7 +50,8 @@ const monsters = [
     level: 20,
     health: 300
   }
-]
+];
+
 const locations = [
   {
     name: "town square",
@@ -88,7 +101,7 @@ const locations = [
   }
 ];
 
-// initialize buttons
+// Initialize buttons
 button1.onclick = goStore;
 button2.onclick = goCave;
 button3.onclick = fightDragon;
@@ -102,7 +115,40 @@ function update(location) {
   button2.onclick = location["button functions"][1];
   button3.onclick = location["button functions"][2];
   text.innerHTML = location.text;
+
+  // Update game image based on the current location
+  switch (location.name) {
+    case "town square":
+        gameImage.src = images.townSquare;
+        break;
+    case "store":
+        gameImage.src = images.store;
+        break;
+    case "cave":
+        gameImage.src = images.cave;
+        break;
+    case "fight":
+        gameImage.src = images.fight;
+        break;
+    case "win":
+        gameImage.src = images.win;
+        break;
+    case "lose":
+        gameImage.src = images.lose;
+        break;
+    case "easter egg":
+        gameImage.src = images.easterEgg;
+        break;
+    default:
+        gameImage.src = ''; // Clear the image or set a default one if location is not matched
+  }
 }
+
+// Additional functions remain unchanged
+// ...
+
+// Remember to include all the functions from your original script
+// and make sure they call update() appropriately to change the game state and image as needed.
 
 function goTown() {
   update(locations[0]);
