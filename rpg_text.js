@@ -27,7 +27,8 @@ const images = {
     fight: 'beast_small.png', // This can remain as a default or fallback image
     win: 'win_small.png',
     lose: 'dead_small.png',
-    easterEgg: 'gambler_small.png'
+    easterEgg: 'gambler_small.png',
+    victory: 'victory.png'
 };
 
 const weapons = [
@@ -291,8 +292,13 @@ function defeatMonster() {
   xp += monsters[fighting].level;
   goldText.innerText = gold;
   xpText.innerText = xp;
+
+  // Display victory image
+  gameImage.src = images.victory; // Use the victory image from the images object
+
   update(locations[4]);
 }
+
 
 function lose() {
   update(locations[5]);
