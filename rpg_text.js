@@ -292,8 +292,7 @@ function defeatMonster() {
   xp += monsters[fighting].level;
   goldText.innerText = gold;
   xpText.innerText = xp;
-  gameImage.src = images.victory; // Display the victory image
-  update(locations[4]); // This assumes that your locations[4] is the post-victory state
+  update(locations[4]);
 }
 
 function lose() {
