@@ -18,16 +18,16 @@ const monsterName = document.querySelector("#monsterName");
 const monsterHealthText = document.querySelector("#monsterHealth");
 const gameImage = document.getElementById('gameImage'); // Reference to the image element
 const images = {
-    townSquare: 'village_square.png',
-    store: 'shop.png',
-    cave: 'cavey.png',
-    slime: 'slime.png',
+    townSquare: 'village_small.png',
+    store: 'shop_small.png',
+    cave: 'cavey_small.png',
+    slime: 'slime_small.png',
     beast: 'beast_small.png',
     dragon: 'dragon.png', // Assuming you want a specific image for the dragon as well
-    fight: 'beast.png', // This can remain as a default or fallback image
-    win: 'win.png',
-    lose: 'dead.png',
-    easterEgg: 'gambler.png'
+    fight: 'beast_small.png', // This can remain as a default or fallback image
+    win: 'win_small.png',
+    lose: 'dead_small.png',
+    easterEgg: 'gambler_small.png'
 };
 
 const weapons = [
