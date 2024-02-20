@@ -1,53 +1,62 @@
-const arrow = document.getElementById('arrow');
-const scoreDisplay = document.getElementById('score');
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+
+let fruits = [];
 let score = 0;
+let gameRunning = true;
 
-const directions = ['↑', '↓', '←', '→'];
-let currentDirection = '';
-
-function setNewDirection() {
-    const randomIndex = Math.floor(Math.random() * directions.length);
-    currentDirection = directions[randomIndex];
-    arrow.textContent = currentDirection;
+// Function to add fruits
+function addFruit() {
+    fruits.push({
+        x: Math.random() * canvas.width,
+        y: canvas.height,
+        speed: 2 + Math.random() * 3, // Adjust speed for challenge
+        radius: 20 // Adjust size if needed
+    });
 }
 
-function updateScore(isCorrectSwipe) {
-    score += isCorrectSwipe ? 1 : -1;
-    scoreDisplay.textContent = `Score: ${score}`;
+// Function to draw fruits
+function drawFruit() {
+    fruits.forEach(fruit => {
+        ctx.beginPath();
+        ctx.arc(fruit.x, fruit.y, fruit.radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'red'; // Change colors for fun
+        ctx.fill();
+        ctx.closePath();
+    });
 }
 
-function detectSwipeDirection(touchStart, touchEnd) {
-    const xDiff = touchEnd.x - touchStart.x;
-    const yDiff = touchEnd.y - touchStart.y;
-
-    if (Math.abs(xDiff) > Math.abs(yDiff)) { // Horizontal swipe
-        if (xDiff > 0) return '→';
-        else return '←';
-    } else { // Vertical swipe
-        if (yDiff > 0) return '↓';
-        else return '↑';
-    }
+// Function to update game state
+function updateGame() {
+    if (!gameRunning) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawFruit();
+    // Move fruits
+    fruits.forEach(fruit => {
+        fruit.y -= fruit.speed;
+    });
+    requestAnimationFrame(updateGame);
 }
 
-let touchStart = {};
-
-arrow.addEventListener('touchstart', e => {
-    const touch = e.touches[0];
-    touchStart = { x: touch.clientX, y: touch.clientY };
+canvas.addEventListener('touchstart', function(e) {
+    const touchX = e.touches[0].clientX - canvas.offsetLeft;
+    const touchY = e.touches[0].clientY - canvas.offsetTop;
+    // Check collision with fruits
+    fruits = fruits.filter(fruit => {
+        const distance = Math.sqrt((fruit.x - touchX) ** 2 + (fruit.y - touchY) ** 2);
+        if (distance < fruit.radius) {
+            score++;
+            return false; // Remove fruit if touched
+        }
+        return true;
+    });
 });
 
-arrow.addEventListener('touchend', e => {
-    const touch = e.changedTouches[0];
-    const touchEnd = { x: touch.clientX, y: touch.clientY };
-    const swipeDirection = detectSwipeDirection(touchStart, touchEnd);
-    
-    if (swipeDirection === currentDirection) {
-        updateScore(true);
-    } else {
-        updateScore(false);
-    }
-    setNewDirection();
-});
+// Start game
+function startGame() {
+    gameRunning = true;
+    setInterval(addFruit, 1000); // Adjust frequency of fruits appearing
+    updateGame();
+}
 
-// Initialize game
-setNewDirection();
+startGame();
