@@ -21,10 +21,13 @@ const images = {
     townSquare: 'village_square.png',
     store: 'shop.png',
     cave: 'cavey.png',
-    fight: 'beast.png', // Generic fight image, replace with specific if needed
+    slime: 'slime.png',
+    beast: 'beast.png',
+    dragon: 'dragon.png', // Assuming you want a specific image for the dragon as well
+    fight: 'beast.png', // This can remain as a default or fallback image
     win: 'win.png',
     lose: 'dead.png',
-    easterEgg: 'dragon.png'
+    easterEgg: 'gambler.png'
 };
 
 const weapons = [
@@ -226,6 +229,21 @@ function goFight() {
   monsterStats.style.display = "block";
   monsterName.innerText = monsters[fighting].name;
   monsterHealthText.innerText = monsterHealth;
+
+  // Set the image based on the monster being fought
+  switch (monsters[fighting].name) {
+    case "slime":
+      gameImage.src = images.slime;
+      break;
+    case "fanged beast":
+      gameImage.src = images.beast;
+      break;
+    case "dragon": // Assuming you want to show a dragon image when fighting the dragon
+      gameImage.src = images.dragon;
+      break;
+    default:
+      gameImage.src = images.fight; // Fallback image if needed
+  }
 }
 
 function attack() {
