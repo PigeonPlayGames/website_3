@@ -1,35 +1,22 @@
 body, html {
+    height: 100%;
     margin: 0;
-    padding: 0;
-    overflow: hidden;
-    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
 }
 
-#gameArea {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    background-color: black;
-    overflow: hidden;
+#game {
+    text-align: center;
 }
 
-#paddle {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    width: 100px;
-    height: 20px;
-    background-color: white;
-    transform: translateX(-50%);
+#arrow {
+    font-size: 48px;
+    margin: 20px;
 }
 
-#ball {
-    position: absolute;
-    bottom: 50px;
-    left: 50%;
-    width: 20px;
-    height: 20px;
-    background-color: red;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
+#score {
+    margin-top: 20px;
 }
