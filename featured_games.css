@@ -1,6 +1,6 @@
 :root {
     --primary-bg-color: #333;
-    --secondary-bg-color: #f0f0f0;
+    --secondary-bg-color: #e0f0e0; /* Changed to a soft green */
     --accent-color: #007bff;
     --hover-accent-color: #0056b3;
     --text-color: white;
