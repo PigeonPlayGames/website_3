@@ -28,19 +28,19 @@ const monsters = [
     name: "slime",
     level: 2,
     health: 15,
-    image: 'path/to/slime.png'
+    image: 'slime.png'
   },
   {
     name: "fanged beast",
     level: 8,
     health: 60,
-    image: 'path/to/beast.png'
+    image: 'beast.png'
   },
   {
     name: "dragon",
     level: 20,
     health: 300,
-    image: 'path/to/dragon.png'
+    image: 'dragon.png'
   }
 ]
 
