@@ -27,33 +27,39 @@ const monsters = [
     name: "slime",
     level: 2,
     health: 15
+   imagePath: "slime.png",
   },
   {
     name: "fanged beast",
     level: 8,
     health: 60
+   imagePath: "beast.png",
   },
   {
     name: "dragon",
     level: 20,
     health: 300
+   imagePath: "dragon.png",
   }
 ]
 const locations = [
   {
     name: "town square",
+    imagePath: "village_square.png",
     "button text": ["Go to store", "Go to cave", "Fight dragon"],
     "button functions": [goStore, goCave, fightDragon],
     text: "You are in the town square. You see a sign that says \"Store\"."
   },
   {
     name: "store",
+    imagePath: "shop.png",
     "button text": ["Buy 10 health (10 gold)", "Buy weapon (30 gold)", "Go to town square"],
     "button functions": [buyHealth, buyWeapon, goTown],
     text: "You enter the store."
   },
   {
     name: "cave",
+    imagePath: "cavey.png",
     "button text": ["Fight slime", "Fight fanged beast", "Go to town square"],
     "button functions": [fightSlime, fightBeast, goTown],
     text: "You enter the cave. You see some monsters."
@@ -70,12 +76,14 @@ const locations = [
     text: 'The monster screams "Arg!" as it dies. You gain experience points and find gold.'
   },{
     name: "lose",
+    imagePath: "dead.png",
     "button text": ["REPLAY?", "REPLAY?", "REPLAY?"],
     "button functions": [restart, restart, restart],
     text: "You die. &#x2620;"
   },
   { 
-    name: "win", 
+    name: "win",
+    imagePath: "win.png",
     "button text": ["REPLAY?", "REPLAY?", "REPLAY?"], 
     "button functions": [restart, restart, restart], 
     text: "You defeat the dragon! YOU WIN THE GAME! &#x1F389;" 
