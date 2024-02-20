@@ -58,7 +58,7 @@ window.onload = function() {
     doodlerLeftImg.src = "skater_left.png";
 
     platformImg = new Image();
-    platformImg.src = "./platform.png";
+    platformImg.src = "halfpipe.png";
 
     velocityY = initialVelocityY;
     placePlatforms();
