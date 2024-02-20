@@ -202,7 +202,7 @@ async function loadImages() {
     try {
         doodlerRightImg = await loadImage('skater_right.png');
         doodlerLeftImg = await loadImage('skater_left.png');
-        platformImg = await loadImage('platform.png');
+        platformImg = await loadImage('halfpipe.png');
         doodler.img = doodlerRightImg; // Set initial doodler image
     } catch (error) {
         console.error("Error loading images", error);
