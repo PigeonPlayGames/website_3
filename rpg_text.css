@@ -17,11 +17,10 @@ body {
   padding: 10px;
 }
 #gameImage {
+  max-width: 75%; /* Adjust the percentage to suit your needs */
+  max-height: 400px; /* Adjust the height as needed */
   display: block;
-  margin: 0 auto;
-  max-width: 100%;
-  height: auto;
-  border: 2px solid #000; /* Example border */
+  margin: 20px auto;
 }
 
 #controls,
