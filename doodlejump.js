@@ -48,14 +48,14 @@ window.onload = function() {
 
     //load images
     doodlerRightImg = new Image();
-    doodlerRightImg.src = "./doodler-right.png";
+    doodlerRightImg.src = "skater_right.png";
     doodler.img = doodlerRightImg;
     doodlerRightImg.onload = function() {
         context.drawImage(doodler.img, doodler.x, doodler.y, doodler.width, doodler.height);
     }
 
     doodlerLeftImg = new Image();
-    doodlerLeftImg.src = "./doodler-left.png";
+    doodlerLeftImg.src = "skater_left.png";
 
     platformImg = new Image();
     platformImg.src = "./platform.png";
