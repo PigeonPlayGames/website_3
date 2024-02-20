@@ -28,7 +28,7 @@ window.onload = function() {
     doodlerLeftImg = new Image();
     doodlerLeftImg.src = "skater_left.png";
     platformImg = new Image();
-    platformImg.src = "platform.png"; // Ensure this path is correct
+    platformImg.src = "halfpipe.png"; // Ensure this path is correct
 
     // Set initial doodler image
     doodler.img = doodlerRightImg;
