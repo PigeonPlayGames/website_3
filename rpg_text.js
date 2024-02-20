@@ -22,7 +22,7 @@ const images = {
     store: 'shop.png',
     cave: 'cavey.png',
     slime: 'slime.png',
-    beast: 'beast.png',
+    beast: 'beast_small.png',
     dragon: 'dragon.png', // Assuming you want a specific image for the dragon as well
     fight: 'beast.png', // This can remain as a default or fallback image
     win: 'win.png',
