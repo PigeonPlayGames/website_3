@@ -245,6 +245,10 @@ function goFight() {
     default:
       gameImage.src = images.fight; // Fallback image if needed
   }
+    if (monsters[fighting].health <= 0) {
+        gameImage.src = images.victory;
+        break;
+    default:
 }
 
 function attack() {
