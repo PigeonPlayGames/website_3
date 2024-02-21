@@ -28,7 +28,7 @@ const images = {
     win: 'win_small.png',
     lose: 'dead_small.png',
     easterEgg: 'gambler.png',
-    victory: 'victory.png'
+    victory: 'victory_small.png'
 };
 
 const weapons = [
