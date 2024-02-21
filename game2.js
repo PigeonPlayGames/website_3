@@ -11,18 +11,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const blockRows = 5;
     const blockColumns = 5;
     const blockWidth = gameArea.clientWidth / blockColumns;
-    const blockHeight = 20; // Adjust block height as needed
+    const blockHeight = 20;
 
     let gameWidth = gameArea.clientWidth;
     let paddleWidth = paddle.offsetWidth;
     let paddleX = (gameWidth - paddleWidth) / 2;
     let ballX = paddleX + paddleWidth / 2 - ball.offsetWidth / 2;
     let ballY = paddle.offsetTop - ball.offsetHeight;
-    let dx = 2;
-    let dy = -2;
+    let dx = 4; // Increased initial speed
+    let dy = -4; // Increased initial speed
     let score = 0;
     let level = 1;
-    let powerUpActive = false;
 
     applyStyles(scoreDisplay, { color: 'white', position: 'absolute', top: '10px', left: '10px' });
     applyStyles(levelDisplay, { color: 'white', position: 'absolute', top: '10px', right: '10px' });
@@ -31,18 +30,18 @@ document.addEventListener('DOMContentLoaded', () => {
         Object.assign(element.style, styles);
     }
 
-    // Initialize blocks
     function createBlocks() {
+        blocks = []; // Reset blocks array
         for (let row = 0; row < blockRows; row++) {
             for (let col = 0; col < blockColumns; col++) {
                 const block = document.createElement('div');
                 block.className = 'block';
                 applyStyles(block, {
-                    width: `${blockWidth - 5}px`, // 5px for margin
+                    width: `${blockWidth - 5}px`,
                     height: `${blockHeight}px`,
                     backgroundColor: 'blue',
                     position: 'absolute',
-                    top: `${row * (blockHeight + 5)}px`, // 5px for margin
+                    top: `${row * (blockHeight + 5)}px`,
                     left: `${col * (blockWidth)}px`
                 });
                 gameArea.appendChild(block);
@@ -58,7 +57,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     updateScoreAndLevel();
 
-    // Adjust game elements on window resize
+    function levelUp() {
+        level++;
+        dx *= 1.2; // Increase speed by 20%
+        dy *= -1.2; // Increase speed by 20% and reverse direction
+        createBlocks(); // Recreate blocks for the new level
+        updateScoreAndLevel();
+    }
+
+    function checkForLevelUp() {
+        if (blocks.length === 0) {
+            levelUp();
+        }
+    }
+
     window.addEventListener('resize', () => {
         gameWidth = gameArea.clientWidth;
         paddleX = Math.min(paddleX, gameWidth - paddleWidth);
@@ -67,7 +79,6 @@ document.addEventListener('DOMContentLoaded', () => {
         ball.style.left = `${ballX}px`;
     });
 
-    // Handle touch move for paddle control
     gameArea.addEventListener('touchmove', function(e) {
         e.preventDefault();
         const touchX = e.touches[0].clientX - gameArea.getBoundingClientRect().left;
@@ -85,14 +96,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (ballRect.right > blockRect.left && ballRect.left < blockRect.right &&
                 ballRect.bottom > blockRect.top && ballRect.top < blockRect.bottom) {
-                // Ball has hit the block
-                dy = -dy; // Reverse the ball's Y-direction
+                dy = -dy;
 
                 item.hits += 1;
                 if (item.hits === 1) {
                     block.style.backgroundColor = 'red';
                 } else {
-                    // Remove block after second hit
                     block.parentNode.removeChild(block);
                     blocks.splice(index, 1);
                 }
@@ -101,6 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateScoreAndLevel();
             }
         });
+        checkForLevelUp();
     }
 
     function updateGame() {
