@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Ball collision with walls
         if (ballX <= 0 || ballX + ball.offsetWidth >= gameArea.clientWidth) dx = -dx;
-        if (ballY <= 0) dy = -dy;
+        if (ballY <= 0 || ballY + ball.offsetHeight >= gameArea.offsetHeight) dy = -dy; // Revert original behavior
         else if (ballY + ball.offsetHeight >= paddle.offsetTop &&
                  ballX + ball.offsetWidth >= paddle.offsetLeft &&
                  ballX <= paddle.offsetLeft + paddle.offsetWidth) {
@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
         checkForLevelUp();
 
         // Game Over check
-        if (ballY + ball.offsetHeight > gameArea.offsetHeight) {
+        if (ballY > gameArea.offsetHeight) {
             gameOver();
             return; // Exit the function to stop the game loop
         }
@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (ballRect.right > blockRect.left && ballRect.left < blockRect.right &&
                 ballRect.bottom > blockRect.top && ballRect.top < blockRect.bottom) {
-                dy = -dy; // Reflect ball
+                dy = -dy; // Reverse the ball's Y-direction upon block collision
 
                 item.hits += 1;
                 if (item.hits === 1) {
@@ -192,4 +192,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
     updateGame(); // Start the game loop
 });
-            
+        
