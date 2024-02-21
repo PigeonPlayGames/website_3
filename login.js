@@ -1,21 +1,47 @@
+// Mock database using local storage
+const users = JSON.parse(localStorage.getItem('users')) || [];
+
+function findUser(username) {
+    return users.find(user => user.username === username);
+}
+
 document.getElementById('loginBtn').addEventListener('click', function() {
-    // Placeholder for login functionality
-    alert('Login functionality not implemented');
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const user = findUser(username);
+
+    if (user && user.password === password) {
+        alert('Login successful!');
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        document.getElementById('loginPage').style.display = 'none';
+        document.getElementById('gamePage').style.display = 'flex';
+    } else {
+        alert('Invalid username or password');
+    }
 });
 
 document.getElementById('registerBtn').addEventListener('click', function() {
-    // Placeholder for register functionality
-    alert('Register functionality not implemented');
-});
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
 
-document.getElementById('tapBtn').addEventListener('click', function() {
-    let scoreElement = document.getElementById('score');
-    let score = parseInt(scoreElement.innerText, 10);
-    scoreElement.innerText = ++score;
+    if (!username || !password) {
+        alert('Username and password cannot be empty');
+        return;
+    }
+
+    if (findUser(username)) {
+        alert('Username is already taken');
+        return;
+    }
+
+    const newUser = { username, password };
+    users.push(newUser);
+    localStorage.setItem('users', JSON.stringify(users));
+    alert('Registration successful, you can now login');
 });
 
 document.getElementById('logoutBtn').addEventListener('click', function() {
-    // Placeholder for logout functionality
+    localStorage.removeItem('currentUser');
     document.getElementById('gamePage').style.display = 'none';
     document.getElementById('loginPage').style.display = 'flex';
 });
