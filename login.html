@@ -17,10 +17,31 @@
     <div id="gamePage" style="display:none;">
         <h2>Tap Game</h2>
         <p>Score: <span id="score">0</span></p>
-        <button id="tapBtn">Tap Me!</button>
+        <button id="tapBtn">Let's Go!</button>
         <button id="logoutBtn">Logout</button>
     </div>
 
-    <script src="login.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Assuming you already have login and register functionality handled
+
+            // Handle Tap Me! button click
+            document.getElementById('tapBtn').addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent any default action, such as navigation or form submission
+
+                // Logic to increase the score
+                var scoreElement = document.getElementById('score');
+                var currentScore = parseInt(scoreElement.textContent, 10);
+                scoreElement.textContent = currentScore + 1;
+
+                // Here you can add any other logic you want to execute when Tap Me! is clicked
+
+                // Remove or comment out any redirect if it exists to prevent navigation
+                window.location.href = 'featured_games.html';
+            });
+
+            // Your existing login, register, and logout functionality here
+        });
+    </script>
 </body>
 </html>
