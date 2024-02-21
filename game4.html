@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Keyboard Touch Gamepad</title>
+    <link rel="stylesheet" type="text/css" href="simple.css">
+    <script type="text/javascript" src="ktg.js"></script>
+    <script type="text/javascript">
+      function writeKeyUp(e){
+        document.getElementById('writer').innerHTML = document.getElementById('writer').innerHTML  + '<br>'+'button released ' + e.detail;
+      }
+      function writeKeyDown(e){
+        document.getElementById('writer').innerHTML  = document.getElementById('writer').innerHTML  + '<br>'+'button pressed ' + e.detail;
+      }
+
+      function onbodyload(){
+        ktg.setup()
+        window.addEventListener('ktg_KeyReleased',  writeKeyUp,false);
+        window.addEventListener('ktg_KeyPressed', writeKeyDown,false);
+        document.getElementById('writer').innerHTML = document.getElementById('writer').innerHTML  + ktg.getPrintableKeyboadMap().replace(/\n/g, "<br />") +  '<br>' ;
+      }
+    </script>
+  </head>
+  <body onload='onbodyload()'>
+    <header>
+        <h1> ktg.js</h1>
+        A interface for Keyboard Touch and Gamepad input.
+    </header>
+  <p>
+    Press a key.
+  </p>
+
+  <div id='writer'>
+  </div>
+
+  <footer>
+    <br>MIT License, copyright Érico Vieira Porto 2016</br>
+    <br> more info on the Github repository:
+    <a href="https://github.com/ericoporto/ktg"> github.com/ericoporto/ktg </a>
+  </footer>
+  </body>
+</html>
