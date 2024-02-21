@@ -1,67 +1,47 @@
-const express = require('express');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const bodyParser = require('body-parser');
+// Mock database using local storage
+const users = JSON.parse(localStorage.getItem('users')) || [];
 
-const app = express();
-const PORT = 3000;
+function findUser(username) {
+    return users.find(user => user.username === username);
+}
 
-// Use body-parser middleware to parse JSON bodies
-app.use(bodyParser.json());
+document.getElementById('loginBtn').addEventListener('click', function() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const user = findUser(username);
 
-// Mock user database (replace with real database in production)
-let users = [];
+    if (user && user.password === password) {
+        alert('Login successful!');
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        document.getElementById('loginPage').style.display = 'none';
+        document.getElementById('gamePage').style.display = 'flex';
+    } else {
+        alert('Invalid username or password');
+    }
+});
 
-// Secret key for JWT (keep secure in production)
-const JWT_SECRET = 'your_jwt_secret_here';
+document.getElementById('registerBtn').addEventListener('click', function() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
 
-// Register new user
-app.post('/register', async (req, res) => {
-    const { username, password } = req.body;
-    const userExists = users.some(user => user.username === username);
-
-    if (userExists) {
-        return res.status(400).send('Username is already taken');
+    if (!username || !password) {
+        alert('Username and password cannot be empty');
+        return;
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    users.push({ username, password: hashedPassword });
-    res.status(201).send('User registered successfully');
-});
-
-// Login user
-app.post('/login', async (req, res) => {
-    const { username, password } = req.body;
-    const user = users.find(user => user.username === username);
-
-    if (!user || !(await bcrypt.compare(password, user.password))) {
-        return res.status(401).send('Invalid username or password');
+    if (findUser(username)) {
+        alert('Username is already taken');
+        return;
     }
 
-    const token = jwt.sign({ username }, JWT_SECRET, { expiresIn: '24h' });
-    res.json({ message: "Login successful", token });
+    const newUser = { username, password };
+    users.push(newUser);
+    localStorage.setItem('users', JSON.stringify(users));
+    alert('Registration successful, you can now login');
 });
 
-// Middleware to authenticate token
-const authenticateToken = (req, res, next) => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-
-    if (token == null) return res.sendStatus(401);
-
-    jwt.verify(token, JWT_SECRET, (err, user) => {
-        if (err) return res.sendStatus(403);
-        req.user = user;
-        next();
-    });
-};
-
-// A protected route
-app.get('/protected', authenticateToken, (req, res) => {
-    res.json({ message: "Access to protected content", user: req.user });
-});
-
-// Start server
-app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
+document.getElementById('logoutBtn').addEventListener('click', function() {
+    localStorage.removeItem('currentUser');
+    document.getElementById('gamePage').style.display = 'none';
+    document.getElementById('loginPage').style.display = 'flex';
 });
