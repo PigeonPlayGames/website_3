@@ -11,7 +11,7 @@
 // input
 
 const enableGamepads = 1;
-const enableTouchInput = 0;
+const enableTouchInput = 1;
 const copyGamepadDirectionToStick = 1;
 const copyWASDToDpad = 1;
 
