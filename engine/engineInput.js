@@ -127,26 +127,35 @@ function updateGamepads()
 
 if (enableTouchInput && window.ontouchstart !== undefined)
 {
-    // handle all touch events the same way
     ontouchstart = ontouchmove = ontouchend = e=>
     {
         e.button = 0; // all touches are left click
-        hadInput || zzfx(hadInput = 1) ; // fix mobile audio, force it to play a sound the first time
+        hadInput || zzfx(hadInput = 1);
 
-        // check if touching and pass to mouse events
         const touching = e.touches.length;
         if (touching)
         {
-            // set event pos and pass it along
             e.x = e.touches[0].clientX;
             e.y = e.touches[0].clientY;
+            
+            // Determine touch zone for movement or jumping
+            const screenWidth = window.innerWidth;
+            const touchX = e.touches[0].clientX;
+            const movementZoneWidth = screenWidth / 2; // Left half for movement, right half for jump
+
+            if (touchX < movementZoneWidth) {
+                // Add logic for movement
+            } else {
+                // Add logic for jump
+            }
+
             wasTouching ? onmousemove(e) : onmousedown(e);
         }
         else if (wasTouching)
-            wasTouching && onmouseup(e);
+            onmouseup(e);
 
-        // set was touching
         wasTouching = touching;
     }
     let wasTouching;
 }
+
