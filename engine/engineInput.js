@@ -125,37 +125,44 @@ function updateGamepads()
 ///////////////////////////////////////////////////////////////////////////////
 // touch screen input
 
-if (enableTouchInput && window.ontouchstart !== undefined)
-{
-    ontouchstart = ontouchmove = ontouchend = e=>
-    {
-        e.button = 0; // all touches are left click
-        hadInput || zzfx(hadInput = 1);
+if (enableTouchInput && window.ontouchstart !== undefined) {
+    ontouchstart = ontouchmove = ontouchend = e => {
+        e.preventDefault(); // Prevent default behavior to ensure touch is fully captured
+        hadInput || zzfx(hadInput = 1); // Play sound or initiate input flag
 
-        const touching = e.touches.length;
-        if (touching)
-        {
-            e.x = e.touches[0].clientX;
-            e.y = e.touches[0].clientY;
-            
-            // Determine touch zone for movement or jumping
-            const screenWidth = window.innerWidth;
-            const touchX = e.touches[0].clientX;
-            const movementZoneWidth = screenWidth / 2; // Left half for movement, right half for jump
+        const screenWidth = window.innerWidth;
+        const screenHeight = window.innerHeight;
+        const touchX = e.touches[0].clientX;
+        const touchY = e.touches[0].clientY;
 
-            if (touchX < movementZoneWidth) {
-                // Add logic for movement
+        // Determine action based on touch zone
+        if (touchX < screenWidth / 2) {
+            // Left side of the screen for movement
+            if (touchY < screenHeight / 2) {
+                // Upper half for moving left
+                simulateKeyPress('ArrowLeft');
             } else {
-                // Add logic for jump
+                // Lower half for moving right
+                simulateKeyPress('ArrowRight');
             }
-
-            wasTouching ? onmousemove(e) : onmousedown(e);
+        } else {
+            // Right side of the screen for actions
+            if (touchY < screenHeight / 2) {
+                // Upper half for jumping
+                simulateKeyPress('Space');
+            } else {
+                // Lower half for shooting
+                // Assuming shooting is tied to a specific key, e.g., 'S'
+                simulateKeyPress('S');
+            }
         }
-        else if (wasTouching)
-            onmouseup(e);
-
-        wasTouching = touching;
-    }
-    let wasTouching;
+    };
 }
 
+// Placeholder function to simulate key presses for actions
+function simulateKeyPress(key) {
+    console.log(`Simulated key press for: ${key}`);
+    // Here you need to integrate how your game interprets these simulated key presses.
+    // This could involve directly calling movement, jump, or shoot functions,
+    // or setting game state variables that are checked in your game's main loop.
+}
