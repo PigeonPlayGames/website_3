@@ -17,9 +17,9 @@ const copyWASDToDpad = 0;
 
 // input for all devices including keyboard, mouse, and gamepad. (d=down, p=pressed, r=released)
 const inputData = [[]];
-const keyIsDown      = (key, device=0)=> inputData[device][key] && inputData[device][key].d ? 1 : 0;
-const keyWasPressed  = (key, device=0)=> inputData[device][key] && inputData[device][key].p ? 1 : 0;
-const keyWasReleased = (key, device=0)=> inputData[device][key] && inputData[device][key].r ? 1 : 0;
+const keyIsDown      = (key, device=1)=> inputData[device][key] && inputData[device][key].d ? 1 : 0;
+const keyWasPressed  = (key, device=1)=> inputData[device][key] && inputData[device][key].p ? 1 : 0;
+const keyWasReleased = (key, device=1)=> inputData[device][key] && inputData[device][key].r ? 1 : 0;
 const clearInput     = ()=> inputData[0].length = 0;
 
 // mouse input is stored with keyboard
@@ -62,12 +62,12 @@ const remapKeyCode = c=> copyWASDToDpad ? c==87?38 : c==83?40 : c==65?37 : c==68
 ////////////////////////////////////////////////////////////////////
 // gamepad
 
-let isUsingGamepad = 0;
+let isUsingGamepad = 1;
 let gamepadCount = 0;
-const gamepadStick       = (stick,  gamepad=0)=> gamepad < gamepadCount ? inputData[gamepad+1].stickData[stick] : vec2();
-const gamepadIsDown      = (button, gamepad=0)=> gamepad < gamepadCount ? keyIsDown     (button, gamepad+1) : 0;
-const gamepadWasPressed  = (button, gamepad=0)=> gamepad < gamepadCount ? keyWasPressed (button, gamepad+1) : 0;
-const gamepadWasReleased = (button, gamepad=0)=> gamepad < gamepadCount ? keyWasReleased(button, gamepad+1) : 0;
+const gamepadStick       = (stick,  gamepad=1)=> gamepad < gamepadCount ? inputData[gamepad+1].stickData[stick] : vec2();
+const gamepadIsDown      = (button, gamepad=1)=> gamepad < gamepadCount ? keyIsDown     (button, gamepad+1) : 0;
+const gamepadWasPressed  = (button, gamepad=1)=> gamepad < gamepadCount ? keyWasPressed (button, gamepad+1) : 0;
+const gamepadWasReleased = (button, gamepad=1)=> gamepad < gamepadCount ? keyWasReleased(button, gamepad+1) : 0;
 
 function updateGamepads()
 {
