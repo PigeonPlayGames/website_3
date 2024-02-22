@@ -1,92 +1,126 @@
+/*
+    LittleJS Input System
+    - Tracks key down, pressed, and released
+    - Also tracks mouse buttons, position, and wheel
+    - Supports multiple gamepads
+*/
+
 'use strict';
 
 ///////////////////////////////////////////////////////////////////////////////
-// Input Configuration
+// input
+
 const enableGamepads = 1;
-const enableTouchInput = 1; // Enable touch input handling
-const copyGamepadDirectionToStick = 0;
+const enableTouchInput = 1;
+const copyGamepadDirectionToStick = 1;
 const copyWASDToDpad = 1;
 
-// Input Data Initialization
+// input for all devices including keyboard, mouse, and gamepad. (d=down, p=pressed, r=released)
 const inputData = [[]];
-const keyIsDown = (key, device = 0) => inputData[device][key] && inputData[device][key].d ? 1 : 0;
-const keyWasPressed = (key, device = 0) => inputData[device][key] && inputData[device][key].p ? 1 : 0;
-const keyWasReleased = (key, device = 0) => inputData[device][key] && inputData[device][key].r ? 1 : 0;
-const clearInput = () => inputData[0].length = 0;
+const keyIsDown      = (key, device=0)=> inputData[device][key] && inputData[device][key].d ? 1 : 0;
+const keyWasPressed  = (key, device=0)=> inputData[device][key] && inputData[device][key].p ? 1 : 0;
+const keyWasReleased = (key, device=0)=> inputData[device][key] && inputData[device][key].r ? 1 : 0;
+const clearInput     = ()=> inputData[0].length = 0;
 
-// Mouse and Touch Input Variables
-let hadInput = 0;
+// mouse input is stored with keyboard
+let hadInput   = 0;
 let mouseWheel = 0;
 let mousePosScreen = vec2();
-let mousePosWorld = vec2();
+let mousePosWorld  = vec2();
+const mouseIsDown      = keyIsDown;
+const mouseWasPressed  = keyWasPressed;
+const mouseWasReleased = keyWasReleased;
 
-// Mouse Input Handlers
-document.onkeydown = e => {
-    if (debug && e.target !== document.body) return;
-    e.repeat || (inputData[isUsingGamepad = 0][remapKeyCode(e.keyCode)] = {d: hadInput = 1, p: 1});
-};
-document.onkeyup = e => {
-    if (debug && e.target !== document.body) return;
+// handle input events
+onkeydown   = e=>
+{
+    if (debug && e.target != document.body) return;
+    e.repeat || (inputData[isUsingGamepad = 0][remapKeyCode(e.keyCode)] = {d:hadInput=1, p:1});
+}
+onkeyup     = e=>
+{
+    if (debug && e.target != document.body) return;
     const c = remapKeyCode(e.keyCode); inputData[0][c] && (inputData[0][c].d = 0, inputData[0][c].r = 1);
-};
-document.onmousedown = e => (inputData[0][e.button] = {d: hadInput = 1, p: 1}, document.onmousemove(e));
-document.onmouseup = e => inputData[0][e.button] && (inputData[0][e.button].d = 0, inputData[0][e.button].r = 1);
-document.onmousemove = e => {
+}
+onmousedown = e=> (inputData[0][e.button] = {d:hadInput=1, p:1}, onmousemove(e));
+onmouseup   = e=> inputData[0][e.button] && (inputData[0][e.button].d = 0, inputData[0][e.button].r = 1);
+onmousemove = e=>
+{
+    if (!mainCanvas)
+        return;
+
+    // convert mouse pos to canvas space
     const rect = mainCanvas.getBoundingClientRect();
-    mousePosScreen.x = mainCanvasSize.x * (e.clientX - rect.left) / rect.width;
-    mousePosScreen.y = mainCanvasSize.y * (e.clientY - rect.top) / rect.height;
-};
-if (debug) document.onwheel = e => e.ctrlKey || (mouseWheel = Math.sign(e.deltaY));
-document.oncontextmenu = e => false; // Prevent right-click menu
+    mousePosScreen.x = mainCanvasSize.x * percent(e.x, rect.right, rect.left);
+    mousePosScreen.y = mainCanvasSize.y * percent(e.y, rect.bottom, rect.top);
+}
+if(debug)
+    onwheel = e=> e.ctrlKey || (mouseWheel = sign(e.deltaY));
+oncontextmenu = e=> !1; // prevent right click menu
+const remapKeyCode = c=> copyWASDToDpad ? c==87?38 : c==83?40 : c==65?37 : c==68?39 : c : c;
 
-// Key Code Remapping
-const remapKeyCode = c => copyWASDToDpad ? {'87': 38, '83': 40, '65': 37, '68': 39}[c] || c : c;
+////////////////////////////////////////////////////////////////////
+// gamepad
 
-///////////////////////////////////////////////////////////////////////////////
-// Touch Input Handling
+let isUsingGamepad = 0;
+let gamepadCount = 0;
+const gamepadStick       = (stick,  gamepad=0)=> gamepad < gamepadCount ? inputData[gamepad+1].stickData[stick] : vec2();
+const gamepadIsDown      = (button, gamepad=0)=> gamepad < gamepadCount ? keyIsDown     (button, gamepad+1) : 0;
+const gamepadWasPressed  = (button, gamepad=0)=> gamepad < gamepadCount ? keyWasPressed (button, gamepad+1) : 0;
+const gamepadWasReleased = (button, gamepad=0)=> gamepad < gamepadCount ? keyWasReleased(button, gamepad+1) : 0;
 
-if (enableTouchInput && window.ontouchstart !== undefined) {
-    document.ontouchstart = document.ontouchmove = document.ontouchend = e => {
-        const touchX = e.touches[0].clientX;
-        const screenWidth = window.innerWidth;
-        const touchZone = screenWidth / 2; // Left half for movement, right half for jump
+function updateGamepads()
+{
+    if (!navigator.getGamepads || !enableGamepads)
+        return;
 
-        if (touchX < touchZone) {
-            // Movement: Simulate right arrow key press
-            simulateKeyPress('ArrowRight');
-        } else {
-            // Jump: Simulate spacebar press
-            simulateKeyPress('Space');
+    if (!document.hasFocus() && !debug)
+        return;
+
+    const gamepads = navigator.getGamepads();
+    gamepadCount = 0;
+    for(let i = 0; i < navigator.getGamepads().length; ++i)
+    {
+        // get or create gamepad data
+        const gamepad = gamepads[i];
+        let data = inputData[i+1];
+        if (!data)
+        {
+            data = inputData[i+1] = [];
+            data.stickData = [vec2(), vec2()];
         }
-    };
+
+        if (gamepad && gamepad.axes.length >= 2)
+        {
+            gamepadCount = i+1;
+
+            // read analog sticks and clamp dead zone
+            const deadZone = .3, deadZoneMax = .8;
+            const applyDeadZone = (v)=> 
+                v >  deadZone ?  percent( v, deadZoneMax, deadZone) : 
+                v < -deadZone ? -percent(-v, deadZoneMax, deadZone) : 0;
+            data.stickData[0] = vec2(applyDeadZone(gamepad.axes[0]), applyDeadZone(-gamepad.axes[1]));
+            
+            if (copyGamepadDirectionToStick)
+            {
+                // copy dpad to left analog stick when pressed
+                if (gamepadIsDown(12,i)|gamepadIsDown(13,i)|gamepadIsDown(14,i)|gamepadIsDown(15,i))
+                    data.stickData[0] = vec2(gamepadIsDown(15,i) - gamepadIsDown(14,i), gamepadIsDown(12,i) - gamepadIsDown(13,i));
+            }
+
+            // clamp stick input to unit vector
+            data.stickData[0] = data.stickData[0].clampLength();
+            
+            // read buttons
+            gamepad.buttons.map((button, j)=>
+            {
+                inputData[i+1][j] = button.pressed ? {d:1, p:!gamepadIsDown(j,i)} : 
+                inputData[i+1][j] = {r:gamepadIsDown(j,i)}
+                isUsingGamepad |= button.pressed && !i;
+            });
+        }
+    }
 }
-
-// Simulate key press based on touch input
-function simulateKeyPress(key) {
-    console.log(`Simulated key press: ${key}`);
-    // Here you should integrate the key simulation with your game's input handling
-    // For example, updating `inputData` or directly triggering actions
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// Vector and Gamepad Utilities (Placeholder Implementations)
-
-function vec2(x = 0, y = 0) {
-    return { x, y, clampLength: function() { return this; } };
-}
-
-function percent(value, max, min) {
-    return (value - min) / (max - min);
-}
-
-let mainCanvas = document.getElementById('mainCanvas'); // Ensure you have a canvas with this ID
-let mainCanvasSize = vec2(mainCanvas.width, mainCanvas.height);
-
-let debug = false; // Set this based on your development needs
-
-// Additional gamepad logic...
-
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // touch screen input
@@ -116,4 +150,3 @@ if (enableTouchInput && window.ontouchstart !== undefined)
     }
     let wasTouching;
 }
-
