@@ -47,6 +47,7 @@ const p1 = new Fighter({
     position: {
         x: 100, y: 50
     },
+    imageSrc: './img/samuriMack.png',
     velocity: {
         x: 0, y: 0
     },
@@ -59,6 +60,7 @@ const p2 = new Fighter({
     position: {
         x: 300, y: 100
     },
+    imageSrc: './img/kenji.png',
     velocity: {
         x: 0, y: 0
     },
