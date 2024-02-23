@@ -38,9 +38,9 @@ function upgradeVillage() {
             clearInterval(interval);
             villageLevel++;
             document.getElementById('villageLevel').textContent = villageLevel;
+            document.getElementById('villageImage').src = `village${villageLevel}.png`; // Update village image based on level
             document.getElementById('timerValue').textContent = 'Village upgrade complete';
-            upgradeVillageTime = 0; // Reset timer
-            // Automatically check and display wall upgrade option if village level is 3 or above
+            upgradeVillageTime = 0;
             if (villageLevel >= 3) {
                 document.getElementById('wallSection').style.display = 'block';
             }
@@ -57,10 +57,12 @@ function raiseArmy() {
             raiseArmyTime--;
         } else {
             clearInterval(interval);
-            armySize += 10; // Increment army size
+            armySize += 10;
             document.getElementById('armySize').textContent = armySize;
+            // Assuming a static image for demonstration. Update as needed.
+            document.getElementById('armyImage').src = 'army1.png';
             document.getElementById('timerValue').textContent = 'Army raised successfully';
-            raiseArmyTime = 0; // Reset timer
+            raiseArmyTime = 0;
         }
     }, 1000);
 }
@@ -76,8 +78,9 @@ function upgradeWall() {
             clearInterval(interval);
             wallLevel++;
             document.getElementById('wallLevel').textContent = wallLevel;
+            document.getElementById('wallImage').src = `wall${wallLevel}.png`; // Update wall image based on level
             document.getElementById('timerValue').textContent = 'Wall upgraded successfully';
-            upgradeWallTime = 0; // Reset timer
+            upgradeWallTime = 0;
         }
     }, 1000);
 }
