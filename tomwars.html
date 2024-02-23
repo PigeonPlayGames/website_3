@@ -7,15 +7,24 @@
 </head>
 <body>
     <div id="game">
-        <h2>Village Level: <span id="villageLevel">1</span></h2>
-        <button id="upgradeVillage">Upgrade Village</button>
-        <h2>Army Size: <span id="armySize">0</span></h2>
-        <button id="raiseArmy">Raise Army</button>
-        <!-- New Wall Section -->
-        <div id="wallSection" style="display: none;">
+        <div class="level-container">
+            <h2>Village Level: <span id="villageLevel">1</span></h2>
+            <img id="villageImage" src="village1.png" alt="Village" />
+            <button id="upgradeVillage">Upgrade Village</button>
+        </div>
+        
+        <div class="level-container">
+            <h2>Army Size: <span id="armySize">0</span></h2>
+            <img id="armyImage" src="army1.png" alt="Army" />
+            <button id="raiseArmy">Raise Army</button>
+        </div>
+        
+        <div id="wallSection" class="level-container" style="display: none;">
             <h2>Wall Level: <span id="wallLevel">0</span></h2>
+            <img id="wallImage" src="wall1.png" alt="Wall" />
             <button id="upgradeWall">Upgrade Wall</button>
         </div>
+        
         <div id="timer">Upgrade Timer: <span id="timerValue">0</span>s</div>
     </div>
     <script src="tomwars.js"></script>
