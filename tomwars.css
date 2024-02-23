@@ -3,7 +3,7 @@ body, html {
     font-family: Arial, sans-serif;
     text-align: center;
     padding: 20px;
-    background-image: url('brick_background.png'); /* Add the background image here */
+    background-image: url('brick_background.png'); /* Adjust the path as needed */
     background-size: cover; /* Cover the entire page */
     background-position: center; /* Center the background image */
 }
@@ -14,12 +14,21 @@ body, html {
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.8); /* Slight transparency to see the background */
 }
 
 button {
     margin: 10px;
     padding: 5px 10px;
     cursor: pointer;
+    background-color: #f4f4f4; /* Light grey background */
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+button:hover {
+    background-color: #e2e2e2; /* Slightly darker on hover */
 }
 
 /* Styles for the timer text */
@@ -27,22 +36,9 @@ button {
     margin-top: 20px;
 }
 
-/* Sprite Animation for the Timer */
-#timerImage {
-    width: 100px; /* Adjust based on your sprite frame width */
-    height: 100px; /* Adjust based on your sprite frame height */
-    margin: 0 auto; /* Center the sprite in the container */
-    background-image: url('timer.png'); /* Path to your sprite sheet */
-    background-repeat: no-repeat;
-    display: none; /* Initially hidden, shown via JavaScript */
-    animation-name: timerAnimation;
-    animation-duration: 1s; /* Adjust based on the total duration you want for the animation loop */
-    animation-iteration-count: infinite; /* Loop the animation */
-    animation-timing-function: steps(4); /* Adjust the number of steps based on your frame count */
-}
-
-/* Keyframes for the Timer Sprite Animation */
-@keyframes timerAnimation {
-    from { background-position: 0 0; }
-    to { background-position: -400px 0; } /* Adjust this based on the total width of your frames */
+/* Adjustments for the images representing village, wall, and army */
+#villageImage, #wallImage, #armyImage {
+    width: 100px; /* Standardize width for all images */
+    height: auto; /* Maintain aspect ratio */
+    margin: 10px 0; /* Spacing above and below the image */
 }
