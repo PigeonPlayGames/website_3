@@ -23,7 +23,7 @@ const images = {
     cave: 'cavey_small.png',
     slime: 'slime_small.png',
     beast: 'beast_small.png',
-   // dragon: 'dragon_small.png', // Assuming you want a specific image for the dragon as well
+    dragon: 'dragon_small.png', // Assuming you want a specific image for the dragon as well
     fight: 'beast_small.png', // This can remain as a default or fallback image
     win: 'win_small.png',
     lose: 'dead_small.png',
