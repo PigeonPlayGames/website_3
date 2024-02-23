@@ -8,28 +8,27 @@ let raiseArmyTime = 0; // Timer for raising army
 
 // Event listener for upgrading the village
 document.getElementById('upgradeVillage').addEventListener('click', function() {
-    if (upgradeVillageTime === 0 && upgradeWallTime === 0 && raiseArmyTime === 0) { // Check no other process is running
+    if (upgradeVillageTime === 0 && upgradeWallTime === 0 && raiseArmyTime === 0) {
         upgradeVillage();
     }
 });
 
 // Event listener for raising an army
 document.getElementById('raiseArmy').addEventListener('click', function() {
-    if (upgradeVillageTime === 0 && upgradeWallTime === 0 && raiseArmyTime === 0) { // Check no other process is running
+    if (upgradeVillageTime === 0 && upgradeWallTime === 0 && raiseArmyTime === 0) {
         raiseArmy();
     }
 });
 
 // Event listener for upgrading the wall
 document.getElementById('upgradeWall').addEventListener('click', function() {
-    if (villageLevel >= 3 && upgradeVillageTime === 0 && upgradeWallTime === 0 && raiseArmyTime === 0) { // Check no other process is running and village level is adequate
+    if (villageLevel >= 3 && upgradeVillageTime === 0 && upgradeWallTime === 0 && raiseArmyTime === 0) {
         upgradeWall();
     }
 });
 
-// Function to upgrade the village
 function upgradeVillage() {
-    upgradeVillageTime = 7; // Set upgrade time in seconds
+    upgradeVillageTime = 7;
     const interval = setInterval(() => {
         if (upgradeVillageTime > 0) {
             document.getElementById('timerValue').textContent = upgradeVillageTime + "s remaining for village upgrade";
@@ -38,7 +37,7 @@ function upgradeVillage() {
             clearInterval(interval);
             villageLevel++;
             document.getElementById('villageLevel').textContent = villageLevel;
-            document.getElementById('villageImage').src = `village${villageLevel}.png`; // Update village image based on level
+            document.getElementById('villageImage').src = `village${villageLevel}.png`; // Update village image
             document.getElementById('timerValue').textContent = 'Village upgrade complete';
             upgradeVillageTime = 0;
             if (villageLevel >= 3) {
@@ -48,9 +47,8 @@ function upgradeVillage() {
     }, 1000);
 }
 
-// Function to raise an army with timer
 function raiseArmy() {
-    raiseArmyTime = 10; // Set raising time in seconds
+    raiseArmyTime = 10;
     const interval = setInterval(() => {
         if (raiseArmyTime > 0) {
             document.getElementById('timerValue').textContent = raiseArmyTime + "s remaining to raise army";
@@ -59,17 +57,15 @@ function raiseArmy() {
             clearInterval(interval);
             armySize += 10;
             document.getElementById('armySize').textContent = armySize;
-            // Assuming a static image for demonstration. Update as needed.
-            document.getElementById('armyImage').src = 'army1.png';
+            // Assume a static image for army, or implement logic for different images
             document.getElementById('timerValue').textContent = 'Army raised successfully';
             raiseArmyTime = 0;
         }
     }, 1000);
 }
 
-// Function to upgrade the wall with timer
 function upgradeWall() {
-    upgradeWallTime = 5; // Set upgrade time in seconds
+    upgradeWallTime = 5;
     const interval = setInterval(() => {
         if (upgradeWallTime > 0) {
             document.getElementById('timerValue').textContent = upgradeWallTime + "s remaining for wall upgrade";
@@ -78,7 +74,7 @@ function upgradeWall() {
             clearInterval(interval);
             wallLevel++;
             document.getElementById('wallLevel').textContent = wallLevel;
-            document.getElementById('wallImage').src = `wall${wallLevel}.png`; // Update wall image based on level
+            document.getElementById('wallImage').src = `wall${wallLevel}.png`; // Update wall image
             document.getElementById('timerValue').textContent = 'Wall upgraded successfully';
             upgradeWallTime = 0;
         }
