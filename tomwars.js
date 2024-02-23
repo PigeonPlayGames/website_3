@@ -1,58 +1,57 @@
-// Define initial state variables
 let villageLevel = 1;
 let armySize = 0;
-let wallLevel = 0; // Initialize wall level at 0
-let upgradeTime = 0;
+let wallLevel = 0;
+let upgradeTime = 0; // Timer for any upgrade process
 
-// Event listener for upgrading the village
 document.getElementById('upgradeVillage').addEventListener('click', function() {
-    upgradeVillage();
+    // Only start the upgrade if no other upgrade is in progress
+    if (upgradeTime === 0) { 
+        startUpgrade('village');
+    }
 });
 
-// Event listener for raising an army
 document.getElementById('raiseArmy').addEventListener('click', function() {
     raiseArmy();
 });
 
-// Initially, the wall upgrade option is not available until the village reaches level 3
-// Check if the wall upgrade button exists before adding an event listener to avoid errors
+// Check if the wall upgrade button exists to avoid errors in case the HTML is not yet updated
 const upgradeWallButton = document.getElementById('upgradeWall');
 if (upgradeWallButton) {
     upgradeWallButton.addEventListener('click', function() {
-        upgradeWall();
+        // Only start the upgrade if no other upgrade is in progress and the village is at least level 3
+        if (upgradeTime === 0 && villageLevel >= 3) {
+            startUpgrade('wall');
+        }
     });
 }
 
-// Function to upgrade the village
-function upgradeVillage() {
-    if (upgradeTime === 0) { // Ensure no concurrent upgrades
-        upgradeTime = 5; // Example upgrade time in seconds
-        const interval = setInterval(() => {
-            if (upgradeTime > 0) {
-                document.getElementById('timerValue').textContent = upgradeTime--;
-            } else {
-                clearInterval(interval);
+function startUpgrade(type) {
+    upgradeTime = 5; // Simulate a 5-second upgrade process for both village and wall
+    let interval = setInterval(() => {
+        if (upgradeTime > 0) {
+            // Update the timer display with the remaining time
+            document.getElementById('timerValue').textContent = `${upgradeTime}s remaining for ${type} upgrade`;
+            upgradeTime--;
+        } else {
+            clearInterval(interval);
+            if (type === 'village') {
                 villageLevel++;
                 document.getElementById('villageLevel').textContent = villageLevel;
-                document.getElementById('timerValue').textContent = '0';
-                upgradeTime = 0; // Reset upgrade timer
+                // Unlock wall upgrade option when village reaches level 3
                 if (villageLevel === 3) {
-                    // Unlock wall upgrade option at village level 3
                     document.getElementById('wallSection').style.display = 'block';
                 }
+            } else if (type === 'wall') {
+                wallLevel++;
+                document.getElementById('wallLevel').textContent = wallLevel;
             }
-        }, 1000);
-    }
+            document.getElementById('timerValue').textContent = 'Upgrade complete';
+            upgradeTime = 0; // Reset the timer for the next upgrade
+        }
+    }, 1000);
 }
 
-// Function to upgrade the wall
-function upgradeWall() {
-    wallLevel++; // Increment wall level
-    document.getElementById('wallLevel').textContent = wallLevel;
-}
-
-// Function to raise an army
 function raiseArmy() {
-    armySize += 10; // Simplified army size increment
+    armySize += 10; // Increment army size by 10
     document.getElementById('armySize').textContent = armySize;
 }
