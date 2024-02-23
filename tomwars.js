@@ -6,6 +6,9 @@ let upgradeVillageTime = 0; // Timer for upgrading village
 let upgradeWallTime = 0; // Timer for upgrading wall
 let raiseArmyTime = 0; // Timer for raising army
 
+// Reference to the timer sprite animation container
+const timerImage = document.getElementById('timerImage');
+
 // Event listener for upgrading the village
 document.getElementById('upgradeVillage').addEventListener('click', function() {
     if (upgradeVillageTime === 0 && upgradeWallTime === 0 && raiseArmyTime === 0) {
@@ -27,12 +30,14 @@ document.getElementById('upgradeWall').addEventListener('click', function() {
     }
 });
 
+// Function to manage showing the timer sprite animation
 function showTimerSprite() {
-    document.getElementById('timerImage').style.display = 'block'; // Show the sprite animation
+    timerImage.style.display = 'block'; // Show the sprite animation
 }
 
+// Function to manage hiding the timer sprite animation
 function hideTimerSprite() {
-    document.getElementById('timerImage').style.display = 'none'; // Hide the sprite animation
+    timerImage.style.display = 'none'; // Hide the sprite animation
 }
 
 // Function to upgrade the village with timer and sprite animation
@@ -67,7 +72,7 @@ function raiseArmy() {
             raiseArmyTime--;
         } else {
             clearInterval(interval);
-            armySize += 10;
+            armySize += 10; // Increment army size by 10
             document.getElementById('armySize').textContent = armySize;
             document.getElementById('timerValue').textContent = 'Army raised successfully';
             hideTimerSprite();
