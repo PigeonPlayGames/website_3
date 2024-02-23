@@ -3,27 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>Mini Medieval Strategy Game</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="tomwars.css">
 </head>
 <body>
     <div id="game">
         <h2>Village Level: <span id="villageLevel">1</span></h2>
         <button id="upgradeVillage">Upgrade Village</button>
-        
         <h2>Army Size: <span id="armySize">0</span></h2>
         <button id="raiseArmy">Raise Army</button>
-        
-        <!-- Wall Section initially hidden, becomes visible when village level reaches 3 -->
+        <!-- New Wall Section -->
         <div id="wallSection" style="display: none;">
             <h2>Wall Level: <span id="wallLevel">0</span></h2>
             <button id="upgradeWall">Upgrade Wall</button>
         </div>
-        
-        <!-- Timer and Timer Image Section -->
-        <div id="timer">Upgrade Timer: <span id="timerValue">0s</span></div>
-        <img id="timerImage" src="timer.png" style="display: none;" alt="Timer" />
+        <div id="timer">Upgrade Timer: <span id="timerValue">0</span>s</div>
     </div>
-    
-    <script src="script.js"></script>
+    <script src="tomwars.js"></script>
 </body>
 </html>
