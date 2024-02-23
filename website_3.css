@@ -86,3 +86,16 @@ footer {
     margin-left: auto;
     margin-right: auto;
 }
+
+/* Styles for the visit counter */
+#visitCount {
+    text-align: center;
+    padding: 20px;
+    background-color: #fff;
+    color: #222;
+    margin: 20px auto;
+    border-radius: 5px;
+    width: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-size: 1.2em;
+}
