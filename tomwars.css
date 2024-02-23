@@ -1,4 +1,4 @@
-/* style.css */
+/* Style for the game container and elements */
 body, html {
     font-family: Arial, sans-serif;
     text-align: center;
@@ -19,6 +19,27 @@ button {
     cursor: pointer;
 }
 
+/* Styles for the timer text */
 #timer {
     margin-top: 20px;
+}
+
+/* Sprite Animation for the Timer */
+#timerImage {
+    width: 100px; /* Adjust based on your sprite frame width */
+    height: 100px; /* Adjust based on your sprite frame height */
+    margin: 0 auto; /* Center the sprite in the container */
+    background-image: url('timer.png'); /* Path to your sprite sheet */
+    background-repeat: no-repeat;
+    display: none; /* Initially hidden, shown via JavaScript */
+    animation-name: timerAnimation;
+    animation-duration: 1s; /* Adjust based on the total duration you want for the animation loop */
+    animation-iteration-count: infinite; /* Loop the animation */
+    animation-timing-function: steps(4); /* Adjust the number of steps based on your frame count */
+}
+
+/* Keyframes for the Timer Sprite Animation */
+@keyframes timerAnimation {
+    from { background-position: 0 0; }
+    to { background-position: -400px 0; } /* Adjust this based on the total width of your frames */
 }
