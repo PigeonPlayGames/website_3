@@ -46,22 +46,14 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const loginBtn = document.getElementById('loginBtn');
-            const registerBtn = document.getElementById('registerBtn');
-            const logoutBtn = document.getElementById('logoutBtn');
-            const tapBtn = document.getElementById('tapBtn');
-
+            // Function to switch to game page
             function switchToGamePage() {
                 document.getElementById('loginPage').style.display = 'none';
                 document.getElementById('gamePage').style.display = 'block';
             }
 
-            function switchToLoginPage() {
-                document.getElementById('loginPage').style.display = 'flex';
-                document.getElementById('gamePage').style.display = 'none';
-            }
-
-            function handleLogin() {
+            // Function to handle login
+            document.getElementById('loginBtn').addEventListener('click', function() {
                 const username = document.getElementById('username').value;
                 const password = document.getElementById('password').value;
 
@@ -74,19 +66,21 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    if (data.token) {
-                        console.log('Login successful:', data);
+                    if (data.token) { // Assuming the server sends a token upon successful login
+                        alert('Login successful!');
+                        localStorage.setItem('currentUser', JSON.stringify({ username, token: data.token }));
                         switchToGamePage();
                     } else {
-                        alert('Login failed');
+                        alert('Invalid username or password');
                     }
                 })
-                .catch((error) => {
+                .catch(error => {
                     console.error('Error:', error);
                 });
-            }
+            });
 
-            function handleRegister() {
+            // Function to handle registration
+            document.getElementById('registerBtn').addEventListener('click', function() {
                 const username = document.getElementById('username').value;
                 const password = document.getElementById('password').value;
 
@@ -99,34 +93,27 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    console.log('Registration successful:', data);
-                    alert('Registration successful, please log in.');
+                    alert('Registration successful, you can now login');
                 })
-                .catch((error) => {
+                .catch(error => {
                     console.error('Error:', error);
                 });
-            }
+            });
 
-            function handleLogout() {
-                switchToLoginPage();
-                // Reset the score
-                document.getElementById('score').textContent = '0';
-                // Clear the input fields
-                document.getElementById('username').value = '';
-                document.getElementById('password').value = '';
-            }
+            // Function to handle logout
+            document.getElementById('logoutBtn').addEventListener('click', function() {
+                localStorage.removeItem('currentUser');
+                document.getElementById('gamePage').style.display = 'none';
+                document.getElementById('loginPage').style.display = 'flex';
+            });
 
-            function incrementScore() {
-                let scoreElement = document.getElementById('score');
-                let currentScore = parseInt(scoreElement.textContent, 10);
-                scoreElement.textContent = currentScore + 1;
-            }
-
-            loginBtn.addEventListener('click', handleLogin);
-            registerBtn.addEventListener('click', handleRegister);
-            logoutBtn.addEventListener('click', handleLogout);
-            tapBtn.addEventListener('click', incrementScore);
+            // Function to handle tap button click
+            document.getElementById('tapBtn').addEventListener('click', function() {
+                let score = parseInt(document.getElementById('score').innerText, 10);
+                document.getElementById('score').innerText = score + 1;
+            });
         });
     </script>
 </body>
 </html>
+
