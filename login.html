@@ -4,7 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tap Game</title>
-    <link rel="stylesheet" href="login.css">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background-color: #b3f8c2;
+        }
+
+        #loginPage, #gamePage {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input[type="text"], input[type="password"], button {
+            padding: 10px;
+            font-size: 16px;
+            margin: 5px;
+        }
+    </style>
 </head>
 <body>
     <div id="loginPage">
@@ -17,30 +40,92 @@
     <div id="gamePage" style="display:none;">
         <h2>Tap Game</h2>
         <p>Score: <span id="score">0</span></p>
-        <button id="tapBtn">Let's Go!</button>
+        <button id="tapBtn">Tap Me!</button>
         <button id="logoutBtn">Logout</button>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Assuming you already have login and register functionality handled
+            const loginBtn = document.getElementById('loginBtn');
+            const registerBtn = document.getElementById('registerBtn');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const tapBtn = document.getElementById('tapBtn');
 
-            // Handle Tap Me! button click
-            document.getElementById('tapBtn').addEventListener('click', function(event) {
-                event.preventDefault(); // Prevent any default action, such as navigation or form submission
+            function switchToGamePage() {
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('gamePage').style.display = 'block';
+            }
 
-                // Logic to increase the score
-                var scoreElement = document.getElementById('score');
-                var currentScore = parseInt(scoreElement.textContent, 10);
+            function switchToLoginPage() {
+                document.getElementById('loginPage').style.display = 'flex';
+                document.getElementById('gamePage').style.display = 'none';
+            }
+
+            function handleLogin() {
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+
+                fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, password }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.token) {
+                        console.log('Login successful:', data);
+                        switchToGamePage();
+                    } else {
+                        alert('Login failed');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            }
+
+            function handleRegister() {
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+
+                fetch('/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, password }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Registration successful:', data);
+                    alert('Registration successful, please log in.');
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            }
+
+            function handleLogout() {
+                switchToLoginPage();
+                // Reset the score
+                document.getElementById('score').textContent = '0';
+                // Clear the input fields
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+            }
+
+            function incrementScore() {
+                let scoreElement = document.getElementById('score');
+                let currentScore = parseInt(scoreElement.textContent, 10);
                 scoreElement.textContent = currentScore + 1;
+            }
 
-                // Here you can add any other logic you want to execute when Tap Me! is clicked
-
-                // Remove or comment out any redirect if it exists to prevent navigation
-                window.location.href = 'featured_games.html';
-            });
-
-            // Your existing login, register, and logout functionality here
+            loginBtn.addEventListener('click', handleLogin);
+            registerBtn.addEventListener('click', handleRegister);
+            logoutBtn.addEventListener('click', handleLogout);
+            tapBtn.addEventListener('click', incrementScore);
         });
     </script>
 </body>
