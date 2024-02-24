@@ -4,19 +4,15 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
-const User = require('user.js'); // Ensure this path matches where you store your User model
-const token = jwt.sign({ username }, process.env.JWT_SECRET, { expiresIn: '24h' });
-
+const User = require('./models/User'); // Adjust the path as necessary to point to your User model
 
 const app = express();
 const PORT = 3000;
-const JWT_SECRET = 'your_jwt_secret_here'; // Move to environment variable in production
 
 app.use(express.json());
 
-// MongoDB connection string
-const dbURI = 'mongodb+srv://<tommessage>:<Mongoose12>@cluster0.iid9i9h.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
-mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
+// Connect to MongoDB
+mongoose.connect(process.env.DB_URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
   .then(() => console.log('MongoDB connected…'))
   .catch(err => console.log(err));
 
@@ -52,7 +48,7 @@ app.post('/login', async (req, res) => {
             return res.status(401).send('Invalid username or password');
         }
 
-        const token = jwt.sign({ username }, JWT_SECRET, { expiresIn: '24h' });
+        const token = jwt.sign({ username }, process.env.JWT_SECRET, { expiresIn: '24h' });
         res.json({ message: "Login successful", token });
     } catch (err) {
         console.error(err);
@@ -65,9 +61,9 @@ const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
 
-    if (token == null) return res.sendStatus(401);
+    if (!token) return res.sendStatus(401);
 
-    jwt.verify(token, JWT_SECRET, (err, user) => {
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
         if (err) return res.sendStatus(403);
         req.user = user;
         next();
