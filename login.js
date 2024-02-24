@@ -2,7 +2,7 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
-const User = require('./models/User'); // Ensure this path matches where you store your User model
+const User = require('./models/tommessage'); // Ensure this path matches where you store your User model
 
 const app = express();
 const PORT = 3000;
@@ -11,7 +11,7 @@ const JWT_SECRET = 'your_jwt_secret_here'; // Move to environment variable in pr
 app.use(express.json());
 
 // MongoDB connection string
-const dbURI = 'mongodb+srv://<username>:<password>@cluster0.iid9i9h.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+const dbURI = 'mongodb+srv://<tommessage>:<Mongoose12>@cluster0.iid9i9h.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
   .then(() => console.log('MongoDB connected…'))
   .catch(err => console.log(err));
