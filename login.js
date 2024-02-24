@@ -4,7 +4,7 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
-const User = require('./models/tommessage'); // Ensure this path matches where you store your User model
+const User = require('user.js'); // Ensure this path matches where you store your User model
 const token = jwt.sign({ username }, process.env.JWT_SECRET, { expiresIn: '24h' });
 
 
