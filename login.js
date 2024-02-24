@@ -4,7 +4,7 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
-const User = require('./models/User'); // Adjust the path as necessary to point to your User model
+const User = require('user.js'); // Adjust the path as necessary to point to your User model
 
 const app = express();
 const PORT = 3000;
