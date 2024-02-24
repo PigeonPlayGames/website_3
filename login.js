@@ -11,7 +11,7 @@ const JWT_SECRET = 'your_jwt_secret_here'; // Move to environment variable in pr
 app.use(express.json());
 
 // MongoDB connection string
-const dbURI = 'your_mongodb_connection_string_here';
+const dbURI = 'mongodb+srv://<username>:<password>@cluster0.iid9i9h.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
   .then(() => console.log('MongoDB connected…'))
   .catch(err => console.log(err));
