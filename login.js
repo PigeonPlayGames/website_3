@@ -45,3 +45,11 @@ document.getElementById('logoutBtn').addEventListener('click', function() {
     document.getElementById('gamePage').style.display = 'none';
     document.getElementById('loginPage').style.display = 'flex';
 });
+
+// Added functionality to increment score
+document.getElementById('tapBtn').addEventListener('click', function() {
+    const scoreSpan = document.getElementById('score');
+    let score = parseInt(scoreSpan.textContent);
+    score++;
+    scoreSpan.textContent = score;
+});
