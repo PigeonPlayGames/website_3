@@ -30,7 +30,7 @@ client.connect(err => {
     console.log("Connected successfully to MongoDB");
     
     // Access or create your database and collections
-    const database = client.db("yourDatabaseName");
+    const database = client.db("pigeonplaygames_db");
     const users = database.collection("users");
 
     // Define the registration endpoint
