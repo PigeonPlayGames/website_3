@@ -73,7 +73,7 @@ function upgradeWall() {
     upgradeWallTime = 5;
     const interval = setInterval(() => {
         if (upgradeWallTime > 0) {
-            document.getElementById('timerValue').textContent = upgradeWallTime + "s remaining for wall upgrade";
+            document.getElementById('timerValue').textContent = upgradeWallTime + " remaining for wall upgrade";
             upgradeWallTime--;
         } else {
             clearInterval(interval);
@@ -90,7 +90,7 @@ function startIncomingTroopsTimer(duration) {
     incomingTroopsTime = duration;
     const troopsInterval = setInterval(() => {
         if (incomingTroopsTime > 0) {
-            document.getElementById('timerValue').textContent = incomingTroopsTime + "s remaining until troops arrive";
+            document.getElementById('timerValue').textContent = incomingTroopsTime + " remaining until troops arrive";
             incomingTroopsTime--;
         } else {
             clearInterval(troopsInterval);
