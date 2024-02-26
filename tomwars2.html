@@ -25,7 +25,27 @@
             <button id="upgradeWall">Upgrade Wall</button>
         </div>
 
+        <!-- Placeholder for resources (Optional) -->
+        <div id="resources" style="display: none;">
+            <h3>Resources</h3>
+            <p>Gold: <span id="gold">100</span></p>
+            <p>Wood: <span id="wood">50</span></p>
+            <p>Stone: <span id="stone">30</span></p>
+        </div>
+
+        <!-- Placeholder for random events (Optional) -->
+        <div id="events" style="display: none;">
+            <h3>Events</h3>
+            <p id="eventMessage">No recent events</p>
+        </div>
+
         <div id="timer">Upgrade Timer: <span id="timerValue">0</span>s</div>
+
+        <!-- Section for incoming troop alert -->
+        <div id="incomingTroopsAlert" style="margin-top: 20px;">
+            <h3>Incoming Troops!</h3>
+            <p>Prepare your defenses. Troops arrive in: <span id="incomingTroopsTimer">0</span>s</p>
+        </div>
     </div>
     <script src="tomwars2.js"></script>
 </body>
