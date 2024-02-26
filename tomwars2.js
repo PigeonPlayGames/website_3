@@ -125,4 +125,4 @@ function simulateAttack() {
 
 // Example usage to start an incoming troops timer
 // Uncomment the line below to test the incoming troops attack simulation
-// startIncomingTroopsTimer(15); // Start an incoming troops timer for 15 seconds
+startIncomingTroopsTimer(25); // Start an incoming troops timer for 15 seconds
