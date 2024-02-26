@@ -56,7 +56,7 @@ function raiseArmy() {
     raiseArmyTime = 10;
     const interval = setInterval(() => {
         if (raiseArmyTime > 0) {
-            document.getElementById('timerValue').textContent = raiseArmyTime + "s remaining to raise army";
+            document.getElementById('timerValue').textContent = raiseArmyTime + " remaining to raise army";
             raiseArmyTime--;
         } else {
             clearInterval(interval);
