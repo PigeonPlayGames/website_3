@@ -31,8 +31,8 @@ button:hover {
     background-color: #e2e2e2; /* Slightly darker on hover */
 }
 
-/* Styles for the timer text */
-#timer {
+/* Styles for the timer and incoming troops alert text */
+#timer, #incomingTroopsAlert {
     margin-top: 20px;
 }
 
@@ -41,4 +41,22 @@ button:hover {
     width: 100px; /* Standardize width for all images */
     height: auto; /* Maintain aspect ratio */
     margin: 10px 0; /* Spacing above and below the image */
+}
+
+/* Style for resource and event sections */
+#resources, #events {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: rgba(250, 250, 250, 0.9); /* Slightly opaque background */
+    border-radius: 5px;
+}
+
+/* Specific styles for resources to differentiate from other texts */
+#resources p {
+    color: #4E9A06; /* Green color for resource numbers */
+}
+
+/* Style for event messages */
+#eventMessage {
+    color: #C4A000; /* Gold color to highlight event messages */
 }
