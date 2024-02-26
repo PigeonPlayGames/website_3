@@ -1,36 +1,31 @@
-// Define initial state variables
 let villageLevel = 1;
 let armySize = 0;
 let wallLevel = 0;
 let upgradeVillageTime = 0; // Timer for upgrading village
 let upgradeWallTime = 0; // Timer for upgrading wall
 let raiseArmyTime = 0; // Timer for raising army
+let incomingTroopsTime = 0; // Timer for incoming troops
 
 // Function to update image sources based on current levels or sizes
 function updateImageSources() {
     document.getElementById('villageImage').src = `village${villageLevel}.png`;
     document.getElementById('wallImage').src = `wall${wallLevel}.png`;
-    // Dynamically update the army image based on army size
-    // This example assumes you have images named like "army1.png", "army2.png", etc.
-    let armyImageIndex = Math.min(Math.floor(armySize / 10) + 1, 5); // Example logic to change images
+    let armyImageIndex = Math.min(Math.floor(armySize / 10) + 1, 5);
     document.getElementById('armyImage').src = `army${armyImageIndex}.png`;
 }
 
-// Event listener for upgrading the village
 document.getElementById('upgradeVillage').addEventListener('click', function() {
     if (upgradeVillageTime === 0 && upgradeWallTime === 0 && raiseArmyTime === 0) {
         upgradeVillage();
     }
 });
 
-// Event listener for raising an army
 document.getElementById('raiseArmy').addEventListener('click', function() {
     if (upgradeVillageTime === 0 && upgradeWallTime === 0 && raiseArmyTime === 0) {
         raiseArmy();
     }
 });
 
-// Event listener for upgrading the wall
 document.getElementById('upgradeWall').addEventListener('click', function() {
     if (villageLevel >= 3 && upgradeVillageTime === 0 && upgradeWallTime === 0 && raiseArmyTime === 0) {
         upgradeWall();
@@ -90,3 +85,44 @@ function upgradeWall() {
         }
     }, 1000);
 }
+
+function startIncomingTroopsTimer(duration) {
+    incomingTroopsTime = duration;
+    const troopsInterval = setInterval(() => {
+        if (incomingTroopsTime > 0) {
+            document.getElementById('timerValue').textContent = incomingTroopsTime + "s remaining until troops arrive";
+            incomingTroopsTime--;
+        } else {
+            clearInterval(troopsInterval);
+            document.getElementById('timerValue').textContent = 'Troops have arrived and are attacking!';
+            incomingTroopsTime = 0;
+            simulateAttack(); // Simulate an attack on the player
+        }
+    }, 1000);
+}
+
+function simulateAttack() {
+    let attackSeverity = Math.random();
+    if (wallLevel > 0 && attackSeverity < 0.7) {
+        wallLevel--;
+        document.getElementById('wallLevel').textContent = wallLevel;
+        alert('Your wall has been damaged in the attack.');
+    }
+    if (villageLevel > 1 && attackSeverity < 0.5) {
+        villageLevel--;
+        document.getElementById('villageLevel').textContent = villageLevel;
+        alert('Your village has suffered damage.');
+    }
+    if (armySize > 0 && attackSeverity < 0.8) {
+        let troopsLost = Math.ceil(armySize * 0.1);
+        armySize -= troopsLost;
+        armySize = Math.max(0, armySize);
+        document.getElementById('armySize').textContent = armySize;
+        alert(`You lost ${troopsLost} troops in the attack.`);
+    }
+    updateImageSources(); // Update images to reflect the new state
+}
+
+// Example usage to start an incoming troops timer
+// Uncomment the line below to test the incoming troops attack simulation
+// startIncomingTroopsTimer(15); // Start an incoming troops timer for 15 seconds
