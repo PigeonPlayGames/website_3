@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mini Medieval Strategy Game</title>
+    <link rel="stylesheet" href="tomwars2.css">
+</head>
+<body>
+    <div id="game">
+        <div>
+            <h2>Palace Level: <span id="villageLevel">1</span></h2>
+            <img id="villageImage" src="village1.png" alt="Village" style="width:100px; height:auto;">
+            <button id="upgradeVillage">Upgrade Palace</button>
+        </div>
+
+        <div>
+            <h2>Army Size: <span id="armySize">0</span></h2>
+            <img id="armyImage" src="army1.png" alt="Army" style="width:100px; height:auto;">
+            <button id="raiseArmy">Raise Army</button>
+        </div>
+
+        <div id="wallSection" style="display: none;">
+            <h2>Wall Level: <span id="wallLevel">0</span></h2>
+            <img id="wallImage" src="wall1.png" alt="Wall" style="width:100px; height:auto;">
+            <button id="upgradeWall">Upgrade Wall</button>
+        </div>
+
+        <div id="timer">Upgrade Timer: <span id="timerValue">0</span>s</div>
+    </div>
+    <script src="tomwars2.js"></script>
+</body>
+</html>
