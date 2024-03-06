@@ -3,33 +3,76 @@ body, html {
     padding: 0;
     overflow: hidden;
     height: 100%;
+    background-color: #000; /* Sets the background color to black for any area not covered by the game area */
+    font-family: 'Arial', sans-serif; /* Ensures a consistent font is used */
 }
 
 #gameArea {
     width: 100%;
     height: 100%;
     position: relative;
-    background-color: black;
+    background-color: #222; /* A slightly lighter shade of black for contrast */
     overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #paddle {
     position: absolute;
     bottom: 20px;
-    left: 50%;
     width: 100px;
     height: 20px;
-    background-color: white;
+    background-color: #FFF; /* White paddle */
+    border-radius: 10px; /* Rounded corners for the paddle */
     transform: translateX(-50%);
 }
 
 #ball {
     position: absolute;
     bottom: 50px;
-    left: 50%;
     width: 20px;
     height: 20px;
-    background-color: red;
-    border-radius: 50%;
+    background-color: #F00; /* Red ball for better visibility */
+    border-radius: 50%; /* Makes the ball perfectly round */
     transform: translate(-50%, -50%);
+}
+
+#gameOverOverlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.75); /* Dark overlay to focus attention */
+    color: #FFF; /* White text for contrast */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    z-index: 10; /* Ensures overlay is above all other elements */
+}
+
+#gameOverOverlay h2 {
+    margin-bottom: 20px;
+    font-size: 2em; /* Larger text for the game over message */
+}
+
+#gameOverOverlay button {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 1em;
+    color: #000; /* Black text for buttons */
+    background-color: #FFF; /* White background for buttons */
+    border: none;
+    border-radius: 5px; /* Slightly rounded corners for buttons */
+    cursor: pointer; /* Changes cursor to indicate clickable */
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effects */
+}
+
+#gameOverOverlay button:hover {
+    background-color: #F00; /* Red background on hover */
+    color: #FFF; /* White text on hover */
 }
