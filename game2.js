@@ -18,8 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let paddleX = (gameWidth - paddleWidth) / 2;
     let ballX = paddleX + paddleWidth / 2 - ball.offsetWidth / 2;
     let ballY = paddle.offsetTop - ball.offsetHeight;
-    let dx = 4; // Increased initial speed
-    let dy = -4; // Increased initial speed
+    let dx = 4; // Initial horizontal speed
+    let dy = -4; // Initial vertical speed
     let score = 0;
     let level = 1;
 
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function createBlocks() {
-        blocks = []; // Reset blocks array
+        blocks = [];
         for (let row = 0; row < blockRows; row++) {
             for (let col = 0; col < blockColumns; col++) {
                 const block = document.createElement('div');
@@ -59,9 +59,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function levelUp() {
         level++;
-        dx *= 1.2; // Increase speed by 20%
-        dy *= -1.2; // Increase speed by 20% and reverse direction
-        createBlocks(); // Recreate blocks for the new level
+        dx *= 1.2;
+        dy *= -1.2;
+        createBlocks();
         updateScoreAndLevel();
     }
 
@@ -122,7 +122,12 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (ballY + ball.offsetHeight >= paddle.offsetTop &&
                  ballX + ball.offsetWidth >= paddle.offsetLeft &&
                  ballX <= paddle.offsetLeft + paddle.offsetWidth) {
-            dy = -dy;
+            // Improved bounce logic
+            const hitPoint = (ballX + ball.offsetWidth / 2) - (paddle.offsetLeft + paddleWidth / 2);
+            const normalizedHitPoint = hitPoint / (paddleWidth / 2);
+            const bounceAngle = normalizedHitPoint * (Math.PI / 4); // Adjust angle based on hit point
+            dx = 4 * Math.cos(bounceAngle);
+            dy = -4 * Math.sin(bounceAngle);
         }
 
         checkBlockCollisions();
@@ -140,4 +145,3 @@ document.addEventListener('DOMContentLoaded', () => {
 
     updateGame(); // Start the game loop
 });
-                
