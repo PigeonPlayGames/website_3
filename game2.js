@@ -16,15 +16,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const blockColumns = 5;
     let gameWidth = gameArea.clientWidth;
     let paddleWidth = paddle.offsetWidth;
-    let paddleX, ballX, ballY, dx, dy, score, level;
+    let paddleX = (gameWidth - paddleWidth) / 2;
+    let ballX = paddleX + paddleWidth / 2 - ball.offsetWidth / 2;
+    let ballY = paddle.offsetTop - ball.offsetHeight;
+    let dx = 4;
+    let dy = -4;
+    let score = 0;
+    let level = 1;
+
+    applyStyles(scoreDisplay, { color: 'white', position: 'absolute', top: '10px', left: '10px' });
+    applyStyles(levelDisplay, { color: 'white', position: 'absolute', top: '10px', right: '10px' });
 
     function applyStyles(element, styles) {
-        for (const property in styles) {
-            element.style[property] = styles[property];
-        }
+        Object.keys(styles).forEach(key => {
+            element.style[key] = styles[key];
+        });
     }
 
     function createBlocks() {
+        blocks = [];
         for (let row = 0; row < blockRows; row++) {
             for (let col = 0; col < blockColumns; col++) {
                 const block = document.createElement('div');
@@ -34,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     height: '20px',
                     backgroundColor: 'blue',
                     position: 'absolute',
-                    top: `${row * 25}px`,
+                    top: `${row * (20 + 5)}px`,
                     left: `${col * (gameWidth / blockColumns)}px`
                 });
                 gameArea.appendChild(block);
@@ -46,22 +56,14 @@ document.addEventListener('DOMContentLoaded', () => {
     function resetGame() {
         gameOverOverlay.style.display = 'none';
         blocks.forEach(block => block.remove());
-        blocks = [];
-        createBlocks();
-
         score = 0;
         level = 1;
-        dx = 4;
-        dy = -4;
-        paddleX = gameWidth / 2 - paddleWidth / 2;
+        paddleX = (gameWidth - paddleWidth) / 2;
         ballX = paddleX + paddleWidth / 2 - ball.offsetWidth / 2;
         ballY = paddle.offsetTop - ball.offsetHeight;
-
-        applyStyles(ball, { left: `${ballX}px`, top: `${ballY}px` });
-        applyStyles(paddle, { left: `${paddleX}px` });
-        applyStyles(scoreDisplay, { color: 'white', position: 'absolute', top: '10px', left: '10px' });
-        applyStyles(levelDisplay, { color: 'white', position: 'absolute', top: '10px', right: '10px' });
-
+        dx = 4;
+        dy = -4;
+        createBlocks();
         updateScoreAndLevel();
         requestAnimationFrame(updateGame);
     }
@@ -71,35 +73,76 @@ document.addEventListener('DOMContentLoaded', () => {
         levelDisplay.textContent = `Level: ${level}`;
     }
 
+    tryAgainButton.addEventListener('click', resetGame);
+    quitButton.addEventListener('click', () => window.location.href = 'index.html');
+
+    gameArea.addEventListener('mousemove', e => {
+        paddleX = e.clientX - gameArea.getBoundingClientRect().left - paddleWidth / 2;
+        if (paddleX < 0) paddleX = 0;
+        if (paddleX + paddleWidth > gameWidth) paddleX = gameWidth - paddleWidth;
+        paddle.style.left = `${paddleX}px`;
+    });
+
+    function checkCollisions() {
+        // Ball collision with walls
+        if (ballX <= 0 || ballX + ball.offsetWidth >= gameWidth) dx = -dx;
+        if (ballY <= 0) dy = -dy;
+
+        // Ball collision with paddle
+        if (ballX < paddleX + paddleWidth && ballX + ball.offsetWidth > paddleX && ballY < paddle.offsetTop + paddle.offsetHeight && ballY + ball.offsetHeight > paddle.offsetTop) {
+            dy = -dy;
+            ballY = paddle.offsetTop - ball.offsetHeight;
+        }
+
+        // Ball collision with blocks
+        blocks.forEach((block, index) => {
+            if (!block) return;
+            const rect = block.getBoundingClientRect();
+            if (ballX < rect.right && ballX + ball.offsetWidth > rect.left && ballY < rect.bottom && ballY + ball.offsetHeight > rect.top) {
+                blocks.splice(index, 1);
+                block.parentNode.removeChild(block);
+                dy = -dy;
+                score += 10;
+                updateScoreAndLevel();
+            }
+        });
+
+        if (blocks.length === 0) {
+            levelUp();
+        }
+    }
+
+    function levelUp() {
+        createBlocks();
+        level++;
+        dx *= 1.1;
+        dy = Math.abs(dy) * 1.1 * (dy / Math.abs(dy)); // Increase speed and maintain direction
+        updateScoreAndLevel();
+    }
+
+    function updateGame() {
+        ballX += dx;
+        ballY += dy;
+
+        checkCollisions();
+
+        // Update ball position
+        ball.style.left = `${ballX}px`;
+        ball.style.top = `${ballY}px`;
+
+        // Game over condition
+        if (ballY + ball.offsetHeight > gameArea.offsetHeight) {
+            showGameOver();
+            return; // Stop the game loop
+        }
+
+        requestAnimationFrame(updateGame);
+    }
+
     function showGameOver() {
         gameOverOverlay.style.display = 'flex';
     }
 
-    tryAgainButton.addEventListener('click', resetGame);
-    quitButton.addEventListener('click', () => window.location.href = 'index.html');
-
-    function collisionDetection() {
-        // Implementation of collision detection with blocks and updating game state
-    }
-
-    function updateGame() {
-        // Implementation of the game update logic including movement, collision detection, etc.
-        ballX += dx;
-        ballY += dy;
-
-        // Implement collision detection with walls, paddle, and blocks here
-        collisionDetection();
-
-        // Example game over condition
-        if (ballY + ball.offsetHeight > gameArea.offsetHeight) {
-            showGameOver(); // Instead of directly resetting the game
-            return; // Stop the game loop
-        }
-
-        applyStyles(ball, { left: `${ballX}px`, top: `${ballY}px` });
-        requestAnimationFrame(updateGame);
-    }
-
-    resetGame(); // Initialize the game
+    resetGame(); // Start the game
 });
-                    
+                          
