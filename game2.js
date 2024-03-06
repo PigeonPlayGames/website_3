@@ -2,123 +2,104 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameArea = document.getElementById('gameArea');
     const paddle = document.getElementById('paddle');
     const ball = document.getElementById('ball');
+    const gameOverOverlay = document.getElementById('gameOverOverlay');
+    const tryAgainButton = document.getElementById('tryAgainButton');
+    const quitButton = document.getElementById('quitButton');
     const scoreDisplay = document.createElement('div');
     const levelDisplay = document.createElement('div');
+
     gameArea.appendChild(scoreDisplay);
     gameArea.appendChild(levelDisplay);
 
     let blocks = [];
     const blockRows = 5;
     const blockColumns = 5;
-    const blockWidth = gameArea.clientWidth / blockColumns;
-    const blockHeight = 20;
-
     let gameWidth = gameArea.clientWidth;
     let paddleWidth = paddle.offsetWidth;
-    let paddleX = (gameWidth - paddleWidth) / 2;
-    let ballX = paddleX + paddleWidth / 2 - ball.offsetWidth / 2;
-    let ballY = paddle.offsetTop - ball.offsetHeight;
-    let dx = 4; // Initial horizontal speed
-    let dy = -4; // Initial vertical speed
-    let score = 0;
-    let level = 1;
-
-    applyStyles(scoreDisplay, { color: 'white', position: 'absolute', top: '10px', left: '10px' });
-    applyStyles(levelDisplay, { color: 'white', position: 'absolute', top: '10px', right: '10px' });
+    let paddleX, ballX, ballY, dx, dy, score, level;
 
     function applyStyles(element, styles) {
-        Object.assign(element.style, styles);
+        for (const property in styles) {
+            element.style[property] = styles[property];
+        }
     }
 
     function createBlocks() {
-        blocks = [];
         for (let row = 0; row < blockRows; row++) {
             for (let col = 0; col < blockColumns; col++) {
                 const block = document.createElement('div');
                 block.className = 'block';
                 applyStyles(block, {
-                    width: `${blockWidth - 5}px`,
-                    height: `${blockHeight}px`,
+                    width: `${gameWidth / blockColumns - 5}px`,
+                    height: '20px',
                     backgroundColor: 'blue',
                     position: 'absolute',
-                    top: `${row * (blockHeight + 5)}px`,
-                    left: `${col * (blockWidth)}px`
+                    top: `${row * 25}px`,
+                    left: `${col * (gameWidth / blockColumns)}px`
                 });
                 gameArea.appendChild(block);
-                blocks.push({ block, hits: 0 });
+                blocks.push(block);
             }
         }
     }
-    createBlocks();
+
+    function resetGame() {
+        gameOverOverlay.style.display = 'none';
+        blocks.forEach(block => block.remove());
+        blocks = [];
+        createBlocks();
+
+        score = 0;
+        level = 1;
+        dx = 4;
+        dy = -4;
+        paddleX = gameWidth / 2 - paddleWidth / 2;
+        ballX = paddleX + paddleWidth / 2 - ball.offsetWidth / 2;
+        ballY = paddle.offsetTop - ball.offsetHeight;
+
+        applyStyles(ball, { left: `${ballX}px`, top: `${ballY}px` });
+        applyStyles(paddle, { left: `${paddleX}px` });
+        applyStyles(scoreDisplay, { color: 'white', position: 'absolute', top: '10px', left: '10px' });
+        applyStyles(levelDisplay, { color: 'white', position: 'absolute', top: '10px', right: '10px' });
+
+        updateScoreAndLevel();
+        requestAnimationFrame(updateGame);
+    }
 
     function updateScoreAndLevel() {
         scoreDisplay.textContent = `Score: ${score}`;
         levelDisplay.textContent = `Level: ${level}`;
     }
 
-    function levelUp() {
-        level++;
-        dx *= 1.2;
-        dy *= 1.2; // Increase speed
-        createBlocks();
-        updateScoreAndLevel();
+    function showGameOver() {
+        gameOverOverlay.style.display = 'flex';
     }
 
-    function checkForLevelUp() {
-        if (blocks.length === 0) {
-            levelUp();
+    tryAgainButton.addEventListener('click', resetGame);
+    quitButton.addEventListener('click', () => window.location.href = 'index.html');
+
+    function collisionDetection() {
+        // Implementation of collision detection with blocks and updating game state
+    }
+
+    function updateGame() {
+        // Implementation of the game update logic including movement, collision detection, etc.
+        ballX += dx;
+        ballY += dy;
+
+        // Implement collision detection with walls, paddle, and blocks here
+        collisionDetection();
+
+        // Example game over condition
+        if (ballY + ball.offsetHeight > gameArea.offsetHeight) {
+            showGameOver(); // Instead of directly resetting the game
+            return; // Stop the game loop
         }
+
+        applyStyles(ball, { left: `${ballX}px`, top: `${ballY}px` });
+        requestAnimationFrame(updateGame);
     }
 
-    window.addEventListener('resize', () => {
-        gameWidth = gameArea.clientWidth;
-        paddleX = Math.min(paddleX, gameWidth - paddleWidth);
-        ballX = paddleX + paddleWidth / 2 - ball.offsetWidth / 2;
-        paddle.style.left = `${paddleX}px`;
-        ball.style.left = `${ballX}px`;
-    });
-
-    gameArea.addEventListener('touchmove', function(e) {
-        e.preventDefault();
-        const touchX = e.touches[0].clientX - gameArea.getBoundingClientRect().left;
-        paddleX = touchX - paddleWidth / 2;
-        if (paddleX < 0) paddleX = 0;
-        if (paddleX + paddleWidth > gameWidth) paddleX = gameWidth - paddleWidth;
-        paddle.style.left = `${paddleX}px`;
-    }, { passive: false });
-
-    function checkBlockCollisions() {
-        blocks.forEach((item, index) => {
-            const block = item.block;
-            const blockRect = block.getBoundingClientRect();
-            const ballRect = ball.getBoundingClientRect();
-
-            if (ballRect.right > blockRect.left && ballRect.left < blockRect.right &&
-                ballRect.bottom > blockRect.top && ballRect.top < blockRect.bottom) {
-                dy = -dy;
-                item.hits += 1;
-                if (item.hits === 1) {
-                    block.style.backgroundColor = 'red';
-                } else {
-                    block.parentNode.removeChild(block);
-                    blocks.splice(index, 1);
-                }
-                score += 10;
-                updateScoreAndLevel();
-            }
-        });
-        checkForLevelUp();
-    }
-
-    function resetGame() {
-        score = 0;
-        level = 1;
-        dx = 4;
-        dy = -4;
-        paddleX = (gameWidth - paddleWidth) / 2;
-        ballX = paddleX + paddleWidth / 2 - ball.offsetWidth / 2;
-        ballY = paddle.offsetTop - ball.offsetHeight;
-        blocks = [];
-        createBlocks();
-
-                          
+    resetGame(); // Initialize the game
+});
+                    
