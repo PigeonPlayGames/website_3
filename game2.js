@@ -16,13 +16,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const blockColumns = 5;
     let gameWidth = gameArea.clientWidth;
     let paddleWidth = paddle.offsetWidth;
-    let paddleX = (gameWidth - paddleWidth) / 2;
-    let ballX = paddleX + paddleWidth / 2 - ball.offsetWidth / 2;
-    let ballY = paddle.offsetTop - ball.offsetHeight;
-    let dx = 4;
-    let dy = -4;
-    let score = 0;
-    let level = 1;
+    let paddleX, ballX, ballY, dx, dy, score, level;
+
+    function initGame() {
+        paddleX = (gameWidth - paddleWidth) / 2;
+        ballX = paddleX + paddleWidth / 2 - ball.offsetWidth / 2;
+        ballY = paddle.offsetTop - ball.offsetHeight;
+        dx = 4;
+        dy = -4;
+        score = 0;
+        level = 1;
+        blocks = [];
+        createBlocks();
+        updateScoreAndLevel();
+        gameOverOverlay.style.display = 'none';
+        requestAnimationFrame(updateGame);
+    }
 
     applyStyles(scoreDisplay, { color: 'white', position: 'absolute', top: '10px', left: '10px' });
     applyStyles(levelDisplay, { color: 'white', position: 'absolute', top: '10px', right: '10px' });
@@ -34,7 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function createBlocks() {
-        blocks = [];
         for (let row = 0; row < blockRows; row++) {
             for (let col = 0; col < blockColumns; col++) {
                 const block = document.createElement('div');
@@ -53,96 +61,73 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function resetGame() {
-        gameOverOverlay.style.display = 'none';
-        blocks.forEach(block => block.remove());
-        score = 0;
-        level = 1;
-        paddleX = (gameWidth - paddleWidth) / 2;
-        ballX = paddleX + paddleWidth / 2 - ball.offsetWidth / 2;
-        ballY = paddle.offsetTop - ball.offsetHeight;
-        dx = 4;
-        dy = -4;
-        createBlocks();
-        updateScoreAndLevel();
-        requestAnimationFrame(updateGame);
-    }
-
     function updateScoreAndLevel() {
         scoreDisplay.textContent = `Score: ${score}`;
         levelDisplay.textContent = `Level: ${level}`;
     }
 
-    tryAgainButton.addEventListener('click', resetGame);
+    tryAgainButton.addEventListener('click', initGame);
     quitButton.addEventListener('click', () => window.location.href = 'index.html');
 
-    gameArea.addEventListener('mousemove', e => {
-        paddleX = e.clientX - gameArea.getBoundingClientRect().left - paddleWidth / 2;
-        if (paddleX < 0) paddleX = 0;
-        if (paddleX + paddleWidth > gameWidth) paddleX = gameWidth - paddleWidth;
-        paddle.style.left = `${paddleX}px`;
+    gameArea.addEventListener('mousemove', function(e) {
+        let relativeX = e.clientX - gameArea.getBoundingClientRect().left;
+        if (relativeX > 0 && relativeX < gameWidth) {
+            paddleX = relativeX - paddleWidth / 2;
+            if (paddleX < 0) {
+                paddleX = 0;
+            } else if (paddleX + paddleWidth > gameWidth) {
+                paddleX = gameWidth - paddleWidth;
+            }
+            paddle.style.left = paddleX + 'px';
+        }
     });
 
-    function checkCollisions() {
-        // Ball collision with walls
-        if (ballX <= 0 || ballX + ball.offsetWidth >= gameWidth) dx = -dx;
-        if (ballY <= 0) dy = -dy;
+    function collisionWithBlocks() {
+        for (let i = 0; i < blocks.length; i++) {
+            let block = blocks[i];
+            if (block) {
+                let blockRect = block.getBoundingClientRect();
+                let ballRect = ball.getBoundingClientRect();
 
-        // Ball collision with paddle
-        if (ballX < paddleX + paddleWidth && ballX + ball.offsetWidth > paddleX && ballY < paddle.offsetTop + paddle.offsetHeight && ballY + ball.offsetHeight > paddle.offsetTop) {
-            dy = -dy;
-            ballY = paddle.offsetTop - ball.offsetHeight;
-        }
-
-        // Ball collision with blocks
-        blocks.forEach((block, index) => {
-            if (!block) return;
-            const rect = block.getBoundingClientRect();
-            if (ballX < rect.right && ballX + ball.offsetWidth > rect.left && ballY < rect.bottom && ballY + ball.offsetHeight > rect.top) {
-                blocks.splice(index, 1);
-                block.parentNode.removeChild(block);
-                dy = -dy;
-                score += 10;
-                updateScoreAndLevel();
+                if (ballRect.left < blockRect.right && ballRect.right > blockRect.left &&
+                    ballRect.top < blockRect.bottom && ballRect.bottom > blockRect.top) {
+                    blocks.splice(i, 1);
+                    gameArea.removeChild(block);
+                    dy = -dy;
+                    score += 10;
+                    updateScoreAndLevel();
+                    break;
+                }
             }
-        });
-
-        if (blocks.length === 0) {
-            levelUp();
         }
-    }
-
-    function levelUp() {
-        createBlocks();
-        level++;
-        dx *= 1.1;
-        dy = Math.abs(dy) * 1.1 * (dy / Math.abs(dy)); // Increase speed and maintain direction
-        updateScoreAndLevel();
     }
 
     function updateGame() {
         ballX += dx;
         ballY += dy;
 
-        checkCollisions();
+        if (ballX <= 0 || ballX + ball.offsetWidth >= gameWidth) dx = -dx;
+        if (ballY <= 0) dy = -dy;
 
-        // Update ball position
-        ball.style.left = `${ballX}px`;
-        ball.style.top = `${ballY}px`;
+        if (ballY + ball.offsetHeight >= paddle.offsetTop &&
+            ballX + ball.offsetWidth >= paddle.offsetLeft &&
+            ballX <= paddle.offsetLeft + paddle.offsetWidth) {
+            dy = -dy;
+        }
 
-        // Game over condition
+        collisionWithBlocks();
+
         if (ballY + ball.offsetHeight > gameArea.offsetHeight) {
-            showGameOver();
+            gameOverOverlay.style.display = 'flex';
             return; // Stop the game loop
         }
+
+        ball.style.left = `${ballX}px`;
+        ball.style.top = `${ballY}px`;
 
         requestAnimationFrame(updateGame);
     }
 
-    function showGameOver() {
-        gameOverOverlay.style.display = 'flex';
-    }
-
-    resetGame(); // Start the game
+    initGame(); // Initialize and start the game
 });
-                          
+            
