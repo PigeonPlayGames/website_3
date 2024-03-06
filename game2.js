@@ -55,12 +55,11 @@ document.addEventListener('DOMContentLoaded', () => {
         scoreDisplay.textContent = `Score: ${score}`;
         levelDisplay.textContent = `Level: ${level}`;
     }
-    updateScoreAndLevel();
 
     function levelUp() {
         level++;
         dx *= 1.2;
-        dy *= -1.2;
+        dy *= 1.2; // Increase speed
         createBlocks();
         updateScoreAndLevel();
     }
@@ -97,7 +96,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (ballRect.right > blockRect.left && ballRect.left < blockRect.right &&
                 ballRect.bottom > blockRect.top && ballRect.top < blockRect.bottom) {
                 dy = -dy;
-
                 item.hits += 1;
                 if (item.hits === 1) {
                     block.style.backgroundColor = 'red';
@@ -105,7 +103,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     block.parentNode.removeChild(block);
                     blocks.splice(index, 1);
                 }
-
                 score += 10;
                 updateScoreAndLevel();
             }
@@ -113,35 +110,15 @@ document.addEventListener('DOMContentLoaded', () => {
         checkForLevelUp();
     }
 
-    function updateGame() {
-        ballX += dx;
-        ballY += dy;
+    function resetGame() {
+        score = 0;
+        level = 1;
+        dx = 4;
+        dy = -4;
+        paddleX = (gameWidth - paddleWidth) / 2;
+        ballX = paddleX + paddleWidth / 2 - ball.offsetWidth / 2;
+        ballY = paddle.offsetTop - ball.offsetHeight;
+        blocks = [];
+        createBlocks();
 
-        if (ballX <= 0 || ballX + ball.offsetWidth >= gameWidth) dx = -dx;
-        if (ballY <= 0) dy = -dy;
-        else if (ballY + ball.offsetHeight >= paddle.offsetTop &&
-                 ballX + ball.offsetWidth >= paddle.offsetLeft &&
-                 ballX <= paddle.offsetLeft + paddle.offsetWidth) {
-            // Improved bounce logic
-            const hitPoint = (ballX + ball.offsetWidth / 2) - (paddle.offsetLeft + paddleWidth / 2);
-            const normalizedHitPoint = hitPoint / (paddleWidth / 2);
-            const bounceAngle = normalizedHitPoint * (Math.PI / 4); // Adjust angle based on hit point
-            dx = 4 * Math.cos(bounceAngle);
-            dy = -4 * Math.sin(bounceAngle);
-        }
-
-        checkBlockCollisions();
-
-        if (ballY + ball.offsetHeight > gameArea.offsetHeight) {
-            alert("Game Over!");
-            document.location.reload();
-        }
-
-        ball.style.left = `${ballX}px`;
-        ball.style.top = `${ballY}px`;
-
-        requestAnimationFrame(updateGame);
-    }
-
-    updateGame(); // Start the game loop
-});
+                          
