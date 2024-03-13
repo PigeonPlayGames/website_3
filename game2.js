@@ -1,167 +1,69 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const player = document.getElementById('player');
     const gameArea = document.getElementById('gameArea');
-    const paddle = document.getElementById('paddle');
-    const ball = document.getElementById('ball');
-    const gameOverOverlay = document.getElementById('gameOverOverlay');
-    const tryAgainButton = document.getElementById('tryAgainButton');
-    const quitButton = document.getElementById('quitButton');
-    const scoreDisplay = document.createElement('div');
-    const levelDisplay = document.createElement('div');
-    gameArea.appendChild(scoreDisplay);
-    gameArea.appendChild(levelDisplay);
+    const platform = document.createElement('div');
 
-    let gameWidth = gameArea.clientWidth;
-    let gameHeight = gameArea.clientHeight;
-    let paddleWidth = 100;
-    let paddleHeight = 20;
-    let ballDiameter = 20;
-    let dx = 4; // Increased the ball's standard speed
-    let dy = -4; // Increased the ball's standard speed
-    let score = 0;
-    let level = 1;
+    let playerPos = { x: 100, y: 0 };
+    let velocity = { x: 0, y: 0 };
+    const gravity = 0.5;
+    let isJumping = false;
 
-    scoreDisplay.style.color = 'white';
-    levelDisplay.style.color = 'white';
-    scoreDisplay.style.position = 'absolute';
-    scoreDisplay.style.top = '10px';
-    scoreDisplay.style.left = '10px';
-    levelDisplay.style.position = 'absolute';
-    levelDisplay.style.top = '10px';
-    levelDisplay.style.right = '10px';
+    // Create a platform
+    platform.style.width = '200px';
+    platform.style.height = '20px';
+    platform.style.position = 'absolute';
+    platform.style.bottom = '100px';
+    platform.style.left = '150px';
+    platform.style.backgroundColor = 'green';
+    gameArea.appendChild(platform);
 
-    class Block {
-        constructor(element, hits) {
-            this.element = element;
-            this.hits = hits; // Number of hits to destroy the block
+    document.getElementById('left').addEventListener('touchstart', function() { velocity.x = -5; });
+    document.getElementById('right').addEventListener('touchstart', function() { velocity.x = 5; });
+    document.getElementById('jump').addEventListener('touchstart', function() {
+        if (!isJumping) {
+            isJumping = true;
+            velocity.y = 10;
         }
-    }
+    });
 
-    let blocks = [];
-    const blockRows = 4;
-    const blockColumns = 5;
+    function gameLoop() {
+        // Update the player's position
+        playerPos.x += velocity.x;
+        playerPos.y += velocity.y;
+        velocity.y -= gravity; // Apply gravity effect
 
-    function createBlocks() {
-        for (let row = 0; row < blockRows; row++) {
-            for (let col = 0; col < blockColumns; col++) {
-                const block = document.createElement('div');
-                block.className = 'block';
-                block.style.backgroundColor = 'blue';
-                block.style.position = 'absolute';
-                block.style.width = `${gameArea.clientWidth / blockColumns - 5}px`;
-                block.style.height = '20px';
-                block.style.top = `${row * 25}px`;
-                block.style.left = `${col * (gameArea.clientWidth / blockColumns)}px`;
-                gameArea.appendChild(block);
-                blocks.push(new Block(block, 2)); // Each block requires 2 hits
+        // Collision detection with the ground
+        if (playerPos.y <= 0) {
+            playerPos.y = 0;
+            velocity.y = 0;
+            isJumping = false;
+        }
+
+        // Platform collision detection
+        let platformBottom = parseInt(platform.style.bottom.replace('px', ''));
+        let platformTop = platformBottom + parseInt(platform.style.height.replace('px', ''));
+        let platformLeft = parseInt(platform.style.left.replace('px', ''));
+        let platformRight = platformLeft + parseInt(platform.style.width.replace('px', ''));
+
+        // Check if the player is above the platform and within its x bounds to land on it
+        if (playerPos.x < platformRight && playerPos.x + 50 > platformLeft && playerPos.y <= platformTop && playerPos.y + 50 > platformBottom) {
+            if (velocity.y < 0) { // Falling
+                playerPos.y = platformTop;
+                velocity.y = 0;
+                isJumping = false;
             }
         }
+
+        // Prevent player from moving out of gameArea bounds
+        if (playerPos.x < 0) playerPos.x = 0;
+        if (playerPos.x + 50 > gameArea.offsetWidth) playerPos.x = gameArea.offsetWidth - 50;
+
+        // Update the player's style to move it
+        player.style.left = playerPos.x + 'px';
+        player.style.bottom = playerPos.y + 'px';
+
+        requestAnimationFrame(gameLoop);
     }
 
-    function movePaddle(e) {
-        let clientX;
-
-        if (e.type === "touchmove") {
-            e.preventDefault();
-            clientX = e.touches[0].clientX;
-        } else {
-            clientX = e.clientX;
-        }
-
-        let paddleX = clientX - gameArea.getBoundingClientRect().left - paddleWidth / 2;
-        if (paddleX < 0) paddleX = 0;
-        else if (paddleX + paddleWidth > gameWidth) paddleX = gameWidth - paddleWidth;
-        paddle.style.left = `${paddleX}px`;
-    }
-
-    function updateGame() {
-        ball.style.left = `${ballX}px`;
-        ball.style.bottom = `${gameHeight - ballY - ballDiameter}px`;
-
-        ballX += dx;
-        ballY += dy;
-
-        // Wall collision
-        if (ballX <= 0 || ballX + ballDiameter >= gameWidth) dx = -dx;
-        if (ballY <= 0) dy = -dy;
-
-        // Paddle collision
-        let paddleTop = gameHeight - paddleHeight;
-        if (ballY < paddleTop && ballY + ballDiameter > paddleTop &&
-            ballX + ballDiameter > paddle.offsetLeft && ballX < paddle.offsetLeft + paddleWidth) {
-            dy = -Math.abs(dy); // Always bounce up
-        }
-
-        // Block collision
-        blocks.forEach((block, index) => {
-            if (block.element) {
-                const blockRect = block.element.getBoundingClientRect();
-                const ballRect = ball.getBoundingClientRect();
-                if (
-                    ballRect.left < blockRect.right && ballRect.right > blockRect.left &&
-                    ballRect.top < blockRect.bottom && ballRect.bottom > blockRect.top
-                ) {
-                    block.hits -= 1;
-                    if (block.hits === 0) {
-                        gameArea.removeChild(block.element);
-                        blocks[index] = null; // Remove the block from the array
-                    } else {
-                        // Change color to red to indicate it's been hit once
-                        block.element.style.backgroundColor = 'red';
-                    }
-                    dy = -dy;
-                    score += 10;
-                    updateScoreAndLevel();
-                }
-            }
-        });
-
-        if (blocks.every(block => block === null)) {
-            levelUp();
-        }
-
-        if (ballY + ballDiameter > gameHeight) {
-            gameOver();
-        }
-
-        requestAnimationFrame(updateGame);
-    }
-
-    function levelUp() {
-        level++;
-        dx *= 1.1;
-        dy *= 1.1;
-        initGame();
-    }
-
-    function gameOver() {
-        gameOverOverlay.style.display = 'flex';
-    }
-
-    function initGame() {
-        ballX = gameWidth / 2 - ballDiameter / 2;
-        ballY = 30;
-        dx = 4; // Reset to initial speed for new game
-        dy = -4; // Reset to initial speed for new game
-        score = 0;
-        level = 1;
-        blocks.forEach(block => block && block.element && block.element.remove());
-        blocks = [];
-        createBlocks();
-        updateScoreAndLevel();
-        gameOverOverlay.style.display = 'none';
-        requestAnimationFrame(updateGame);
-    }
-
-    function updateScoreAndLevel() {
-        scoreDisplay.textContent = `Score: ${score}`;
-        levelDisplay.textContent = `Level: ${level}`;
-    }
-
-    gameArea.addEventListener('mousemove', movePaddle);
-    gameArea.addEventListener('touchmove', movePaddle, { passive: false });
-
-    tryAgainButton.addEventListener('click', initGame);
-    quitButton.addEventListener('click', () => window.location.href = 'index.html');
-
-    initGame(); // Start the game
+    gameLoop();
 });
