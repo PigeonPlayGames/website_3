@@ -1,82 +1,74 @@
 document.addEventListener('DOMContentLoaded', () => {
     const player = document.getElementById('player');
     const gameArea = document.getElementById('gameArea');
-    gameArea.style.left = '0px'; // Initialize gameArea position
+    let platforms = []; // Array to hold platforms
 
-    const platform = document.createElement('div');
-    platform.style.width = '200px';
-    platform.style.height = '20px';
-    platform.style.position = 'absolute';
-    platform.style.bottom = '100px';
-    platform.style.left = '150px';
-    platform.style.backgroundColor = 'green';
-    gameArea.appendChild(platform);
+    // Set game area wider to simulate a larger world
+    gameArea.style.width = '3000px'; // Example width, adjust as needed
 
-    let playerPos = { x: 100, y: 0 };
+    // Initial player setup
+    const playerWidth = 50; // Match CSS
+    const playerHeight = 50; // Match CSS
+    let playerPos = window.innerWidth / 2 - playerWidth / 2; // Center player on screen
+    player.style.left = playerPos + 'px'; // Center player
+
+    // Initialize platforms (example)
+    createPlatform(150, 100, 200, 20); // Parameters: x, y, width, height
+    createPlatform(400, 200, 250, 20);
+
+    // Game variables
+    let isJumping = false;
     let velocity = { x: 0, y: 0 };
     const gravity = 0.5;
-    let isJumping = false;
 
-    document.getElementById('left').addEventListener('touchstart', function() { velocity.x = -5; });
-    document.getElementById('right').addEventListener('touchstart', function() { velocity.x = 5; });
-    document.getElementById('jump').addEventListener('touchstart', function() {
+    // Touch controls
+    document.getElementById('left').addEventListener('touchstart', () => velocity.x = -5);
+    document.getElementById('right').addEventListener('touchstart', () => velocity.x = 5);
+    document.getElementById('jump').addEventListener('touchstart', jump);
+
+    function jump() {
         if (!isJumping) {
             isJumping = true;
-            velocity.y = 10;
+            velocity.y = 10; // Adjust jump strength as needed
         }
-    });
+    }
+
+    function createPlatform(x, y, width, height) {
+        const platform = document.createElement('div');
+        platform.style.position = 'absolute';
+        platform.style.left = x + 'px';
+        platform.style.bottom = y + 'px';
+        platform.style.width = width + 'px';
+        platform.style.height = height + 'px';
+        platform.style.backgroundColor = 'green';
+        gameArea.appendChild(platform);
+        platforms.push({ platform, x, y, width, height });
+    }
 
     function gameLoop() {
-        // Update the player's position
-        playerPos.x += velocity.x;
-        playerPos.y += velocity.y;
-        velocity.y -= gravity; // Apply gravity effect
+        // Update horizontal movement based on velocity
+        platforms.forEach(p => {
+            p.x += velocity.x;
+            p.platform.style.left = p.x + 'px';
+        });
 
-        // Collision detection with the ground
-        if (playerPos.y <= 0) {
-            playerPos.y = 0;
-            velocity.y = 0;
-            isJumping = false;
-        }
-
-        // Platform collision detection
-        let platformBottom = parseInt(platform.style.bottom.replace('px', ''));
-        let platformTop = platformBottom + parseInt(platform.style.height.replace('px', ''));
-        let platformLeft = parseInt(platform.style.left.replace('px', ''));
-        let platformRight = platformLeft + parseInt(platform.style.width.replace('px', ''));
-
-        // Check if the player is above the platform and within its x bounds to land on it
-        if (playerPos.x < platformRight && playerPos.x + 50 > platformLeft && playerPos.y <= platformTop && playerPos.y + 50 > platformBottom) {
-            if (velocity.y < 0) { // Falling
-                playerPos.y = platformTop;
-                velocity.y = 0;
+        // Gravity effect
+        if (isJumping) {
+            velocity.y -= gravity;
+            playerPos += velocity.y;
+            if (playerPos < window.innerHeight / 2 - playerHeight / 2) {
+                playerPos = window.innerHeight / 2 - playerHeight / 2; // Simulate landing (reset position)
                 isJumping = false;
             }
+            player.style.bottom = playerPos + 'px';
         }
 
-        // Prevent player from moving out of gameArea bounds
-        if (playerPos.x < 0) playerPos.x = 0;
-        if (playerPos.x + 50 > gameArea.offsetWidth) playerPos.x = gameArea.offsetWidth - 50;
-
-        // Camera follow effect (Horizontal only)
-        const cameraLeftBoundary = window.innerWidth / 4;
-        const cameraRightBoundary = window.innerWidth * 3 / 4;
-        const playerScreenPositionX = playerPos.x + parseInt(gameArea.style.left);
-
-        if (playerScreenPositionX < cameraLeftBoundary) {
-            gameArea.style.left = `${parseInt(gameArea.style.left) + cameraLeftBoundary - playerScreenPositionX}px`;
-        } else if (playerScreenPositionX > cameraRightBoundary) {
-            gameArea.style.left = `${parseInt(gameArea.style.left) - (playerScreenPositionX - cameraRightBoundary)}px`;
-        }
-
-        // Ensure gameArea does not move beyond its boundaries
-        const maxLeft = 0;
-        const maxRight = -gameArea.offsetWidth + window.innerWidth;
-        gameArea.style.left = `${Math.min(maxLeft, Math.max(maxRight, parseInt(gameArea.style.left)))}px`;
-
-        // Update the player's style to move it
-        player.style.left = playerPos.x + 'px';
-        player.style.bottom = playerPos.y + 'px';
+        // Prevent scrolling beyond game area bounds
+        platforms.forEach(p => {
+            if (p.x < 0 || p.x + p.width > parseInt(gameArea.style.width)) {
+                velocity.x = 0; // Stop horizontal movement at bounds
+            }
+        });
 
         requestAnimationFrame(gameLoop);
     }
