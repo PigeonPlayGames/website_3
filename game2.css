@@ -1,30 +1,59 @@
 body, html {
     height: 100%;
     margin: 0;
-    overflow: hidden;
-    background-color: #87CEEB; /* Sky blue background, you can replace it with a background image if you prefer */
+    overflow: hidden; /* Prevents scrolling to keep the game view fixed */
+    background-color: #87CEEB; /* Light sky blue background, simulating a sky */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #gameArea {
     position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
+    width: 100vw; /* Full viewport width */
+    height: 100vh; /* Full viewport height */
+    overflow: hidden; /* Ensures nothing goes outside the game area */
 }
 
 #player {
-    position: fixed;
-    width: 50px; /* Player width */
-    height: 50px; /* Player height */
-    background-color: #FF0000; /* Player color, red */
-    left: 50%; /* Center the player horizontally */
-    bottom: 50%; /* Adjust based on your game's ground level */
-    transform: translateX(-50%); /* Ensure the player is truly centered */
+    position: fixed; /* Fixed position to keep the player centered */
+    width: 50px; /* Player's width */
+    height: 50px; /* Player's height */
+    left: 50%; /* Centers the player horizontally */
+    bottom: 50%; /* Adjust based on game's ground level */
+    transform: translate(-50%, 50%); /* Perfectly centers player */
+    background-color: #FF0000; /* Bright red color for the player */
 }
 
 .platform {
-    position: absolute;
-    height: 20px; /* Platform thickness */
-    bottom: 0; /* Adjust based on platform position */
-    background-color: #654321; /* Platform color, brown */
+    position: absolute; /* Allows positioning within gameArea */
+    height: 20px; /* Height of the platform */
+    bottom: 150px; /* Vertical position from the bottom */
+    background-color: #8B4513; /* Brown color for platforms */
+}
+
+#controls {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%); /* Centers controls horizontally */
+    z-index: 10; /* Ensures controls are clickable above all game elements */
+}
+
+button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    font-size: 16px; /* Larger font size for readability */
+    background-color: #FFF; /* White background for buttons */
+    color: #000; /* Black text color */
+    border: 2px solid #000; /* Black border for better visibility */
+    border-radius: 5px; /* Rounded corners for a modern look */
+    cursor: pointer; /* Cursor changes to pointer to indicate interactiveness */
+    touch-action: manipulation; /* Optimizes touch interaction */
+}
+
+/* Optional: Add transitions for button feedback on touch */
+button:active {
+    transform: scale(0.98); /* Slightly shrinks the button when active/pressed */
+    background-color: #e2e2e2; /* Changes color to indicate active state */
 }
