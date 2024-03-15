@@ -1,94 +1,104 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const player = document.getElementById('player');
-    let gameSpeed = 0;
+    // Player and game state variables
+    let playerVelocity = 0;
+    let playerAcceleration = 0.2;
+    let friction = 0.1;
     let gravity = 0.7;
-    let jumping = false;
-    let verticalVelocity = 0;
-    const groundLevel = window.innerHeight / 2 + 100;
+    let jumpPower = -15;
+    let isJumping = false;
+    let verticalSpeed = 0;
+    let groundLevel = window.innerHeight / 2 + 100; // Set ground level
 
-    // Platforms
-    const platforms = [
-        { x: -500, width: 2000 }, // Main ground
-        { x: 600, width: 200 }, // Floating platform
-        // Add more platforms as needed
+    // Setup player element
+    const player = document.getElementById('player');
+    player.style.bottom = `${groundLevel}px`; // Initial player ground position
+
+    // Define platforms (x position, width)
+    const platformsData = [
+        { x: -500, width: 2000 }, // Example: Long ground platform
+        { x: 800, width: 300 }   // Example: Floating platform
+        // Add more platform data as needed
     ];
 
-    // Initialize platforms
-    platforms.forEach(platform => {
-        let elem = document.createElement('div');
+    // Render platforms
+    platformsData.forEach(platform => {
+        const elem = document.createElement('div');
         elem.className = 'platform';
-        elem.style.width = platform.width + 'px';
-        elem.style.left = platform.x + 'px';
-        elem.style.bottom = '150px'; // Height from the bottom
+        elem.style.width = `${platform.width}px`;
+        elem.style.left = `${platform.x}px`;
+        elem.style.bottom = '150px'; // Platform height from the bottom
         document.body.appendChild(elem);
-        platform.elem = elem;
+        platform.elem = elem; // Keep a reference to the element
     });
 
-    // Touch controls
-    const leftBtn = document.getElementById('left');
-    const rightBtn = document.getElementById('right');
-    const jumpBtn = document.getElementById('jump');
+    // Touch and keyboard control setup
+    const controls = {
+        left: false,
+        right: false
+    };
 
-    // Movement flags
-    let movingLeft = false;
-    let movingRight = false;
+    setupControls();
 
-    // Touch event listeners
-    leftBtn.addEventListener('touchstart', () => movingLeft = true);
-    leftBtn.addEventListener('touchend', () => movingLeft = false);
+    function setupControls() {
+        // Touch controls
+        document.getElementById('left').addEventListener('touchstart', () => controls.left = true, { passive: true });
+        document.getElementById('left').addEventListener('touchend', () => controls.left = false, { passive: true });
 
-    rightBtn.addEventListener('touchstart', () => movingRight = true);
-    rightBtn.addEventListener('touchend', () => movingRight = false);
+        document.getElementById('right').addEventListener('touchstart', () => controls.right = true, { passive: true });
+        document.getElementById('right').addEventListener('touchend', () => controls.right = false, { passive: true });
 
-    jumpBtn.addEventListener('touchstart', jump);
-    
-    // Keyboard controls for non-touch devices
-    document.addEventListener('keydown', (e) => {
-        if (e.key === "ArrowLeft") movingLeft = true;
-        if (e.key === "ArrowRight") movingRight = true;
-        if (e.key === "ArrowUp") jump();
-    });
-    document.addEventListener('keyup', (e) => {
-        if (e.key === "ArrowLeft") movingLeft = false;
-        if (e.key === "ArrowRight") movingRight = false;
-    });
+        document.getElementById('jump').addEventListener('touchstart', jump, { passive: true });
+
+        // Keyboard controls
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') controls.left = true;
+            if (e.key === 'ArrowRight') controls.right = true;
+            if (e.key === 'ArrowUp' || e.key === ' ') jump();
+        });
+
+        document.addEventListener('keyup', (e) => {
+            if (e.key === 'ArrowLeft') controls.left = false;
+            if (e.key === 'ArrowRight') controls.right = false;
+        });
+    }
 
     function jump() {
-        if (!jumping) {
-            verticalVelocity = -15;
-            jumping = true;
+        if (!isJumping) {
+            verticalSpeed = jumpPower;
+            isJumping = true;
         }
     }
 
     function gameLoop() {
-        // Move platforms to simulate player movement
-        if (movingLeft) {
-            gameSpeed = 5;
-        } else if (movingRight) {
-            gameSpeed = -5;
+        // Horizontal movement
+        if (controls.left) {
+            playerVelocity -= playerAcceleration;
+        } else if (controls.right) {
+            playerVelocity += playerAcceleration;
         } else {
-            gameSpeed = 0;
+            playerVelocity *= (1 - friction);
         }
 
-        platforms.forEach(platform => {
-            platform.x += gameSpeed;
-            platform.elem.style.left = platform.x + 'px';
+        // Update platforms positions to simulate player movement
+        platformsData.forEach(platform => {
+            platform.x -= playerVelocity;
+            platform.elem.style.left = `${platform.x}px`;
         });
 
-        // Gravity and jumping mechanics
-        if (jumping) {
-            player.style.bottom = parseInt(player.style.bottom) + verticalVelocity + 'px';
-            verticalVelocity += gravity;
-
-            if (parseInt(player.style.bottom) <= groundLevel) {
-                player.style.bottom = groundLevel + 'px';
-                jumping = false;
-                verticalVelocity = 0;
+        // Gravity and jumping
+        if (isJumping) {
+            verticalSpeed += gravity;
+            let newBottom = parseInt(player.style.bottom) + verticalSpeed;
+            if (newBottom <= groundLevel) {
+                newBottom = groundLevel;
+                isJumping = false;
+                verticalSpeed = 0;
             }
+            player.style.bottom = `${newBottom}px`;
         }
 
         requestAnimationFrame(gameLoop);
     }
 
-    gameLoop();
+    gameLoop(); // Start the game loop
 });
