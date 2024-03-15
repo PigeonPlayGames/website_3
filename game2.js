@@ -1,64 +1,86 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Game settings and state
-    let gameSpeed = 5;
-    let gravity = 0.5;
-    let jumpPower = 10;
-    let jumping = false;
-    let verticalSpeed = 0;
-    let groundLevel = window.innerHeight / 2;
+    // Basic game state
+    let acceleration = 0.2;
+    let friction = 0.05;
+    let velocityX = 0;
+    let maxSpeed = 5;
+    let gravity = 0.7;
+    let jumpPower = -15;
+    let isJumping = false;
+    let isOnGround = false;
+    let verticalVelocity = 0;
 
-    // Player setup
+    const gameArea = document.getElementById('gameArea');
     const player = document.getElementById('player');
-    player.style.bottom = groundLevel + 'px'; // Set initial player position at ground level
+    const groundLevel = window.innerHeight / 2 + 100; // Adjust based on game design
 
-    // Game environment
+    player.style.bottom = groundLevel + 'px'; // Initialize player position
+
+    // Platforms setup
     const platforms = [
-        {x: -200, width: 400}, // Example platform, add as many as needed
-        {x: 400, width: 300},
-        // Add more platforms here
+        {x: 0, y: groundLevel, width: 1000}, // Base ground platform
+        {x: 1200, y: groundLevel + 50, width: 300}, // Elevated platform
+        // Add more platforms as needed
     ];
 
-    // Initialize platforms
-    const gameArea = document.getElementById('gameArea');
+    // Render platforms
     platforms.forEach(platform => {
         let elem = document.createElement('div');
-        elem.classList.add('platform');
+        elem.className = 'platform';
         elem.style.width = platform.width + 'px';
         elem.style.left = platform.x + 'px';
-        elem.style.bottom = '100px'; // Example height, adjust as needed
+        elem.style.bottom = platform.y + 'px';
         gameArea.appendChild(elem);
-        platform.elem = elem; // Store reference for movement updates
+        platform.elem = elem;
     });
 
-    // Control setup
-    document.getElementById('left').addEventListener('touchstart', () => gameSpeed = -5);
-    document.getElementById('right').addEventListener('touchstart', () => gameSpeed = 5);
-    document.getElementById('jump').addEventListener('touchstart', jump);
+    // Input event listeners
+    let leftPressed = false;
+    let rightPressed = false;
+    document.addEventListener('keydown', e => {
+        if (e.key === "ArrowLeft") leftPressed = true;
+        if (e.key === "ArrowRight") rightPressed = true;
+        if (e.key === "ArrowUp" && isOnGround) jump();
+    });
+    document.addEventListener('keyup', e => {
+        if (e.key === "ArrowLeft") leftPressed = false;
+        if (e.key === "ArrowRight") rightPressed = false;
+    });
 
     function jump() {
-        if (!jumping) {
-            jumping = true;
-            verticalSpeed = jumpPower;
+        if (!isJumping) {
+            verticalVelocity = jumpPower;
+            isJumping = true;
+            isOnGround = false;
         }
     }
 
     function gameLoop() {
-        // Update platforms based on movement
+        // Horizontal movement
+        if (leftPressed && velocityX > -maxSpeed) {
+            velocityX -= acceleration;
+        } else if (rightPressed && velocityX < maxSpeed) {
+            velocityX += acceleration;
+        } else {
+            velocityX *= (1 - friction);
+        }
+
+        // Update platform positions based on player movement
         platforms.forEach(platform => {
-            platform.x += gameSpeed;
+            platform.x -= velocityX;
             platform.elem.style.left = platform.x + 'px';
         });
 
-        // Gravity and jumping
-        if (jumping) {
-            player.style.bottom = (parseInt(player.style.bottom) + verticalSpeed) + 'px';
-            verticalSpeed -= gravity;
+        // Gravity
+        player.style.bottom = (parseInt(player.style.bottom) + verticalVelocity) + 'px';
+        verticalVelocity += gravity;
 
-            if (parseInt(player.style.bottom) <= groundLevel) {
-                player.style.bottom = groundLevel + 'px';
-                jumping = false;
-                verticalSpeed = 0;
-            }
+        // Ground check
+        isOnGround = parseInt(player.style.bottom) <= groundLevel;
+        if (isOnGround) {
+            player.style.bottom = groundLevel + 'px';
+            verticalVelocity = 0;
+            isJumping = false;
         }
 
         requestAnimationFrame(gameLoop);
@@ -66,4 +88,3 @@ document.addEventListener('DOMContentLoaded', () => {
 
     gameLoop();
 });
-
