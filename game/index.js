@@ -93,7 +93,6 @@ function rectangularCollision({rectangle1, rectangle2}){
     )
 }
 
-
 const battle = {
     initiated: false
 }
