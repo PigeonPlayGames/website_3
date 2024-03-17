@@ -1,50 +1,49 @@
+/* Reset some basic elements */
 body, html {
-    height: 100%;
     margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: 'Arial', sans-serif;
-    background-color: #add8e6; /* Lighter blue to give a sky-like feel */
+    padding: 0;
+    overflow: hidden; /* Prevent scrolling */
 }
 
+/* Game canvas styles */
 #gameCanvas {
-    width: 480px; /* Define a fixed size for the game area */
-    height: 640px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5); /* Add shadow for depth */
-    background-image: linear-gradient(#87CEEB, #add8e6); /* Gradient background for sky */
-    border-radius: 8px; /* Rounded corners */
+    display: block; /* Remove default margin */
+    position: relative; /* Needed for absolute positioning inside */
+    background: url('flappybird_mountains.png') repeat-x;
+    animation: backgroundScroll 20s linear infinite;
+    width: 100vw; /* Full width */
+    height: 100vh; /* Full height */
 }
 
+/* Score display styles */
 #score {
     position: absolute;
     top: 20px;
     left: 50%;
     transform: translateX(-50%);
-    color: #ffffff;
-    font-size: 32px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5); /* Shadow for better visibility */
-    z-index: 2; /* Ensure score is always visible */
+    font-size: 24px;
+    color: #FFF; /* White color for better visibility */
+    text-shadow: 2px 2px 4px #000; /* Shadow for better readability */
 }
 
+/* Restart button styles */
 #restart {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     padding: 10px 20px;
-    margin-top: 20px;
-    font-size: 18px;
     border: none;
-    border-radius: 20px;
+    background-color: #FFD700; /* Gold color */
+    color: #FFF;
+    font-size: 18px;
     cursor: pointer;
-    background-color: #f8d568; /* Warm color for the button */
-    color: #fff;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-    box-shadow: 0 0 8px rgba(0,0,0,0.3);
-    transition: background-color 0.3s, transform 0.1s; /* Smooth transition for button press */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+    border-radius: 5px; /* Rounded corners */
 }
 
-#restart:hover {
-    background-color: #f7c143; /* Button color change on hover */
-}
-
-#restart:active {
-    transform: scale(0.95); /* Slightly shrink the button when clicked */
+/* Animating the background for a moving effect */
+@keyframes backgroundScroll {
+    from { background-position: 0 0; }
+    to { background-position: -10000px 0; } /* Move background */
 }
