@@ -1,0 +1,20 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+#gameArea {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    background-color: #90ee90; /* Light green, change as needed */
+    overflow: hidden;
+}
+
+#player {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 32px; /* Adjust size as needed */
+}
