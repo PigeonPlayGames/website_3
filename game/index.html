@@ -168,6 +168,12 @@
     <script src="helpers/monsters.js"></script>
     <script src="classes.js"></script>
     <script src="index.js"></script>
+    <script>
+    // Disable context menu on canvas to prevent browser's default menu
+    canvas.addEventListener('contextmenu', function(event) {
+        event.preventDefault();
+    }, false);
+    </script>
     <script src="battleScene.js"></script>
 </body>
 </html>
