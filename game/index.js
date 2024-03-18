@@ -530,3 +530,12 @@ buttonUp.addEventListener("mouseup", () => { touchedButtonUp = false; })
 buttonLeft.addEventListener("mouseup", () => { touchedButtonLeft = false; })
 buttonDown.addEventListener("mouseup", () => { touchedButtonDown = false; })
 buttonRight.addEventListener("mouseup", () => { touchedButtonRight = false; })
+
+// ...
+
+// Disable context menu on canvas to prevent browser's default menu
+canvas.addEventListener('contextmenu', function(event) {
+    event.preventDefault();
+}, false);
+
+// </script> (This is the closing script tag)
