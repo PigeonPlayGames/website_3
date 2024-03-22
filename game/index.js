@@ -96,6 +96,34 @@ function rectangularCollision({rectangle1, rectangle2}){
 const battle = {
     initiated: false
 }
+// Function to handle introduction animation
+function runIntroduction() {
+    // Get the intro text element
+    const introText = document.querySelector("#introText");
+
+    // Show the intro text
+    introText.style.display = 'block';
+
+    // Animate the intro text using GSAP
+    gsap.from(introText, { opacity: 0, duration: 2, ease: "power2.out" });
+
+    // After a delay, fade out the intro text and start the game
+    setTimeout(() => {
+        gsap.to(introText, { opacity: 0, duration: 2, ease: "power2.out", onComplete: () => {
+            introText.style.display = 'none'; // Hide the intro text
+            animate(); // Start the game animation
+        } });
+    }, 5000); // Adjust the delay (in milliseconds) as needed
+}
+
+// Call the introduction animation function to start the game
+runIntroduction();
+
+// Function to handle the game animation
+function animate() {
+    const animationId = window.requestAnimationFrame(animate);
+    // Rest of your existing animate() function code...
+}
 
 function animate() {
     const animationId = window.requestAnimationFrame(animate);
