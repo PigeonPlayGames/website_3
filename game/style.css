@@ -350,5 +350,10 @@ button {
     -webkit-touch-callout: none; /* Prevent long tap menu */
     -ms-touch-action: manipulation; /* Prevent double tap zoom in IE10+ */
     touch-action: manipulation; /* Prevent double tap zoom in modern browsers */
+    -webkit-user-select: none; /* Disable text selection */
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    outline: none; /* Disable outline when focused */
 }
 
