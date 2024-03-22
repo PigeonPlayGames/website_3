@@ -494,6 +494,7 @@ document.querySelector("#levelUpButton").addEventListener("click", ()=>{
 document.querySelector("#penaltyButton").addEventListener("click", ()=>{
     document.querySelector("#penaltyOverlay").style.display = 'none';
 })
+
 // record when control buttons are being touched/clicked
 let touchedButtonUp = false;
 let touchedButtonLeft = false;
@@ -527,5 +528,3 @@ buttonUp.addEventListener("mouseup", () => { touchedButtonUp = false; });
 buttonLeft.addEventListener("mouseup", () => { touchedButtonLeft = false; });
 buttonDown.addEventListener("mouseup", () => { touchedButtonDown = false; });
 buttonRight.addEventListener("mouseup", () => { touchedButtonRight = false; });
-
-
