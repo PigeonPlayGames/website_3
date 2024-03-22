@@ -343,3 +343,12 @@ h6 {
 #addStatsBox {
     display: none;
 }
+/* Add the new CSS styles at the end of your existing CSS file */
+/* Disable highlighting effect on touch for buttons */
+button {
+    -webkit-tap-highlight-color: transparent; /* For iOS Safari */
+    -webkit-touch-callout: none; /* Prevent long tap menu */
+    -ms-touch-action: manipulation; /* Prevent double tap zoom in IE10+ */
+    touch-action: manipulation; /* Prevent double tap zoom in modern browsers */
+}
+
