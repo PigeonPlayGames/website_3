@@ -23,10 +23,6 @@
             <img src="img/galley-hill_island.png" alt="">
             <button id="startButton">START GAME</button>
         </div>
-        <div id="animationContainer">
-            <canvas id="animationCanvas" width="1024" height="576"></canvas>
-            <div id="animationText"></div>
-        </div>
 
         <!-- SET CHARACTER SCREEN -->
         <div id="startScreen2">
@@ -127,8 +123,8 @@
                 <h3 id="enemyName">Draggle</h3>
                 <h5 id="enemyHP">HP: 100/100</h5>
                 <div id="healthWrapper">
-                <div id="greyBox"></div>
-                <div id="enemyHealthBar"></div>
+                    <div id="greyBox"></div>
+                    <div id="enemyHealthBar"></div>
                 </div>
             </div>
 
@@ -179,13 +175,5 @@
     }, false);
     </script>
     <script src="battleScene.js"></script>
-    <script>
-        // Your intro animation script goes here
-        // For example:
-        gsap.to("#startScreen", { duration: 1, opacity: 1 });
-        gsap.to("#startScreen", { duration: 2, y: -100, delay: 2 });
-        gsap.to("#startScreen", { duration: 1, opacity: 0, delay: 4 });
-        gsap.to("#startScreen2", { duration: 1, opacity: 1, delay: 5 });
-    </script>
 </body>
 </html>
