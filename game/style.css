@@ -1,5 +1,8 @@
 * {
     font-family: 'Press Start 2P', cursive;
+    touch-action: manipulation; /* Disable text selection on touch devices */
+}
+
 }
 body {
     background-color: #232323;
