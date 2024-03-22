@@ -257,6 +257,19 @@ h6 {
     top: 80%; left: 40%; right: 40%; bottom: 10%;
     border: #232323 solid 2px;
 }
+.game-button {
+    /* Add your button styles here */
+    /* For example: */
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
 
 /* Tooltip container */
 .tooltip {
