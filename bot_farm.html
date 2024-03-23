@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maze Bot Simulation</title>
+    <style>
+        /* Add CSS styling for maze visualization */
+        .maze {
+            display: grid;
+            grid-template-columns: repeat(5, 50px);
+            grid-template-rows: repeat(5, 50px);
+            position: relative;
+        }
+
+        .cell {
+            width: 50px;
+            height: 50px;
+            border: 1px solid black;
+            box-sizing: border-box;
+        }
+
+        .bot {
+            width: 50px;
+            height: 50px;
+            background-color: red;
+            position: absolute;
+            border-radius: 50%; /* Makes the bot round */
+        }
+
+        .bot::before,
+        .bot::after {
+            content: '';
+            position: absolute;
+            background-color: red;
+        }
+
+        /* Head */
+        .bot::before {
+            top: -10px;
+            left: 20px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        /* Body */
+        .bot::after {
+            top: 20px;
+            left: 20px;
+            width: 10px;
+            height: 20px;
+        }
+
+        /* Arms */
+        .left-arm,
+        .right-arm {
+            width: 20px;
+            height: 5px;
+            background-color: red;
+            position: absolute;
+            top: 15px;
+        }
+
+        /* Left Arm */
+        .left-arm {
+            left: -5px;
+            transform: rotate(-45deg);
+        }
+
+        /* Right Arm */
+        .right-arm {
+            right: -5px;
+            transform: rotate(45deg);
+        }
+
+        /* Legs */
+        .left-leg,
+        .right-leg {
+            width: 5px;
+            height: 15px;
+            background-color: red;
+            position: absolute;
+            top: 40px;
+        }
+
+        /* Left Leg */
+        .left-leg {
+            left: 15px;
+        }
+
+        /* Right Leg */
+        .right-leg {
+            right: 15px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Maze Bot Simulation</h1>
+    <div class="maze" id="maze"></div>
+
+    <script>
+        // Define maze dimensions and layout
+        const maze = [
+            [1, 1, 1, 1, 1],
+            [1, 0, 0, 0, 1],
+            [1, 1, 1, 0, 1],
+            [1, 0, 0, 0, 1],
+            [1, 1, 1, 1, 1]
+        ];
+
+        // Create maze visualization
+        const mazeElement = document.getElementById('maze');
+        maze.forEach((row, rowIndex) => {
+            row.forEach((cell, colIndex) => {
+                const cellElement = document.createElement('div');
+                cellElement.classList.add('cell');
+                cellElement.style.backgroundColor = cell === 1 ? 'black' : 'white';
+                mazeElement.appendChild(cellElement);
+            });
+        });
+
+        // Define bot class
+        class Bot {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.element = document.createElement('div');
+                this.element.classList.add('bot');
+                this.updatePosition();
+                mazeElement.appendChild(this.element);
+                // Add arms and legs
+                const leftArm = document.createElement('div');
+                leftArm.classList.add('left-arm');
+                this.element.appendChild(leftArm);
+
+                const rightArm = document.createElement('div');
+                rightArm.classList.add('right-arm');
+                this.element.appendChild(rightArm);
+
+                const leftLeg = document.createElement('div');
+                leftLeg.classList.add('left-leg');
+                this.element.appendChild(leftLeg);
+
+                const rightLeg = document.createElement('div');
+                rightLeg.classList.add('right-leg');
+                this.element.appendChild(rightLeg);
+            }
+
+            updatePosition() {
+                this.element.style.left = `${this.x * 50}px`;
+                this.element.style.top = `${this.y * 50}px`;
+            }
+
+            moveForward() {
+                if (maze[this.y - 1] && maze[this.y - 1][this.x] !== 1) {
+                    this.y -= 1;
+                    this.updatePosition();
+                }
+            }
+
+            moveBackward() {
+                if (maze[this.y + 1] && maze[this.y + 1][this.x] !== 1) {
+                    this.y += 1;
+                    this.updatePosition();
+                }
+            }
+
+            moveLeft() {
+                if (maze[this.y][this.x - 1] !== 1) {
+                    this.x -= 1;
+                    this.updatePosition();
+                }
+            }
+
+            moveRight() {
+                if (maze[this.y][this.x + 1] !== 1) {
+                    this.x += 1;
+                    this.updatePosition();
+                }
+            }
+        }
+
+        // Create 10 bots
+        const bots = [];
+        for (let i = 0; i < 10; i++) {
+            bots.push(new Bot(1, 1)); // Assuming bots start at position (1, 1)
+        }
+
+        // Simulate bot movements
+        bots.forEach(bot => {
+            // Simulate some movements
+            bot.moveForward();
+            bot.moveLeft();
+            bot.moveRight();
+            bot.moveBackward();
+        });
+    </script>
+</body>
+</html>
