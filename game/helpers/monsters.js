@@ -65,7 +65,7 @@ const monsters = {
         damage: 15,
         armour: 1,
         isEnemy: true, 
-        name:"Woodle",
+        name:"Mouflax",
         attacks: [attacks.Tackle, attacks.Fireball],
         xp: 30,
         drops: ["wood"],
