@@ -58,7 +58,7 @@ const monsters = {
     },
     Woodle: {
         position: {x:785, y:65}, 
-        image: {src: "./img/enemyWoodle.png"}, 
+        image: {src: "moleman.png"}, 
         frames: {max:4, hold:20}, 
         animate: true, 
         health: 150,
