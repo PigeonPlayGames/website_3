@@ -445,7 +445,7 @@ document.querySelector("#levelUpButton").addEventListener("click", ()=>{
         } else { 
             // otherwise keep showing this screen and prompt user
             document.querySelector("#levelUpOverlay").style.display = 'block';
-            alert(`STR + AGI + WIS must be EQUAL TO 3`);
+            alert(`STR + AGI + WIS must be EQUAL TO 9`);
         } 
     }
 
