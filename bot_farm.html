@@ -10,16 +10,13 @@
             display: grid;
             grid-template-columns: repeat(5, 50px);
             grid-template-rows: repeat(5, 50px);
-            position: relative;
         }
-
         .cell {
             width: 50px;
             height: 50px;
             border: 1px solid black;
             box-sizing: border-box;
         }
-
         .bot {
             width: 50px;
             height: 50px;
@@ -27,14 +24,12 @@
             position: absolute;
             border-radius: 50%; /* Makes the bot round */
         }
-
         .bot::before,
         .bot::after {
             content: '';
             position: absolute;
             background-color: red;
         }
-
         /* Head */
         .bot::before {
             top: -10px;
@@ -43,7 +38,6 @@
             height: 10px;
             border-radius: 50%;
         }
-
         /* Body */
         .bot::after {
             top: 20px;
@@ -51,7 +45,6 @@
             width: 10px;
             height: 20px;
         }
-
         /* Arms */
         .left-arm,
         .right-arm {
@@ -61,19 +54,16 @@
             position: absolute;
             top: 15px;
         }
-
         /* Left Arm */
         .left-arm {
             left: -5px;
             transform: rotate(-45deg);
         }
-
         /* Right Arm */
         .right-arm {
             right: -5px;
             transform: rotate(45deg);
         }
-
         /* Legs */
         .left-leg,
         .right-leg {
@@ -83,12 +73,10 @@
             position: absolute;
             top: 40px;
         }
-
         /* Left Leg */
         .left-leg {
             left: 15px;
         }
-
         /* Right Leg */
         .right-leg {
             right: 15px;
@@ -109,17 +97,6 @@
             [1, 1, 1, 1, 1]
         ];
 
-        // Create maze visualization
-        const mazeElement = document.getElementById('maze');
-        maze.forEach((row, rowIndex) => {
-            row.forEach((cell, colIndex) => {
-                const cellElement = document.createElement('div');
-                cellElement.classList.add('cell');
-                cellElement.style.backgroundColor = cell === 1 ? 'black' : 'white';
-                mazeElement.appendChild(cellElement);
-            });
-        });
-
         // Define bot class
         class Bot {
             constructor(x, y) {
@@ -128,23 +105,7 @@
                 this.element = document.createElement('div');
                 this.element.classList.add('bot');
                 this.updatePosition();
-                mazeElement.appendChild(this.element);
-                // Add arms and legs
-                const leftArm = document.createElement('div');
-                leftArm.classList.add('left-arm');
-                this.element.appendChild(leftArm);
-
-                const rightArm = document.createElement('div');
-                rightArm.classList.add('right-arm');
-                this.element.appendChild(rightArm);
-
-                const leftLeg = document.createElement('div');
-                leftLeg.classList.add('left-leg');
-                this.element.appendChild(leftLeg);
-
-                const rightLeg = document.createElement('div');
-                rightLeg.classList.add('right-leg');
-                this.element.appendChild(rightLeg);
+                document.getElementById('maze').appendChild(this.element);
             }
 
             updatePosition() {
@@ -189,11 +150,11 @@
 
         // Simulate bot movements
         bots.forEach(bot => {
-            // Simulate some movements
-            bot.moveForward();
-            bot.moveLeft();
-            bot.moveRight();
-            bot.moveBackward();
+            setInterval(() => {
+                const directions = ['moveForward', 'moveBackward', 'moveLeft', 'moveRight'];
+                const randomDirection = directions[Math.floor(Math.random() * directions.length)];
+                bot[randomDirection]();
+            }, 1000); // Move every 1 second
         });
     </script>
 </body>
