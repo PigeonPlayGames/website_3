@@ -64,7 +64,7 @@ let randomMonster = () => {
             document.querySelector("#enemyName").innerHTML = "Emby"
             return monsters.Emby;
         } else if (randomNumber < 0.8) {
-            document.querySelector("#enemyName").innerHTML = "Woodle"
+            document.querySelector("#enemyName").innerHTML = "Mouflax"
             return monsters.Woodle;
         } else {
             document.querySelector("#enemyName").innerHTML = "Rocky"
@@ -83,7 +83,7 @@ let randomMonster = () => {
             document.querySelector("#enemyName").innerHTML = "Emby"
             return monsters.Emby;
         } else if (randomNumber < 0.3) {
-            document.querySelector("#enemyName").innerHTML = "Woodle"
+            document.querySelector("#enemyName").innerHTML = "Mouflax"
             return monsters.Woodle;
         } else if (randomNumber < 0.65) {
             document.querySelector("#enemyName").innerHTML = "Rocky"
