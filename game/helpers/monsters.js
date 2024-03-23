@@ -56,7 +56,7 @@ const monsters = {
         rareDrops: ["sword"],
         gold: 20,
     },
-    Woodle: {
+    Mouflax: {
         position: {x:785, y:65}, 
         image: {src: "./img/moleman.png"}, 
         frames: {max:4, hold:20}, 
