@@ -8,8 +8,8 @@
         /* Add CSS styling for maze visualization */
         .maze {
             display: grid;
-            grid-template-columns: repeat(5, 50px);
-            grid-template-rows: repeat(5, 50px);
+            grid-template-columns: repeat(10, 50px); /* Increased number of columns */
+            grid-template-rows: repeat(10, 50px); /* Increased number of rows */
         }
         .cell {
             width: 50px;
@@ -90,11 +90,16 @@
     <script>
         // Define maze dimensions and layout
         const maze = [
-            [1, 1, 1, 1, 1],
-            [1, 0, 0, 0, 1],
-            [1, 1, 1, 0, 1],
-            [1, 0, 0, 0, 1],
-            [1, 1, 1, 1, 1]
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 1, 1, 0, 1, 1, 1, 1, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 1, 0, 1],
+            [1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
+            [1, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+            [1, 1, 1, 1, 0, 1, 1, 1, 1, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 0, 1],
+            [1, 1, 0, 0, 0, 0, 0, 1, 1, 1]
         ];
 
         // Create maze visualization
@@ -177,8 +182,8 @@
         // Create 10 bots
         const bots = [];
         for (let i = 0; i < 10; i++) {
-            const startX = Math.floor(Math.random() * 5); // Random starting x-coordinate
-            const startY = Math.floor(Math.random() * 5); // Random starting y-coordinate
+            const startX = Math.floor(Math.random() * 10); // Random starting x-coordinate
+            const startY = Math.floor(Math.random() * 10); // Random starting y-coordinate
             bots.push(new Bot(startX, startY));
         }
 
