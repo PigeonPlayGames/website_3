@@ -97,6 +97,17 @@
             [1, 1, 1, 1, 1]
         ];
 
+        // Create maze visualization
+        const mazeElement = document.getElementById('maze');
+        maze.forEach((row, rowIndex) => {
+            row.forEach((cell, colIndex) => {
+                const cellElement = document.createElement('div');
+                cellElement.classList.add('cell');
+                cellElement.style.backgroundColor = cell === 1 ? 'black' : 'white';
+                mazeElement.appendChild(cellElement);
+            });
+        });
+
         // Define bot class
         class Bot {
             constructor(x, y) {
@@ -105,7 +116,7 @@
                 this.element = document.createElement('div');
                 this.element.classList.add('bot');
                 this.updatePosition();
-                document.getElementById('maze').appendChild(this.element);
+                mazeElement.appendChild(this.element);
             }
 
             updatePosition() {
@@ -140,22 +151,43 @@
                     this.updatePosition();
                 }
             }
+
+            // Function to simulate random movements
+            randomMove() {
+                const randomDirection = Math.floor(Math.random() * 4); // Random number between 0 and 3
+                switch (randomDirection) {
+                    case 0:
+                        this.moveForward();
+                        break;
+                    case 1:
+                        this.moveBackward();
+                        break;
+                    case 2:
+                        this.moveLeft();
+                        break;
+                    case 3:
+                        this.moveRight();
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
 
         // Create 10 bots
         const bots = [];
         for (let i = 0; i < 10; i++) {
-            bots.push(new Bot(1, 1)); // Assuming bots start at position (1, 1)
+            const startX = Math.floor(Math.random() * 5); // Random starting x-coordinate
+            const startY = Math.floor(Math.random() * 5); // Random starting y-coordinate
+            bots.push(new Bot(startX, startY));
         }
 
         // Simulate bot movements
-        bots.forEach(bot => {
-            setInterval(() => {
-                const directions = ['moveForward', 'moveBackward', 'moveLeft', 'moveRight'];
-                const randomDirection = directions[Math.floor(Math.random() * directions.length)];
-                bot[randomDirection]();
-            }, 1000); // Move every 1 second
-        });
+        setInterval(() => {
+            bots.forEach(bot => {
+                bot.randomMove();
+            });
+        }, 1000); // Update every 1000 milliseconds (1 second)
     </script>
 </body>
 </html>
