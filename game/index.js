@@ -1,5 +1,12 @@
 const canvas = document.querySelector("canvas");
 const c = canvas.getContext("2d"); // canvas context
+const buildingCoordinates = {
+    x: 200, // Example x-coordinate
+    y: 300, // Example y-coordinate
+    width: 50, // Example width
+    height: 50 // Example height
+};
+
 
 canvas.width = 1024;
 canvas.height = 576;
@@ -96,6 +103,116 @@ function rectangularCollision({rectangle1, rectangle2}){
 const battle = {
     initiated: false
 }
+function checkBuildingCollision() {
+    if (
+        player.position.x < buildingCoordinates.x + buildingCoordinates.width &&
+        player.position.x + player.width > buildingCoordinates.x &&
+        player.position.y < buildingCoordinates.y + buildingCoordinates.height &&
+        player.position.y + player.height > buildingCoordinates.y
+    ) {
+        enterBuilding();
+    }
+}
+function enterBuilding() {
+    console.log("Entering building...");
+    // Add logic to transition to interior map or state
+    // Define shop inventory
+const shopInventory = [
+    { name: "Potion", price: 50, effect: { health: 20 } },
+    { name: "Revive", price: 100, effect: { revive: true } },
+    // Add more items as needed
+];
+
+// Define player inventory
+let playerInventory = [];
+
+function enterBuilding() {
+    // Display shop interface
+    displayShopInterface();
+}
+
+function displayShopInterface() {
+    // Clear canvas and draw shop interface
+    c.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw shop background or UI elements
+    // Example: Draw shop background image or UI elements
+
+    // Draw available items for purchase
+    drawShopItems();
+
+    // Draw UI elements for buying items
+    // Example: Draw buttons or text for buying items
+
+    // Add event listeners for buying items
+    canvas.addEventListener('click', buyItem);
+
+    // Draw UI element for leaving shop
+    // Example: Draw button or text for leaving shop
+    // Add event listener for leaving shop
+    canvas.addEventListener('click', leaveShop);
+}
+
+function drawShopItems() {
+    // Draw available items for purchase
+    shopInventory.forEach((item, index) => {
+        // Example: Draw images or text representing items
+        c.fillText(`${index + 1}. ${item.name} - $${item.price}`, x, y + index * lineHeight);
+    });
+}
+
+function buyItem(event) {
+    // Determine which item the player clicked
+    const clickX = event.clientX - canvas.offsetLeft;
+    const clickY = event.clientY - canvas.offsetTop;
+    const itemIndex = Math.floor((clickY - startY) / lineHeight);
+
+    if (itemIndex >= 0 && itemIndex < shopInventory.length) {
+        const selectedItem = shopInventory[itemIndex];
+        // Check if the player has enough currency to buy the item
+        if (player.currency >= selectedItem.price) {
+            // Deduct the item price from the player's currency
+            player.currency -= selectedItem.price;
+            // Add the item to the player's inventory
+            playerInventory.push(selectedItem);
+            // Update player's stats if needed (e.g., health restoration)
+            applyItemEffect(selectedItem);
+            // Notify the player of the successful purchase
+            console.log(`You purchased ${selectedItem.name}`);
+        } else {
+            // Notify the player of insufficient funds
+            console.log("You don't have enough money to buy this item.");
+        }
+    }
+}
+
+function applyItemEffect(item) {
+    // Apply item effects to the player
+    // Example: Restore health, revive player, etc.
+    if (item.effect.health) {
+        player.health += item.effect.health;
+    }
+    if (item.effect.revive) {
+        player.health = player.maxHealth; // Revive with full health
+    }
+}
+
+function leaveShop() {
+    // Clear shop interface
+    c.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Remove event listeners
+    canvas.removeEventListener('click', buyItem);
+    canvas.removeEventListener('click', leaveShop);
+
+    // Redraw game environment
+    // Example: Redraw map, player character, etc.
+    // Return to normal game loop
+    // Example: Call gameLoop() function
+}
+
+}
+
 
 function animate() {
     const animationId = window.requestAnimationFrame(animate);
