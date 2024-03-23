@@ -48,8 +48,8 @@ let randomMonster = () => {
             document.querySelector("#enemyName").innerHTML = "Emby"
             return monsters.Emby;
         } else {
-            document.querySelector("#enemyName").innerHTML = "Woodle"
-            return monsters.Woodle;
+            document.querySelector("#enemyName").innerHTML = "Mouflax"
+            return monsters.Mouflax;
         }
     }
     else if (adv.attr.level === 5){
@@ -65,7 +65,7 @@ let randomMonster = () => {
             return monsters.Emby;
         } else if (randomNumber < 0.8) {
             document.querySelector("#enemyName").innerHTML = "Mouflax"
-            return monsters.Woodle;
+            return monsters.Mouflax;
         } else {
             document.querySelector("#enemyName").innerHTML = "Rocky"
             return monsters.Rocky;
@@ -84,7 +84,7 @@ let randomMonster = () => {
             return monsters.Emby;
         } else if (randomNumber < 0.3) {
             document.querySelector("#enemyName").innerHTML = "Mouflax"
-            return monsters.Woodle;
+            return monsters.Mouflax;
         } else if (randomNumber < 0.65) {
             document.querySelector("#enemyName").innerHTML = "Rocky"
             return monsters.Rocky;
@@ -115,7 +115,7 @@ function initBattle() {
     monsters.Momo.position = {x:800, y:100}, 
     monsters.Draggle.position = {x:800, y:100}, 
     monsters.Emby.position = {x:800, y:100}, 
-    monsters.Woodle.position = {x:785, y:65}, 
+    monsters.Mouflax.position = {x:785, y:65}, 
     monsters.Rocky.position = {x:740, y:60}, 
     monsters.Beradin.position = {x:780, y:55}, 
 
