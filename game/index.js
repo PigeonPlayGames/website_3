@@ -652,6 +652,19 @@ document.querySelector("#levelUpButton").addEventListener("click", ()=>{
 
 })
 
+function updatePlayerPosition() {
+    const player = document.getElementById('player');
+    player.style.left = playerPos.x * tileSize + 'px';
+    player.style.top = playerPos.y * tileSize + 'px';
+  }
+
+  function checkDestination() {
+    // Check if the player has reached a certain destination
+    if (playerPos.x === 9 && playerPos.y === 9) {
+      // Redirect to another file or perform other actions
+      window.location.href = 'index.html';
+    }
+
 // click button to close penalty screen
 document.querySelector("#penaltyButton").addEventListener("click", ()=>{
     document.querySelector("#penaltyOverlay").style.display = 'none';
