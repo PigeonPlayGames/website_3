@@ -251,7 +251,7 @@ function animate() {
     let moving = true;
     player.animate = false;
 
-    if (player.position.x >= 245 && player.position.y >= 190) {
+    if (player.position.x >= 512 && player.position.y >= 263) {
         // Implement shake effect for the whole display
         shakeDisplay();
     }
