@@ -112,8 +112,8 @@ function drawCoordinatesMarker() {
     c.fillStyle = "red"; // Choose the color you want for the marker
 
     // Calculate the marker's position relative to the canvas
-    const markerX = 245 - offset.x; // Adjust for the offset
-    const markerY = 190 - offset.y; // Adjust for the offset
+    const markerX = 510 - offset.x; // Adjust for the offset
+    const markerY = 260 - offset.y; // Adjust for the offset
 
     // Draw a circle or any shape as the marker at the calculated position
     c.beginPath();
