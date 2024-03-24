@@ -230,6 +230,11 @@ function animate() {
     let moving = true;
     player.animate = false;
 
+    if (player.position.x >= 245 && player.position.y >= 190) {
+        // Implement shake effect for the whole display
+        shakeDisplay();
+    }
+
     // console.log(animationId)
     if (battle.initiated) return;
     // activate a battle
@@ -358,6 +363,25 @@ function animate() {
     } 
 }
 // animate();
+function shakeDisplay() {
+    const shakeStrength = 10; // Adjust the strength of the shake as needed
+    const originalX = canvas.offsetLeft;
+    const originalY = canvas.offsetTop;
+
+    // Generate random shake offsets within the strength limit
+    const offsetX = Math.random() * shakeStrength - shakeStrength / 2;
+    const offsetY = Math.random() * shakeStrength - shakeStrength / 2;
+
+    // Apply the shake offsets to the canvas position
+    canvas.style.left = `${originalX + offsetX}px`;
+    canvas.style.top = `${originalY + offsetY}px`;
+
+    // Reset the canvas position after a short delay
+    setTimeout(() => {
+        canvas.style.left = `${originalX}px`;
+        canvas.style.top = `${originalY}px`;
+    }, 100); // Adjust the duration of the shake effect as needed
+}
 
 let lastKey = '';
 window.addEventListener("keydown", (e) => {
