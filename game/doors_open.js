@@ -1,6 +1,6 @@
 // Define images for doors
 const doorImage = new Image();
-doorImage.src = "./img/door.png";
+doorImage.src = "./img/door_open.png";
 
 // Define Sprite for doors
 const door = new Sprite({
