@@ -112,8 +112,8 @@ function drawCoordinatesMarker() {
     c.fillStyle = "red"; // Choose the color you want for the marker
 
     // Calculate the marker's position relative to the canvas
-    const markerX = 510 - offset.x; // Adjust for the offset
-    const markerY = 260 - offset.y; // Adjust for the offset
+    const markerX = 110 - offset.x; // Adjust for the offset
+    const markerY = 120 - offset.y; // Adjust for the offset
 
     // Draw a circle or any shape as the marker at the calculated position
     c.beginPath();
@@ -251,7 +251,7 @@ function animate() {
     let moving = true;
     player.animate = false;
 
-    if (player.position.x >= 512 && player.position.y >= 263) {
+    if (player.position.x >= 112 && player.position.y >= 163) {
         // Implement shake effect for the whole display
         shakeDisplay();
     }
