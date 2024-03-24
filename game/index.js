@@ -103,6 +103,27 @@ function rectangularCollision({rectangle1, rectangle2}){
 const battle = {
     initiated: false
 }
+
+function drawCoordinatesMarker() {
+    // Save the current drawing state
+    c.save();
+
+    // Set style for the marker
+    c.fillStyle = "red"; // Choose the color you want for the marker
+
+    // Calculate the marker's position relative to the canvas
+    const markerX = 245 - offset.x; // Adjust for the offset
+    const markerY = 190 - offset.y; // Adjust for the offset
+
+    // Draw a circle or any shape as the marker at the calculated position
+    c.beginPath();
+    c.arc(markerX, markerY, 5, 0, Math.PI * 2); // Adjust the size of the marker as needed
+    c.fill();
+
+    // Restore the previous drawing state
+    c.restore();
+}
+
 function checkBuildingCollision() {
     if (
         player.position.x < buildingCoordinates.x + buildingCoordinates.width &&
