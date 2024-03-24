@@ -4,7 +4,7 @@ doorImage.src = "./img/door_open.png";
 
 // Define Sprite for doors
 const door = new Sprite({
-    position: {x: 400, y: 200}, // Example position, adjust as needed
+    position: {x: 150, y: 150}, // Example position, adjust as needed
     image: doorImage
 });
 
