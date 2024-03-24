@@ -103,27 +103,6 @@ function rectangularCollision({rectangle1, rectangle2}){
 const battle = {
     initiated: false
 }
-
-function drawCoordinatesMarker() {
-    // Save the current drawing state
-    c.save();
-
-    // Set style for the marker
-    c.fillStyle = "red"; // Choose the color you want for the marker
-
-    // Calculate the marker's position relative to the canvas
-    const markerX = 110 - offset.x; // Adjust for the offset
-    const markerY = 120 - offset.y; // Adjust for the offset
-
-    // Draw a circle or any shape as the marker at the calculated position
-    c.beginPath();
-    c.arc(markerX, markerY, 5, 0, Math.PI * 2); // Adjust the size of the marker as needed
-    c.fill();
-
-    // Restore the previous drawing state
-    c.restore();
-}
-
 function checkBuildingCollision() {
     if (
         player.position.x < buildingCoordinates.x + buildingCoordinates.width &&
@@ -250,11 +229,6 @@ function animate() {
 
     let moving = true;
     player.animate = false;
-
-    if (player.position.x >= 112 && player.position.y >= 163) {
-        // Implement shake effect for the whole display
-        shakeDisplay();
-    }
 
     // console.log(animationId)
     if (battle.initiated) return;
@@ -384,25 +358,6 @@ function animate() {
     } 
 }
 // animate();
-function shakeDisplay() {
-    const shakeStrength = 10; // Adjust the strength of the shake as needed
-    const originalX = canvas.offsetLeft;
-    const originalY = canvas.offsetTop;
-
-    // Generate random shake offsets within the strength limit
-    const offsetX = Math.random() * shakeStrength - shakeStrength / 2;
-    const offsetY = Math.random() * shakeStrength - shakeStrength / 2;
-
-    // Apply the shake offsets to the canvas position
-    canvas.style.left = `${originalX + offsetX}px`;
-    canvas.style.top = `${originalY + offsetY}px`;
-
-    // Reset the canvas position after a short delay
-    setTimeout(() => {
-        canvas.style.left = `${originalX}px`;
-        canvas.style.top = `${originalY}px`;
-    }, 100); // Adjust the duration of the shake effect as needed
-}
 
 let lastKey = '';
 window.addEventListener("keydown", (e) => {
@@ -651,19 +606,6 @@ document.querySelector("#levelUpButton").addEventListener("click", ()=>{
     // other levelUp logic @ battleScene.js initBattle()
 
 })
-
-function updatePlayerPosition() {
-    const player = document.getElementById('player');
-    player.style.left = playerPos.x * tileSize + 'px';
-    player.style.top = playerPos.y * tileSize + 'px';
-  }
-
-  function checkDestination() {
-    // Check if the player has reached a certain destination
-    if (playerPos.x === 9 && playerPos.y === 9) {
-      // Redirect to another file or perform other actions
-      window.location.href = 'index.html';
-    }
 
 // click button to close penalty screen
 document.querySelector("#penaltyButton").addEventListener("click", ()=>{
