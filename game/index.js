@@ -25,8 +25,8 @@ for (let i=0; i<battleZonesData.length; i+=70){
 
 const boundaries = [];
 const offset = {
-    x: -735,
-    y: -650,
+    x: -0,
+    y: -0,
 }
 
 collisionsMap.forEach((row, i) => {
@@ -46,7 +46,7 @@ const bgImage = new Image();
 bgImage.src = "./img/galley_hill_5.png";
 
 const foregroundImage = new Image();
-foregroundImage.src = "./img/foregroundObjects.png";
+foregroundImage.src = "./img/foreground_images2.png";
 
 const playerUpImage = new Image();
 playerUpImage.src = "./img/playerUp.png";
