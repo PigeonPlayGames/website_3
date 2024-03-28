@@ -25,8 +25,8 @@ for (let i=0; i<battleZonesData.length; i+=70){
 
 const boundaries = [];
 const offset = {
-    x: 200,
-    y: -100,
+    x: 700,
+    y: -600,
 }
 
 collisionsMap.forEach((row, i) => {
