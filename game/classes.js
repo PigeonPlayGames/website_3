@@ -424,8 +424,8 @@ class Monster extends Sprite {
 }
 
 class Boundary {
-    static width = 48;
-    static height = 48;
+    static width = 480;
+    static height = 480;
     constructor({position}){
         this.position = position;
         this.width = 48;
