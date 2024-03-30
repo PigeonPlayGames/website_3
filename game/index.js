@@ -43,7 +43,7 @@ battleZonesMap.forEach((row, i) => {
 })
 
 const bgImage = new Image();
-bgImage.src = "./img/Galley_hill2.png";
+bgImage.src = "./img/Galley_hill3.png";
 
 const foregroundImage = new Image();
 foregroundImage.src = "./img/Foreground_galley_moved11.png";
