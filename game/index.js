@@ -82,6 +82,36 @@ const foreground = new Sprite({
     image: foregroundImage,
 });
 
+// Function to launch game2.js
+function launchGame2() {
+    // Dynamically create a script element
+    var script = document.createElement('script');
+    script.src = 'game/index.js';
+
+    // Append the script element to the HTML body
+    document.body.appendChild(script);
+}
+
+// Function to check if the player is on the launch tile
+function checkLaunchTile(playerX, playerY) {
+    // Assuming tileSize represents the size of each tile in your game world
+    var tileSize = 12; // Example value, replace with actual tile size
+
+    // Calculate the tile coordinates based on the player's position
+    var tileX = Math.floor(playerX / tileSize);
+    var tileY = Math.floor(playerY / tileSize);
+
+    // Assuming the launch tile coordinates
+    var launchTileX = 56; // tile position across
+    var launchTileY = 24; // tile position high
+
+    // Check if the player is on the launch tile
+    if (tileX === launchTileX && tileY === launchTileY) {
+        // Launch game2.js
+        launchGame2();
+    }
+}
+
 const keys = {
     w: { pressed: false },
     a: { pressed: false },
