@@ -27,4 +27,8 @@ const attacks = {
         name: 'Fireball',
         damage: 20,
     },
+    Run: {
+        name: 'Run',
+        damage: 0, // Since "Run" doesn't cause damage, you can set it to 0
+    },
 }
