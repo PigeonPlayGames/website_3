@@ -115,8 +115,8 @@ const transportTileCoordinates = {
 };
 
 // Calculate the new destination coordinates for the transported tile
-const newDestinationX = playerStartingPosition.x - (25 * tileWidth); // 25 tiles left of player's starting position
-const newDestinationY = playerStartingPosition.y + (20 * tileHeight); // 20 tiles down from player's starting position
+const newDestinationX = playerStartingPosition.x - (250 * tileWidth); // 25 tiles left of player's starting position
+const newDestinationY = playerStartingPosition.y + (200 * tileHeight); // 20 tiles down from player's starting position
 
 // Function to animate
 function animate() {
