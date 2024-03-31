@@ -102,8 +102,8 @@ function checkLaunchTile(playerX, playerY) {
     var tileY = Math.floor(playerY / tileSize);
 
     // Assuming the launch tile coordinates
-    var launchTileX = 2; // tile position across
-    var launchTileY = 2; // tile position high
+    var launchTileX = -1401; // tile position across
+    var launchTileY = -626; // tile position high
 
     // Check if the player is on the launch tile
     if (tileX === launchTileX && tileY === launchTileY) {
