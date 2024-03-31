@@ -103,6 +103,22 @@ function rectangularCollision({rectangle1, rectangle2}){
 const battle = {
     initiated: false
 }
+
+// Define constants and variables
+const tileWidth = 12; // Width of each tile
+const tileHeight = 12; // Height of each tile
+
+// Calculate the coordinates of the transport tile
+const transportTileCoordinates = {
+    x: playerStartingPosition.x - (tileWidth * 25), // 25 tiles left of player's starting position
+    y: playerStartingPosition.y + (tileHeight * 20) // 20 tiles down from player's starting position
+};
+
+// Calculate the new destination coordinates for the transported tile
+const newDestinationX = playerStartingPosition.x - (25 * tileWidth); // 25 tiles left of player's starting position
+const newDestinationY = playerStartingPosition.y + (20 * tileHeight); // 20 tiles down from player's starting position
+
+// Function to animate
 function animate() {
     const animationId = window.requestAnimationFrame(animate);
     background.draw();
@@ -118,6 +134,18 @@ function animate() {
 
     let moving = true;
     player.animate = false;
+
+    // Check if the player's position matches the transport tile coordinates
+    if (player.position.x === transportTileCoordinates.x && player.position.y === transportTileCoordinates.y) {
+        // Update the player's position to the new destination coordinates
+        player.position.x = newDestinationX;
+        player.position.y = newDestinationY;
+
+        // Redraw the player at the new destination
+        player.draw();
+
+        // You may also perform any additional actions or logic here
+    }
 
     // console.log(animationId)
     if (battle.initiated) return;
