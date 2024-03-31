@@ -86,7 +86,7 @@ const foreground = new Sprite({
 function launchGame2() {
     // Dynamically create a script element
     var script = document.createElement('script');
-    script.src = 'game/index.js';
+    script.src = 'game/index.html';
 
     // Append the script element to the HTML body
     document.body.appendChild(script);
