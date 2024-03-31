@@ -106,11 +106,6 @@ class Monster extends Sprite {
             if (attack.name === "Fireball"){
                 attack.damage = Math.ceil(this.damage*1.5) + Math.ceil(Math.random() * (this.damage/2));
             }
-            // Check if the attack is "Run" to end the battle
-            if (attack.name === "Run") {
-            // End the battle
-            battle.initiated = false;
-            return; // Exit the function early
         }
 
             } else { 
@@ -121,6 +116,12 @@ class Monster extends Sprite {
                 if (adv.attr.strength >= 10) attack.damage = adv.attr.strength;
                 else attack.damage = 10;
             }
+
+            // Check if the attack is "Run" to end the battle
+            if (attack.name === "Run") {
+            // End the battle
+            battle.initiated = false;
+            return; // Exit the function early
     
             // UPDATE DAMAGE FOR "Lucky"
             if (attack.name === "Lucky"){
