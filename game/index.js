@@ -46,7 +46,7 @@ const bgImage = new Image();
 bgImage.src = "./img/Galley_hill3.png";
 
 const foregroundImage = new Image();
-foregroundImage.src = "./img/Foreground_galley_moved14.png";
+foregroundImage.src = "./img/Foreground_galley_moved15.png";
 
 const playerUpImage = new Image();
 playerUpImage.src = "./img/playerUp.png";
