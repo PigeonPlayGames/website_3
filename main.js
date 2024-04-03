@@ -3077,7 +3077,7 @@ vec4 gc(vec2 c){vec2 n=gsn(c)-.5;c+=n*float(${noiseScale0});${voronoiPattern
             startButton.textContent = "Try again";
         }
         else if (level == 0) {
-            overlayTextDiv.textContent = "The enemy is attacking the city, you need to defend it!\nAre you ready?";
+            overlayTextDiv.textContent = " Help ! The enemy are on thier way to attack the city, you need to defend it!\nAre you ready?";
             startButton.textContent = "Let's go!";
         }
         else if (level == 1) {
