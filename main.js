@@ -2586,7 +2586,7 @@ vec4 gc(vec2 c){vec2 n=gsn(c)-.5;c+=n*float(${noiseScale0});${voronoiPattern
                     if (--requiredNumberOfEnemiesToKill == 0) {
                         nextLevelLoading = true;
                         FadeOutMusic();
-                        CreateFixedUpdateTimer(2, false, () => LoadLevel(currentLevel + 1, false));
+                        CreateFixedUpdateTimer(3, false, () => LoadLevel(currentLevel + 1, false));
                     }
                 }
             }
@@ -2628,6 +2628,13 @@ vec4 gc(vec2 c){vec2 n=gsn(c)-.5;c+=n*float(${noiseScale0});${voronoiPattern
             enemySpawnTimes: splitmap("0,0,0,0,0,0,15,15,15,15,15,15,30,30,30,30,30,30,45,45,45,45,45,45,60,60,60,60,60,60,60,90,90,90,90,90,90,90,120,120,120,120,120,120,120,125,125,125,125,125,125,125,130,130,130,130,130,130,130"),
             startingGold: 150,
             startingFood: 100,
+        }, {
+            cityRadius: 125,
+            wallOffset: 3,
+            wallRotation: -0.05,
+            enemySpawnTimes: splitmap("0,0,0,0,15,15,15,15,15,15,15,15,30,30,30,30,30,30,45,45,45,45,45,45,60,90,90,90,90,90,90,90,90,90,90,90,90,90,120,120,120,120,120,120,120,150,155,155,155,155,155,155,190,190,190,190,190,190,190"),
+            startingGold: 200,
+            startingFood: 200,
         }];
     let activeLevelObjects = new Set();
     let AddLevelObject = (obj) => {
@@ -3080,8 +3087,15 @@ vec4 gc(vec2 c){vec2 n=gsn(c)-.5;c+=n*float(${noiseScale0});${voronoiPattern
             setTimeout(() => musicDurationSetterFn(5), 10000);
         }
         else if (level == 2) {
-            overlayTextDiv.textContent = "This is the final attack. The enemy is stronger than ever.\nCan you defend the city one last time?";
+            overlayTextDiv.textContent = "This is the one before the last attack. The enemy is stronger than ever.\nCan you defend the city one last time?";
             startButton.textContent = "Let's do it!";
+            musicDurationSetterFn(4.5);
+            setTimeout(() => musicDurationSetterFn(4), 10000);
+        }
+        }
+        else if (level == 3) {
+            overlayTextDiv.textContent = "This is the final attack. The enemy is stronger than ever.\nCan you defend the city one last time?";
+            startButton.textContent = "Super Sayain Mode!";
             musicDurationSetterFn(4.5);
             setTimeout(() => musicDurationSetterFn(4), 10000);
         }
