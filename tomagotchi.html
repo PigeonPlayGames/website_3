@@ -4,15 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digital Pet Tamagotchi</title>
-    <link rel="stylesheet" href="tomagotchi.css"> <!-- Make sure this path is correct -->
-    <script src="tomagotchi.js" defer></script> <!-- Ensure this path matches your JS file -->
+    <link rel="stylesheet" href="tomagotchi.css"> <!-- Ensure the stylesheet link is correct -->
+    <script src="tomagotchi.js" defer></script> <!-- Ensure the JavaScript file link is correct -->
 </head>
 <body>
     <div id="pet-container" style="position: relative; width: 300px; height: 300px; border: 2px solid #ccc; margin: auto; overflow: hidden;">
-        <div id="pet" style="position: absolute; width: 100px; height: 100px;">
-            <div class="pet-block"></div>
-            <div class="pet-block"></div>
-            <div class="pet-block"></div>
+        <div id="pet" style="position: absolute; width: 100px; height: 100px; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            <!-- Blocks representing parts of the Tamagotchi -->
+            <div class="pet-block" style="position: absolute; width: 30px; height: 30px; background-color: #FFD700; top: 10px; left: 35px;"></div>
+            <div class="pet-block" style="position: absolute; width: 30px; height: 30px; background-color: #FFD700; top: 40px; left: 10px;"></div>
+            <div class="pet-block" style="position: absolute; width: 30px; height: 30px; background-color: #FFD700; top: 40px; left: 60px;"></div>
         </div>
     </div>
     <div style="text-align: center; margin-top: 20px;">
