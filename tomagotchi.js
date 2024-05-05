@@ -5,17 +5,17 @@ class Tamagotchi {
         this.energy = 50; // Initial energy level
         this.mood = 50;  // Initial mood level
         this.cleanliness = 50; // Initial cleanliness level
-        this.health = 100; // Initial health level, starting at 100 for better survivability
+        this.health = 100; // Initial health level, set to 100 for better survivability
         this.timer = null;
         this.movementTimer = null;
     }
 
     startLifeCycle() {
         this.timer = setInterval(() => {
-            this.hunger += 1;
-            this.energy -= 1;
-            this.mood -= 1;
-            this.cleanliness -= 1;
+            this.hunger = Math.min(100, this.hunger + 1);
+            this.energy = Math.max(0, this.energy - 1);
+            this.mood = Math.max(0, this.mood - 1);
+            this.cleanliness = Math.max(0, this.cleanliness - 1);
             this.health = this.calculateHealth();
             this.updateUI();
             this.checkStatus();
@@ -31,7 +31,7 @@ class Tamagotchi {
     }
 
     play() {
-        if (this.energy >= 5) {
+        if (this.energy > 5) {
             this.energy -= 5;
             this.mood += 10;
             this.updateUI();
@@ -46,12 +46,14 @@ class Tamagotchi {
 
     clean() {
         this.cleanliness = 100;
-        this.health += 5; // Improving health directly when cleaning
+        this.health += 5; // Direct improvement to health
         this.updateUI();
     }
 
     calculateHealth() {
-        return Math.max(0, Math.min(100, 100 + this.cleanliness - this.hunger));
+        let baseHealth = 50;
+        baseHealth += this.cleanliness - (100 - this.energy) - this.hunger;
+        return Math.max(0, Math.min(100, baseHealth));
     }
 
     checkStatus() {
@@ -83,9 +85,8 @@ class Tamagotchi {
     }
 }
 
-const myPet = new Tamagotchi('Fluffy');
-
 document.addEventListener('DOMContentLoaded', () => {
+    const myPet = new Tamagotchi('Fluffy');
     myPet.startLifeCycle();
     document.getElementById('feed-button').addEventListener('click', () => myPet.feed());
     document.getElementById('play-button').addEventListener('click', () => myPet.play());
