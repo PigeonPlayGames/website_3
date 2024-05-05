@@ -4,15 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digital Pet Tamagotchi</title>
-    <link rel="stylesheet" href="tamagotchi.css"> <!-- Correct the CSS file name if necessary -->
-    <script src="tamagotchi.js" defer></script> <!-- Ensuring JavaScript loads after HTML parsing -->
+    <link rel="stylesheet" href="tamagotchi.css"> <!-- Make sure this path is correct -->
+    <script src="tamagotchi.js" defer></script> <!-- Ensure this path matches your JS file -->
 </head>
 <body>
-    <div id="pet-container">
-        <div id="pet">
-            <!-- Placeholder for the pet image -->
-            <img src="https://via.placeholder.com/100" alt="Cute Tamagotchi Pet">
+    <div id="pet-container" style="position: relative; width: 300px; height: 300px; border: 2px solid #ccc; margin: auto; overflow: hidden;">
+        <div id="pet" style="position: absolute; width: 100px; height: 100px;">
+            <div class="pet-block"></div>
+            <div class="pet-block"></div>
+            <div class="pet-block"></div>
         </div>
+    </div>
+    <div style="text-align: center; margin-top: 20px;">
         <button id="feed-button">Feed</button>
         <button id="play-button">Play</button>
         <button id="sleep-button">Sleep</button>
