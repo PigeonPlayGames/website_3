@@ -14,21 +14,44 @@ body {
 /* Main container for the pet */
 #pet-container {
     width: 350px;
+    height: 350px; /* Added height to contain the pet */
     background-color: #ffffff;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     text-align: center;
+    position: relative; /* Needed for absolute positioning of the pet */
+    overflow: hidden; /* Prevents the pet from displaying outside the container */
 }
 
-/* Styling the pet image */
-#pet img {
+/* Styling the pet using blocks instead of an image */
+#pet {
+    position: absolute;
     width: 100px;
     height: 100px;
-    border-radius: 50%;
-    margin: 20px auto;
-    display: block;
-    background-color: #eaeaea; /* Placeholder in case the image fails to load */
+    top: 50%; /* Center the pet initially */
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.pet-block {
+    width: 30px;
+    height: 30px;
+    background-color: #FFD700; /* Gold color for visibility */
+    position: absolute;
+    transition: transform 0.5s ease; /* Smooth transition for movement */
+}
+
+.pet-block:nth-child(1) {
+    transform: translateX(-15px);
+}
+
+.pet-block:nth-child(2) {
+    transform: translateY(15px);
+}
+
+.pet-block:nth-child(3) {
+    transform: translateX(15px);
 }
 
 /* Button styles */
