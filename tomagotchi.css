@@ -1,101 +1,23 @@
-/* Overall body and background styles */
 body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f4f4f9;
-    color: #333;
-    margin: 0;
-    padding: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    background-color: #000;
+    margin: 0;
+    color: #fff;
+    font-family: Arial, sans-serif;
 }
 
-/* Main container for the pet */
-#pet-container {
-    width: 350px;
-    height: 350px; /* Added height to contain the pet */
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+#game-container {
     text-align: center;
-    position: relative; /* Needed for absolute positioning of the pet */
-    overflow: hidden; /* Prevents the pet from displaying outside the container */
 }
 
-/* Styling the pet using blocks instead of an image */
-#pet {
-    position: absolute;
-    width: 100px;
-    height: 100px;
-    top: 50%; /* Center the pet initially */
-    left: 50%;
-    transform: translate(-50%, -50%);
+canvas {
+    border: 2px solid #fff;
+    background-color: #000;
 }
 
-.pet-block {
-    width: 30px;
-    height: 30px;
-    background-color: #FFD700; /* Gold color for visibility */
-    position: absolute;
-    transition: transform 0.5s ease; /* Smooth transition for movement */
-}
-
-.pet-block:nth-child(1) {
-    transform: translateX(-15px);
-}
-
-.pet-block:nth-child(2) {
-    transform: translateY(15px);
-}
-
-.pet-block:nth-child(3) {
-    transform: translateX(15px);
-}
-
-/* Button styles */
-button {
-    background-color: #0084ff;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    margin: 10px 5px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
-/* Status indicators */
-#status, #health, #energy, #mood, #cleanliness, #stage {
+#controls {
     margin-top: 10px;
-    font-size: 14px;
-    color: #555;
-}
-
-/* Highlighting key status indicators */
-#health {
-    color: #e53e3e;
-}
-
-#energy {
-    color: #48bb78;
-}
-
-#mood {
-    color: #d69e2e;
-}
-
-#cleanliness {
-    color: #3182ce;
-}
-
-#stage {
-    font-weight: bold;
-    color: #805ad5;
 }
