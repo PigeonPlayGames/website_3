@@ -2,16 +2,17 @@ body, html {
     margin: 0;
     padding: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #b3f8c2;
+    background-color: #f4f4f4; /* Light grey background for contrast */
 }
 
 header {
-    background-color: #222;
+    background: linear-gradient(135deg, #333, #666); /* Metallic gradient background */
     color: white;
     padding: 1em 2em;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 2px solid #444; /* Subtle border for depth */
 }
 
 header nav ul {
@@ -28,21 +29,27 @@ header nav ul li {
 header nav ul li a {
     color: white;
     text-decoration: none;
-    transition: color 0.3s ease;
+    font-weight: bold; /* Make the text bold for emphasis */
+    transition: color 0.3s ease, text-shadow 0.3s ease;
 }
 
 header nav ul li a:hover, header nav ul li a:focus {
     color: #ffcc00;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.4); /* Subtle text shadow for a glowing effect */
 }
 
 #hero {
     text-align: center;
     padding: 2em 1em;
-    background-color: #fff;
+    background: linear-gradient(135deg, #e0e0e0, #b0b0b0); /* Metallic gradient */
+    border-bottom: 2px solid #ccc; /* Light border for separation */
 }
 
 #hero h1 {
     margin-bottom: 1em;
+    font-size: 2em;
+    font-weight: bold;
+    color: #333; /* Darker text for contrast */
 }
 
 .hero-images {
@@ -53,22 +60,36 @@ header nav ul li a:hover, header nav ul li a:focus {
 
 .hero-images a {
     display: inline-block;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .hero-images a:hover {
     transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3); /* Enhanced shadow for depth */
 }
 
 .hero-images img {
     max-width: 100%;
     height: auto;
     border-radius: 8px;
+    border: 2px solid #666; /* Metallic border around images */
 }
 
 #featured-games, #game-gallery {
     text-align: center;
     padding: 2em 0;
+}
+
+#featured-games {
+    background: #fff; /* Light background for contrast */
+    border: 1px solid #ddd; /* Light border */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Subtle shadow */
+}
+
+#game-gallery {
+    background: linear-gradient(135deg, #e0e0e0, #b0b0b0); /* Metallic gradient */
+    border-radius: 8px;
 }
 
 .games {
@@ -82,39 +103,21 @@ header nav ul li a:hover, header nav ul li a:focus {
     background-color: #fff;
     border: 1px solid #ddd;
     padding: 10px;
+    border-radius: 8px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .games div:hover {
     transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2); /* Enhanced shadow */
 }
 
 footer {
-    background-color: #222;
+    background: linear-gradient(135deg, #333, #666); /* Metallic gradient */
     color: white;
     text-align: center;
     padding: 1em 0;
-    position: relative;
-    bottom: 0;
-    width: 100%;
-}
-
-@media (max-width: 768px) {
-    header nav ul {
-        flex-direction: column;
-        margin-top: 0.5em;
-    }
-
-    header nav ul li {
-        margin: 5px 0;
-    }
-}
-
-#logo {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+    border-top: 2px solid #444; /* Subtle border for depth */
 }
 
 #visitCount {
@@ -127,4 +130,15 @@ footer {
     width: auto;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     font-size: 1.2em;
+}
+
+@media (max-width: 768px) {
+    header nav ul {
+        flex-direction: column;
+        margin-top: 0.5em;
+    }
+
+    header nav ul li {
+        margin: 5px 0;
+    }
 }
