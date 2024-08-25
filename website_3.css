@@ -35,6 +35,37 @@ header nav ul li a:hover, header nav ul li a:focus {
     color: #ffcc00;
 }
 
+#hero {
+    text-align: center;
+    padding: 2em 1em;
+    background-color: #fff;
+}
+
+#hero h1 {
+    margin-bottom: 1em;
+}
+
+.hero-images {
+    display: flex;
+    justify-content: center;
+    gap: 1em;
+}
+
+.hero-images a {
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+.hero-images a:hover {
+    transform: scale(1.05);
+}
+
+.hero-images img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
 #featured-games, #game-gallery {
     text-align: center;
     padding: 2em 0;
@@ -51,7 +82,7 @@ header nav ul li a:hover, header nav ul li a:focus {
     background-color: #fff;
     border: 1px solid #ddd;
     padding: 10px;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .games div:hover {
@@ -80,14 +111,12 @@ footer {
     }
 }
 
-/* Centering the logo */
 #logo {
     display: block;
     margin-left: auto;
     margin-right: auto;
 }
 
-/* Styles for the visit counter */
 #visitCount {
     text-align: center;
     padding: 20px;
