@@ -92,3 +92,28 @@ fadeInStyle.innerHTML = `
     }
 `;
 document.head.appendChild(fadeInStyle);
+
+// Array of leaf image URLs (you can use actual images of leaves or simple SVGs)
+const leafImages = [
+    'leaf1.png', // Replace these with actual URLs to leaf images
+    'leaf2.png',
+    'leaf3.png'
+];
+
+// Create a function to generate and animate leaves
+function createFallingLeaves() {
+    const numLeaves = 10; // Number of leaves you want
+    for (let i = 0; i < numLeaves; i++) {
+        const leaf = document.createElement('div');
+        leaf.classList.add('leaf');
+        leaf.style.backgroundImage = `url(${leafImages[Math.floor(Math.random() * leafImages.length)]})`;
+        leaf.style.left = `${Math.random() * 100}vw`;
+        leaf.style.animationDuration = `${10 + Math.random() * 20}s`;
+        leaf.style.animationDelay = `${Math.random() * 5}s`;
+        document.body.appendChild(leaf);
+    }
+}
+
+// Call the function when the page loads
+window.addEventListener('load', createFallingLeaves);
+
