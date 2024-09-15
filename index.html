@@ -1,96 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PPG</title>
-    <meta name="description" content="PPG - PigeonPlayGames offers a wide variety of mobile and 3D Unity games. Explore our featured and latest games.">
-    <meta name="keywords" content="PPG, mobile games, 3D Unity games, indie games, PigeonPlayGames">
-    <meta name="author" content="PigeonPlayGames">
-    <link rel="icon" href="favicon.ico">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com;">
-    <title>PPG - PigeonPlayGames</title>
     <link rel="stylesheet" href="website_3.css">
 
     <!-- Google Analytics -->
-@@ -14,11 +19,49 @@
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-74GSTMB6RW"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'G-74GSTMB6RW');
     </script>
-
-    <style>
-        /* Additional styles */
-        #scroll-indicator {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 0;
-            height: 5px;
-            background: #ffcc00;
-            z-index: 99;
-        }
-
-        .spinner {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border: 6px solid #f3f3f3;
-            border-top: 6px solid #3498db;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 0.8s linear infinite;
-            z-index: 9999;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-    </style>
 </head>
 <body>
-    <!-- Loading Spinner -->
-    <div id="loading-spinner" class="spinner"></div>
-
     <header>
         <div class="hamburger-menu">&#9776;</div>
         <nav>
-        <div class="hamburger-menu" aria-label="Main Menu">&#9776;</div>
-        <nav aria-label="Primary Navigation">
             <ul>
                 <li><a href="index.html">Home</a></li>
                 <li><a href="mobile_games.html">Mobile Games</a></li>
-@@ -29,44 +72,46 @@
+                <li><a href="all_games.html">All Games</a></li>
+                <li><a href="login.html">Log-in</a></li>
+                <li><a href="https://pigeonplaygames.itch.io/get-high-411">3D Unity Games</a></li>
+            </ul>
         </nav>
     </header>
-
-    <!-- Scroll Indicator -->
-    <div id="scroll-indicator"></div>
 
     <section id="hero">
         <h1>PPG</h1>
             <a>
                 <img src="pigeon_logo_small.png" alt="Logo">
             </a>
-        <a>
-            <img src="pigeon_logo_small.png" alt="Pigeon Play Games Logo">
-        </a>
         <div class="hero-images">
             <a href="https://pigeonplaygames.itch.io/tinycity">
                 <img src="wastland1.png" alt="TINY CITY">
-                <img src="wastland1.png" alt="Screenshot of Tiny City mobile game" loading="lazy">
             </a>
             <a href="https://pigeonplaygames.itch.io/tom-hawk-pro-10">
                 <img src="TomHawk.png" alt="Tom Hawk Pro 10">
-                <img src="TomHawk.png" alt="Tom Hawk Pro 10 game image" loading="lazy">
             </a>
-
+            
             <a href="https://pigeonplaygames.itch.io/get-high-411">
                 <img src="GoUp.png" alt="Get High 411">
-                <img src="GoUp.png" alt="Get High 411 game image" loading="lazy">
             </a>
         </div>
     </section>
@@ -105,11 +58,6 @@
                 <!-- Game 2 Content -->
             </div>
             <!-- Additional slides as needed -->
-            <div class="game-slide active"> <!-- Game 1 Content --> </div>
-            <div class="game-slide"> <!-- Game 2 Content --> </div>
-            <!-- Navigation Arrows for manual control -->
-            <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
-            <a class="next" onclick="plusSlides(1)">&#10095;</a>
         </div>
     </section>
 
@@ -119,80 +67,14 @@
             <div><img src="wastland1.png" alt="Recent Mobile Games"></div>
             <h2>*Recently Added to Mobile Games*</h2>
             <!-- Thumbnails for games will be displayed here -->
-            <div>
-                <img src="wastland1.png" alt="Screenshot of Tiny City mobile game" loading="lazy">
-                <h2>*Recently Added to Mobile Games*</h2>
-            </div>
-            <!-- Additional Game Thumbnails -->
         </div>
     </section>
 
-@@ -75,6 +120,68 @@ <h2>*Recently Added to Mobile Games*</h2>
+    <footer>
+        <p>© 2024 PigeonPlayGames. All rights reserved.</p>
     </footer>
 
     <div id="visitCount"></div> <!-- Visit counter display -->
-
     <script src="website_3.js"></script>
-    <script>
-        // Loading Spinner Removal
-        window.addEventListener('load', function() {
-            document.getElementById('loading-spinner').style.display = 'none';
-        });
-
-        // Scroll Progress Indicator
-        window.onscroll = function() {scrollProgress()};
-        function scrollProgress() {
-            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            let scrolled = (winScroll / height) * 100;
-            document.getElementById("scroll-indicator").style.width = scrolled + "%";
-        }
-
-        // Hamburger menu toggle
-        const hamburger = document.querySelector('.hamburger-menu');
-        const navUL = document.querySelector('nav ul');
-        hamburger.addEventListener('click', () => {
-            navUL.classList.toggle('show');
-        });
-
-        // Visit counter
-        if (typeof(Storage) !== "undefined") {
-            if (localStorage.visitCount) {
-                localStorage.visitCount = Number(localStorage.visitCount) + 1;
-            } else {
-                localStorage.visitCount = 1;
-            }
-            document.getElementById("visitCount").innerHTML = "Visit Count: " + localStorage.visitCount;
-        } else {
-            document.getElementById("visitCount").innerHTML = "Sorry, your browser does not support web storage...";
-        }
-
-        // Game Slider Functionality
-        let slideIndex = 1;
-        showSlides(slideIndex);
-        function plusSlides(n) {
-            showSlides(slideIndex += n);
-        }
-        function showSlides(n) {
-            let slides = document.getElementsByClassName("game-slide");
-            if (n > slides.length) {slideIndex = 1}
-            if (n < 1) {slideIndex = slides.length}
-            for (let i = 0; i < slides.length; i++) {
-                slides[i].style.display = "none";
-            }
-            slides[slideIndex-1].style.display = "block";
-        }
-
-        // Google Analytics Event Tracking for Game Clicks
-        document.querySelectorAll('.hero-images a').forEach(function(link) {
-            link.addEventListener('click', function() {
-                gtag('event', 'game_click', {
-                    'event_category': 'Games',
-                    'event_label': link.querySelector('img').alt,
-                    'value': 1
-                });
-            });
-        });
-    </script>
 </body>
 </html>
