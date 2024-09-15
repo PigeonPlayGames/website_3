@@ -1,10 +1,10 @@
 /* General Styles */
 body, html {
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f4f4;
-    scroll-behavior: smooth;
+    background: linear-gradient(to bottom, #FFA07A, #FF6347, #FF4500);
+    background-attachment: fixed; /* Makes the background stay in place while scrolling */
+    background-size: cover;
+    color: #fff; /* Adjust text color for contrast */
+    font-family: 'Poppins', sans-serif;
 }
 
 a {
@@ -59,11 +59,10 @@ header nav ul li a:hover, header nav ul li a:focus {
 
 /* Hero Section */
 #hero {
-    text-align: center;
-    padding: 2em 1em;
-    background: linear-gradient(135deg, #e0e0e0, #b0b0b0);
-    border-bottom: 2px solid #ccc;
-}
+    background: rgba(255, 255, 255, 0.8); /* Add some contrast behind the hero section */
+    padding: 50px;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 
 #hero h1 {
     font-size: 2.5em;
