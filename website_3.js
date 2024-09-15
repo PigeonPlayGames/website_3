@@ -20,15 +20,23 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Event listeners for slider controls
-    document.querySelector('.prev').addEventListener('click', () => plusSlides(-1));
-    document.querySelector('.next').addEventListener('click', () => plusSlides(1));
+    const prevButton = document.querySelector('.prev');
+    const nextButton = document.querySelector('.next');
+    if (prevButton) {
+        prevButton.addEventListener('click', () => plusSlides(-1));
+    }
+    if (nextButton) {
+        nextButton.addEventListener('click', () => plusSlides(1));
+    }
 
     // Hamburger menu toggle
     const hamburger = document.querySelector('.hamburger-menu');
     const navUL = document.querySelector('nav ul');
-    hamburger.addEventListener('click', () => {
-        navUL.classList.toggle('show');
-    });
+    if (hamburger && navUL) {
+        hamburger.addEventListener('click', () => {
+            navUL.classList.toggle('show');
+        });
+    }
 
     // Visit counter
     if (typeof(Storage) !== "undefined") {
@@ -45,11 +53,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Google Analytics Event Tracking for Game Clicks
     document.querySelectorAll('.hero-images a').forEach(function(link) {
         link.addEventListener('click', function() {
-            gtag('event', 'game_click', {
-                'event_category': 'Games',
-                'event_label': link.querySelector('img').alt,
-                'value': 1
-            });
+            if (typeof gtag === 'function') {
+                gtag('event', 'game_click', {
+                    'event_category': 'Games',
+                    'event_label': link.querySelector('img').alt,
+                    'value': 1
+                });
+            }
         });
     });
 });
