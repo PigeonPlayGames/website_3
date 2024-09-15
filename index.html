@@ -1,26 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PPG</title>
     <meta name="description" content="PPG - PigeonPlayGames offers a wide variety of mobile and 3D Unity games. Explore our featured and latest games.">
     <meta name="keywords" content="PPG, mobile games, 3D Unity games, indie games, PigeonPlayGames">
     <meta name="author" content="PigeonPlayGames">
     <link rel="icon" href="favicon.ico">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com;">
     <title>PPG - PigeonPlayGames</title>
     <link rel="stylesheet" href="website_3.css">
-    
+
     <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-74GSTMB6RW"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-74GSTMB6RW');
+@@ -14,11 +19,49 @@
+      gtag('js', new Date());
+      gtag('config', 'G-74GSTMB6RW');
     </script>
 
     <style>
-        /* Simplified styles */
+        /* Additional styles */
         #scroll-indicator {
             position: fixed;
             top: 0;
@@ -59,15 +56,14 @@
     <div id="loading-spinner" class="spinner"></div>
 
     <header>
+        <div class="hamburger-menu">&#9776;</div>
+        <nav>
         <div class="hamburger-menu" aria-label="Main Menu">&#9776;</div>
         <nav aria-label="Primary Navigation">
             <ul>
                 <li><a href="index.html">Home</a></li>
                 <li><a href="mobile_games.html">Mobile Games</a></li>
-                <li><a href="all_games.html">All Games</a></li>
-                <li><a href="login.html">Log-in</a></li>
-                <li><a href="https://pigeonplaygames.itch.io/get-high-411">3D Unity Games</a></li>
-            </ul>
+@@ -29,44 +72,46 @@
         </nav>
     </header>
 
@@ -76,17 +72,24 @@
 
     <section id="hero">
         <h1>PPG</h1>
+            <a>
+                <img src="pigeon_logo_small.png" alt="Logo">
+            </a>
         <a>
             <img src="pigeon_logo_small.png" alt="Pigeon Play Games Logo">
         </a>
         <div class="hero-images">
             <a href="https://pigeonplaygames.itch.io/tinycity">
+                <img src="wastland1.png" alt="TINY CITY">
                 <img src="wastland1.png" alt="Screenshot of Tiny City mobile game" loading="lazy">
             </a>
             <a href="https://pigeonplaygames.itch.io/tom-hawk-pro-10">
+                <img src="TomHawk.png" alt="Tom Hawk Pro 10">
                 <img src="TomHawk.png" alt="Tom Hawk Pro 10 game image" loading="lazy">
             </a>
+
             <a href="https://pigeonplaygames.itch.io/get-high-411">
+                <img src="GoUp.png" alt="Get High 411">
                 <img src="GoUp.png" alt="Get High 411 game image" loading="lazy">
             </a>
         </div>
@@ -95,6 +98,13 @@
     <section id="featured-games">
         <h2>Featured Games ... prev update 8/9/24</h2>
         <div class="game-slider">
+            <div class="game-slide active">
+                <!-- Game 1 Content -->
+            </div>
+            <div class="game-slide">
+                <!-- Game 2 Content -->
+            </div>
+            <!-- Additional slides as needed -->
             <div class="game-slide active"> <!-- Game 1 Content --> </div>
             <div class="game-slide"> <!-- Game 2 Content --> </div>
             <!-- Navigation Arrows for manual control -->
@@ -106,6 +116,9 @@
     <section id="game-gallery">
         <h2>Game Gallery</h2>
         <div class="games">
+            <div><img src="wastland1.png" alt="Recent Mobile Games"></div>
+            <h2>*Recently Added to Mobile Games*</h2>
+            <!-- Thumbnails for games will be displayed here -->
             <div>
                 <img src="wastland1.png" alt="Screenshot of Tiny City mobile game" loading="lazy">
                 <h2>*Recently Added to Mobile Games*</h2>
@@ -114,8 +127,7 @@
         </div>
     </section>
 
-    <footer>
-        <p>© 2024 PigeonPlayGames. All rights reserved.</p>
+@@ -75,6 +120,68 @@ <h2>*Recently Added to Mobile Games*</h2>
     </footer>
 
     <div id="visitCount"></div> <!-- Visit counter display -->
@@ -175,4 +187,12 @@
         document.querySelectorAll('.hero-images a').forEach(function(link) {
             link.addEventListener('click', function() {
                 gtag('event', 'game_click', {
-                    'event_category': 
+                    'event_category': 'Games',
+                    'event_label': link.querySelector('img').alt,
+                    'value': 1
+                });
+            });
+        });
+    </script>
+</body>
+</html>
