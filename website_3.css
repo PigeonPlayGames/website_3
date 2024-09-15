@@ -2,7 +2,7 @@ body, html {
     margin: 0;
     padding: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f4f4; /* Light grey background for contrast */
+    background-color: linear-gradient(to bottom, #FFA07A, #FF6347, #FF4500) /* previously was Light grey background for contrast */
 }
 
 header {
