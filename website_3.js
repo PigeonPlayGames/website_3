@@ -1,119 +1,24 @@
-// Remove the loading spinner once the page has fully loaded
-window.addEventListener('load', function () {
-    document.getElementById('loading-spinner').style.display = 'none';
-});
+// script.js
 
-// Scroll Progress Indicator
-window.onscroll = function () {
-    scrollProgress();
-};
+document.addEventListener('DOMContentLoaded', function() {
+    // Slider functionality
+    showSlides();
+@@ -11,6 +9,18 @@ document.addEventListener('DOMContentLoaded', function() {
+    hamburger.addEventListener('click', () => {
+        navUL.classList.toggle('show');
+    });
 
-function scrollProgress() {
-    let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-    let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    let scrolled = (winScroll / height) * 100;
-    document.getElementById('scroll-indicator').style.width = scrolled + '%';
-}
-
-// Hamburger menu toggle for mobile view
-const hamburger = document.querySelector('.hamburger-menu');
-const navUL = document.querySelector('nav ul');
-hamburger.addEventListener('click', () => {
-    navUL.classList.toggle('show');
-});
-
-// Visit Counter - Uses local storage to count visits
-if (typeof(Storage) !== 'undefined') {
-    if (localStorage.visitCount) {
-        localStorage.visitCount = Number(localStorage.visitCount) + 1;
+    // Visit counter
+    if (typeof(Storage) !== "undefined") {
+        if (localStorage.visitCount) {
+            localStorage.visitCount = Number(localStorage.visitCount) + 1;
+        } else {
+            localStorage.visitCount = 1;
+        }
+        document.getElementById("visitCount").innerHTML = "Visit Count: " + localStorage.visitCount;
     } else {
-        localStorage.visitCount = 1;
+        document.getElementById("visitCount").innerHTML = "Sorry, your browser does not support web storage...";
     }
-    document.getElementById('visitCount').innerHTML = 'Visit Count: ' + localStorage.visitCount;
-} else {
-    document.getElementById('visitCount').innerHTML = 'Sorry, your browser does not support web storage...';
-}
-
-// Game Slider Functionality
-let slideIndex = 1;
-showSlides(slideIndex);
-
-// Next/previous controls
-function plusSlides(n) {
-    showSlides(slideIndex += n);
-}
-
-// Thumbnail image controls
-function currentSlide(n) {
-    showSlides(slideIndex = n);
-}
-
-function showSlides(n) {
-    let i;
-    let slides = document.getElementsByClassName('game-slide');
-    if (n > slides.length) { slideIndex = 1; }
-    if (n < 1) { slideIndex = slides.length; }
-    for (i = 0; i < slides.length; i++) {
-        slides[i].style.display = 'none';
-    }
-    slides[slideIndex - 1].style.display = 'block';
-}
-
-// Google Analytics Event Tracking for Game Clicks
-document.querySelectorAll('.hero-images a').forEach(function (link) {
-    link.addEventListener('click', function () {
-        gtag('event', 'game_click', {
-            'event_category': 'Games',
-            'event_label': link.querySelector('img').alt,
-            'value': 1
-        });
-    });
 });
 
-// Lazy loading images for performance optimization
-document.addEventListener('DOMContentLoaded', function () {
-    const lazyImages = document.querySelectorAll('img[loading="lazy"]');
-    lazyImages.forEach(img => {
-        img.addEventListener('load', function () {
-            img.classList.add('fade-in');
-        });
-    });
-});
-
-// Add a fade-in effect for lazy-loaded images
-const fadeInStyle = document.createElement('style');
-fadeInStyle.innerHTML = `
-    .fade-in {
-        animation: fadeIn 0.5s ease-in-out;
-    }
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-`;
-document.head.appendChild(fadeInStyle);
-
-// Array of leaf image URLs (you can use actual images of leaves or simple SVGs)
-const leafImages = [
-    'leaf1.png', // Replace these with actual URLs to leaf images
-    'leaf2.png',
-    'leaf3.png'
-];
-
-// Create a function to generate and animate leaves
-function createFallingLeaves() {
-    const numLeaves = 10; // Number of leaves you want
-    for (let i = 0; i < numLeaves; i++) {
-        const leaf = document.createElement('div');
-        leaf.classList.add('leaf');
-        leaf.style.backgroundImage = `url(${leafImages[Math.floor(Math.random() * leafImages.length)]})`;
-        leaf.style.left = `${Math.random() * 100}vw`;
-        leaf.style.animationDuration = `${10 + Math.random() * 20}s`;
-        leaf.style.animationDelay = `${Math.random() * 5}s`;
-        document.body.appendChild(leaf);
-    }
-}
-
-// Call the function when the page loads
-window.addEventListener('load', createFallingLeaves);
-
+// Enhanced slider functionality from previous steps
