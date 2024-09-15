@@ -1,10 +1,10 @@
-/* General Styles */
 body, html {
-    background: linear-gradient(to bottom, #FFA07A, #FF6347, #FF4500);
-    background-attachment: fixed; /* Makes the background stay in place while scrolling */
-    background-size: cover;
-    color: #fff; /* Adjust text color for contrast */
-    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f4; /* Light grey background for contrast */
+    background-color: #f4f4f4;
+    scroll-behavior: smooth;
 }
 
 a {
@@ -19,12 +19,14 @@ a:hover {
 
 /* Header Styles */
 header {
+    background: linear-gradient(135deg, #333, #666); /* Metallic gradient background */
     background: linear-gradient(135deg, #333, #666);
     color: white;
     padding: 1em 2em;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 2px solid #444; /* Subtle border for depth */
     border-bottom: 2px solid #444;
 }
 
@@ -33,16 +35,24 @@ header nav ul {
     margin: 0;
     padding: 0;
     display: flex;
+}
+
+header nav ul li {
+    margin: 0 15px;
     gap: 20px;
 }
 
 header nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold; /* Make the text bold for emphasis */
     font-weight: bold;
     transition: color 0.3s ease, text-shadow 0.3s ease;
 }
 
 header nav ul li a:hover, header nav ul li a:focus {
     color: #ffcc00;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.4); /* Subtle text shadow for a glowing effect */
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
@@ -59,12 +69,19 @@ header nav ul li a:hover, header nav ul li a:focus {
 
 /* Hero Section */
 #hero {
-    background: rgba(255, 255, 255, 0.8); /* Add some contrast behind the hero section */
-    padding: 50px;
-    border-radius: 10px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    padding: 2em 1em;
+    background: linear-gradient(135deg, #e0e0e0, #b0b0b0); /* Metallic gradient */
+    border-bottom: 2px solid #ccc; /* Light border for separation */
+    background: linear-gradient(135deg, #e0e0e0, #b0b0b0);
+    border-bottom: 2px solid #ccc;
+}
 
 #hero h1 {
+    margin-bottom: 1em;
+    font-size: 2em;
+    font-weight: bold;
+    color: #333; /* Darker text for contrast */
     font-size: 2.5em;
     color: #333;
 }
@@ -77,12 +94,11 @@ header nav ul li a:hover, header nav ul li a:focus {
 }
 
 .hero-images a {
-    display: inline-block;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
+@@ -65,37 +84,84 @@ header nav ul li a:hover, header nav ul li a:focus {
 
 .hero-images a:hover {
     transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3); /* Enhanced shadow for depth */
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
@@ -90,9 +106,11 @@ header nav ul li a:hover, header nav ul li a:focus {
     max-width: 100%;
     height: auto;
     border-radius: 8px;
+    border: 2px solid #666; /* Metallic border around images */
     border: 2px solid #666;
 }
 
+#featured-games, #game-gallery {
 /* Featured Games */
 #featured-games {
     text-align: center;
@@ -104,6 +122,11 @@ header nav ul li a:hover, header nav ul li a:focus {
     position: relative;
 }
 
+#featured-games {
+    background: #fff; /* Light background for contrast */
+    border: 1px solid #ddd; /* Light border */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Subtle shadow */
 .game-slider {
     position: relative;
     max-width: 80%;
@@ -151,6 +174,7 @@ header nav ul li a:hover, header nav ul li a:focus {
 
 /* Game Gallery */
 #game-gallery {
+    background: linear-gradient(135deg, #e0e0e0, #b0b0b0); /* Metallic gradient */
     text-align: center;
     padding: 2em 0;
     background: linear-gradient(135deg, #e0e0e0, #b0b0b0);
@@ -160,20 +184,16 @@ header nav ul li a:hover, header nav ul li a:focus {
 .games {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
     gap: 20px;
     padding: 0 2em;
 }
 
-.games div {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    padding: 10px;
-    border-radius: 8px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
+@@ -109,17 +175,25 @@ header nav ul li a:hover, header nav ul li a:focus {
 
 .games div:hover {
     transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2); /* Enhanced shadow */
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
@@ -185,101 +205,20 @@ header nav ul li a:hover, header nav ul li a:focus {
 
 /* Footer */
 footer {
+    background: linear-gradient(135deg, #333, #666); /* Metallic gradient */
     background: linear-gradient(135deg, #333, #666);
     color: white;
     text-align: center;
     padding: 1em 0;
+    border-top: 2px solid #444; /* Subtle border for depth */
     border-top: 2px solid #444;
 }
-
-/* Autumn Leaves Animation */
-@keyframes fall {
-    0% {
-        transform: translateY(0) rotate(0deg);
-    }
-    100% {
-        transform: translateY(100vh) rotate(360deg);
-    }
-}
-
-.leaf {
-    position: fixed;
-    top: -10%;
-    width: 50px;
-    height: 50px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    opacity: 0.8;
-    pointer-events: none;
-    z-index: 10;
-    animation: fall linear infinite;
-}
-
-.leaf:nth-child(1) {
-    left: 10%;
-    animation-duration: 10s;
-    animation-delay: 1s;
-}
-
-.leaf:nth-child(2) {
-    left: 20%;
-    animation-duration: 15s;
-    animation-delay: 2s;
-}
-
-.leaf:nth-child(3) {
-    left: 30%;
-    animation-duration: 12s;
-    animation-delay: 3s;
-}
-
-.leaf:nth-child(4) {
-    left: 40%;
-    animation-duration: 18s;
-    animation-delay: 4s;
-}
-
-.leaf:nth-child(5) {
-    left: 50%;
-    animation-duration: 14s;
-    animation-delay: 5s;
-}
-
-.leaf:nth-child(6) {
-    left: 60%;
-    animation-duration: 16s;
-    animation-delay: 2s;
-}
-
-.leaf:nth-child(7) {
-    left: 70%;
-    animation-duration: 10s;
-    animation-delay: 6s;
-}
-
-.leaf:nth-child(8) {
-    left: 80%;
-    animation-duration: 20s;
-    animation-delay: 3s;
-}
-
-.leaf:nth-child(9) {
-    left: 90%;
-    animation-duration: 25s;
-    animation-delay: 4s;
-}
-
 
 /* Visit Count */
 #visitCount {
     text-align: center;
     padding: 20px;
-    background-color: #fff;
-    color: #222;
-    margin: 20px auto;
-    border-radius: 5px;
-    width: auto;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+@@ -132,6 +206,7 @@ footer {
     font-size: 1.2em;
 }
 
@@ -287,9 +226,7 @@ footer {
 @media (max-width: 768px) {
     header nav ul {
         flex-direction: column;
-        margin-top: 0.5em;
-    }
-
+@@ -141,4 +216,34 @@ footer {
     header nav ul li {
         margin: 5px 0;
     }
