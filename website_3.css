@@ -6,7 +6,7 @@ body, html {
 }
 
 header {
-    background: linear-gradient(135deg, #333, #666); /* Metallic gradient background */
+    background: linear-gradient(135deg, #BF5700, #B7410E);  /* prev Metallic gradient background */
     color: white;
     padding: 1em 2em;
     display: flex;
@@ -113,7 +113,7 @@ header nav ul li a:hover, header nav ul li a:focus {
 }
 
 footer {
-    background: linear-gradient(135deg, #333, #666); /* Metallic gradient */
+    background: background: linear-gradient(135deg, #DAA520, #FFBF00); /*linear-gradient(135deg, #333, #666); /* Metallic gradient */
     color: white;
     text-align: center;
     padding: 1em 0;
