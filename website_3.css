@@ -2,8 +2,33 @@ body, html {
     margin: 0;
     padding: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #BF5700 /* previously was Light grey background for contrast */
+    background: #A7C6ED; /* A cool light blue for a winter feel */
+    color: #2A2A2A; /* Dark gray for text */
 }
+
+h1, h2, h3, h4, h5, h6 {
+    color: #FFFFFF; /* White for headers */
+}
+
+a {
+    color: #004D99; /* A darker blue for links */
+}
+
+button {
+    background-color: #005EB8; /* A strong blue for buttons */
+    color: #FFFFFF; /* White text on buttons */
+}
+
+/* Optional: Add a snowy effect */
+.snowflake {
+    position: absolute;
+    color: #FFFFFF; /* White snowflakes */
+    font-size: 1em; /* Adjust size as needed */
+    pointer-events: none; /* Snowflakes don't interfere with mouse events */
+}
+
+/* Add additional styles as needed */
+
 
 header {
     background: linear-gradient(135deg, #BF5700, #B7410E);  /* prev Metallic gradient background */
