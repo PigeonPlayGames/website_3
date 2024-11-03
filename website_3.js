@@ -11,12 +11,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function showSlides(n) {
         let slides = document.getElementsByClassName("game-slide");
-        if (n > slides.length) {slideIndex = 1}
-        if (n < 1) {slideIndex = slides.length}
+        if (n > slides.length) { slideIndex = 1 }
+        if (n < 1) { slideIndex = slides.length }
         for (let i = 0; i < slides.length; i++) {
             slides[i].style.display = "none";
         }
-        slides[slideIndex-1].style.display = "block";
+        slides[slideIndex - 1].style.display = "block";
     }
 
     // Event listeners for slider controls
@@ -62,4 +62,36 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+
+    // Snowfall effect
+    function createSnowflake() {
+        const snowflake = document.createElement('div');
+        snowflake.className = 'snowflake';
+        snowflake.textContent = '❄'; // Use a snowflake emoji
+        document.body.appendChild(snowflake);
+
+        // Randomize position and animation duration
+        snowflake.style.left = Math.random() * window.innerWidth + 'px';
+        snowflake.style.animationDuration = (Math.random() * 3 + 2) + 's'; // 2 to 5 seconds
+        snowflake.style.opacity = Math.random();
+
+        // Remove snowflake after animation
+        snowflake.addEventListener('animationend', () => {
+            snowflake.remove();
+        });
+    }
+
+    // Generate snowflakes at intervals
+    setInterval(createSnowflake, 300); // Adjust frequency of snowflakes
+
+    // Holiday greeting pop-up
+    if (!localStorage.greetingShown) {
+        alert("Welcome to our Winter Wonderland! Enjoy your stay!");
+        localStorage.greetingShown = true; // Prevent showing again
+    }
+
+    // Optional: Background music
+    // const audio = new Audio('path/to/your/music.mp3'); // Replace with your music file path
+    // audio.loop = true; // Loop the music
+    // audio.play(); // Start playing the music (ensure user interaction for autoplay)
 });
