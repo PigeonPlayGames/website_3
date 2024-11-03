@@ -25,7 +25,25 @@ button {
     color: #FFFFFF; /* White snowflakes */
     font-size: 1em; /* Adjust size as needed */
     pointer-events: none; /* Snowflakes don't interfere with mouse events */
+    opacity: 0.8; /* Slightly transparent for a soft look */
+    animation-name: fall; /* Assign the falling animation */
+    animation-timing-function: linear; /* Smooth falling */
+    animation-fill-mode: forwards; /* Keep the final position after falling */
+    animation-duration: 4s;
 }
+
+/* Define the falling animation */
+@keyframes fall {
+    0% {
+        transform: translateY(-10px); /* Start just above the viewport */
+        opacity: 1; /* Fully visible */
+    }
+    100% {
+        transform: translateY(100vh); /* Move to the bottom of the viewport */
+        opacity: 0; /* Fade out as it falls */
+    }
+}
+
 
 /* Header */
 header {
