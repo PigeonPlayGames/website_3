@@ -35,7 +35,7 @@ button {
 /* Define the falling animation */
 @keyframes fall {
     0% {
-        transform: translateY(-10px); /* Start just above the viewport */
+        transform: translateY(-50px); /* Start higher above the viewport */
         opacity: 1; /* Fully visible */
     }
     100% {
