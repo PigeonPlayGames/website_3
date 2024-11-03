@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Holiday greeting pop-up
     if (!localStorage.greetingShown) {
-        alert("Welcome to our Winter Wonderland! Enjoy your stay!");
+        alert("Hello! Welcome to PigeonPlayGames! :)");
         localStorage.greetingShown = true; // Prevent showing again
     }
 
