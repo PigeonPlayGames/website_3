@@ -2,7 +2,7 @@ body, html {
     margin: 0;
     padding: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #A7C6ED; /* A cool light blue for a winter feel */
+    background: #E0F7FA; /* Light icy blue for a winter feel */
     color: #2A2A2A; /* Dark gray for text */
 }
 
@@ -11,15 +11,15 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 a {
-    color: #004D99; /* A darker blue for links */
+    color: #007BFF; /* Bright blue for links */
 }
 
 button {
-    background-color: #005EB8; /* A strong blue for buttons */
+    background-color: #005EB8; /* Strong blue for buttons */
     color: #FFFFFF; /* White text on buttons */
 }
 
-/* Optional: Add a snowy effect */
+/* Snowflake effect */
 .snowflake {
     position: absolute;
     color: #FFFFFF; /* White snowflakes */
@@ -27,17 +27,15 @@ button {
     pointer-events: none; /* Snowflakes don't interfere with mouse events */
 }
 
-/* Add additional styles as needed */
-
-
+/* Header */
 header {
-    background: linear-gradient(135deg, #BF5700, #B7410E);  /* prev Metallic gradient background */
+    background: linear-gradient(135deg, #1C1C1C, #4B4B4B); /* Dark gradient for header */
     color: white;
     padding: 1em 2em;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid #444; /* Subtle border for depth */
+    border-bottom: 2px solid #ccc; /* Light border for depth */
 }
 
 header nav ul {
@@ -59,14 +57,15 @@ header nav ul li a {
 }
 
 header nav ul li a:hover, header nav ul li a:focus {
-    color: #ffcc00;
+    color: #ffcc00; /* Gold color on hover */
     text-shadow: 0 1px 3px rgba(0,0,0,0.4); /* Subtle text shadow for a glowing effect */
 }
 
+/* Hero Section */
 #hero {
     text-align: center;
     padding: 2em 1em;
-    background: linear-gradient(135deg, #e0e0e0, #b0b0b0); /* Metallic gradient */
+    background: linear-gradient(135deg, #A3D9FF, #E0F7FA); /* Light gradient for hero section */
     border-bottom: 2px solid #ccc; /* Light border for separation */
 }
 
@@ -74,7 +73,7 @@ header nav ul li a:hover, header nav ul li a:focus {
     margin-bottom: 1em;
     font-size: 2em;
     font-weight: bold;
-    color: #333; /* Darker text for contrast */
+    color: #2A2A2A; /* Darker text for contrast */
 }
 
 .hero-images {
@@ -97,23 +96,24 @@ header nav ul li a:hover, header nav ul li a:focus {
     max-width: 100%;
     height: auto;
     border-radius: 8px;
-    border: 2px solid #666; /* Metallic border around images */
+    border: 2px solid #ccc; /* Light border around images */
 }
 
+/* Featured Games and Game Gallery */
 #featured-games, #game-gallery {
     text-align: center;
     padding: 2em 0;
 }
 
 #featured-games {
-    background: #fff; /* Light background for contrast */
+    background: #FFFFFF; /* Light background for contrast */
     border: 1px solid #ddd; /* Light border */
     border-radius: 8px; /* Rounded corners */
     box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Subtle shadow */
 }
 
 #game-gallery {
-    background: linear-gradient(135deg, #e0e0e0, #b0b0b0); /* Metallic gradient */
+    background: linear-gradient(135deg, #A3D9FF, #E0F7FA); /* Light gradient for gallery */
     border-radius: 8px;
 }
 
@@ -125,7 +125,7 @@ header nav ul li a:hover, header nav ul li a:focus {
 }
 
 .games div {
-    background-color: #fff;
+    background-color: #FFFFFF; /* White for game containers */
     border: 1px solid #ddd;
     padding: 10px;
     border-radius: 8px;
@@ -137,12 +137,13 @@ header nav ul li a:hover, header nav ul li a:focus {
     box-shadow: 0 8px 16px rgba(0,0,0,0.2); /* Enhanced shadow */
 }
 
+/* Footer */
 footer {
-    background: background: linear-gradient(135deg, #DAA520, #FFBF00); /*linear-gradient(135deg, #333, #666); /* Metallic gradient */
+    background: linear-gradient(135deg, #003366, #006699); /* Dark blue gradient for footer */
     color: white;
     text-align: center;
     padding: 1em 0;
-    border-top: 2px solid #444; /* Subtle border for depth */
+    border-top: 2px solid #ccc; /* Light border for depth */
 }
 
 #visitCount {
@@ -157,6 +158,7 @@ footer {
     font-size: 1.2em;
 }
 
+/* Media Queries */
 @media (max-width: 768px) {
     header nav ul {
         flex-direction: column;
