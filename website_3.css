@@ -21,29 +21,29 @@ button {
 
 /* Snowflake effect */
 .snowflake {
-    position: absolute;
-    color: #FFFFFF; /* White snowflakes */
-    font-size: 1em; /* Adjust size as needed */
-    pointer-events: none; /* Snowflakes don't interfere with mouse events */
-    opacity: 0.8; /* Slightly transparent for a soft look */
-    animation-name: fall; /* Assign the falling animation */
-    animation-timing-function: linear; /* Smooth falling */
-    animation-fill-mode: forwards; /* Keep the final position after falling */
+    position: fixed;
+    top: -50px; /* Start above the viewport */
+    color: #FFFFFF;
+    font-size: 1em;
+    pointer-events: none;
+    opacity: 0.8;
+    animation-name: fall;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
     animation-duration: 4s;
+    z-index: 1000; /* Ensure snowflakes appear above other content */
 }
 
-/* Define the falling animation */
 @keyframes fall {
     0% {
-        transform: translateY(-50px); /* Start higher above the viewport */
-        opacity: 1; /* Fully visible */
+        transform: translateY(-50px); /* Start above the viewport */
+        opacity: 1;
     }
     100% {
-        transform: translateY(100vh); /* Move to the bottom of the viewport */
+        transform: translateY(100vh); /* Fall to the bottom of the viewport */
         opacity: 0; /* Fade out as it falls */
     }
 }
-
 
 /* Header */
 header {
