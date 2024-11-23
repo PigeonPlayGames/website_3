@@ -89,9 +89,29 @@ header nav ul li a:hover, header nav ul li a:focus {
 
 #hero h1 {
     margin-bottom: 1em;
-    font-size: 2em;
+    font-size: 2.5em; /* Adjusted for better visibility */
     font-weight: bold;
     color: #2A2A2A; /* Darker text for contrast */
+    line-height: 1.4;
+}
+
+/* Acronym Highlight */
+.highlight {
+    color: #ffcc00; /* Gold color for acronym */
+    font-size: 1.2em;
+    font-weight: bold; /* Bold for emphasis */
+}
+
+/* Hero Section Logo */
+#hero a img {
+    margin-top: 1em;
+    max-width: 200px;
+    height: auto;
+    transition: transform 0.3s ease;
+}
+
+#hero a:hover img {
+    transform: scale(1.1); /* Slight zoom on hover */
 }
 
 .hero-images {
