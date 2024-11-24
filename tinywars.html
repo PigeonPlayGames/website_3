@@ -141,7 +141,7 @@
     // Upgrade building function (generic for all buildings)
     function upgradeBuilding(building) {
       let resource = building === 'lumber' ? 'wood' : building === 'quarry' ? 'stone' : 'gold';
-      let cost = building === 'lumber' ? gameState.buildings.lumber * 50 : building === 'quarry' ? gameState.buildings.quarry * 50 : gameState.buildings.gold * 50;
+      let cost = gameState.buildings[building] * 50; // Correct cost based on building level
 
       if (gameState.resources[resource] >= cost) {
         gameState.resources[resource] -= cost;
@@ -169,8 +169,18 @@
       document.getElementById('gold-cost').textContent = gameState.buildings.gold * 50;
     }
 
-    // Initial call to update UI
+    // Resource generation logic (every second)
+    function generateResources() {
+      gameState.resources.wood += gameState.buildings.lumber;
+      gameState.resources.stone += gameState.buildings.quarry;
+      gameState.resources.gold += gameState.buildings.gold;
+      updateUI();
+      saveProgress(firebase.auth().currentUser.uid);  // Save progress after generating resources
+    }
+
+    // Initial call to update UI and start generating resources
     updateUI();
+    setInterval(generateResources, 1000); // Generate resources every second
   </script>
 </body>
 
