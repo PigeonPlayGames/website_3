@@ -1,17 +1,3 @@
-// Game State
-const gameState = {
-  resources: {
-    wood: 0,
-    stone: 0,
-    gold: 0,
-  },
-  buildings: {
-    lumber: { level: 1, rate: 1, cost: 50 },
-    quarry: { level: 1, rate: 1, cost: 50 },
-    gold: { level: 1, rate: 1, cost: 50 },
-  },
-};
-
 // Utility: Update Notifications
 function notify(message, color = "green") {
   const notifications = document.getElementById("notifications");
@@ -23,6 +9,9 @@ function notify(message, color = "green") {
 
 // Utility: Update UI
 function updateUI() {
+  // Ensure gameState is defined and accessible before updating UI
+  if (!window.gameState) return;
+
   // Update Resources
   document.getElementById("wood").textContent = gameState.resources.wood;
   document.getElementById("stone").textContent = gameState.resources.stone;
@@ -39,6 +28,8 @@ function updateUI() {
 
 // Upgrade a Building
 function upgradeBuilding(building) {
+  if (!window.gameState) return;
+
   const b = gameState.buildings[building];
   const resourceType = building === "lumber" ? "wood" : building === "quarry" ? "stone" : "gold";
 
@@ -53,6 +44,11 @@ function upgradeBuilding(building) {
 
     notify(`${building} upgraded to Level ${b.level}!`);
     updateUI();
+
+    // Save progress to Firebase after upgrade
+    if (firebase.auth().currentUser) {
+      saveProgress(firebase.auth().currentUser.uid);
+    }
   } else {
     notify(`Not enough ${resourceType} to upgrade ${building}!`, "red");
   }
@@ -60,11 +56,18 @@ function upgradeBuilding(building) {
 
 // Generate Resources Over Time
 function generateResources() {
+  if (!window.gameState) return;
+
   gameState.resources.wood += gameState.buildings.lumber.rate;
   gameState.resources.stone += gameState.buildings.quarry.rate;
   gameState.resources.gold += gameState.buildings.gold.rate;
 
   updateUI();
+
+  // Save progress periodically to Firebase
+  if (firebase.auth().currentUser) {
+    saveProgress(firebase.auth().currentUser.uid);
+  }
 }
 
 // Initialize Game
