@@ -1,4 +1,4 @@
-w<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -59,6 +59,19 @@ w<!DOCTYPE html>
     </div>
   </section>
 
+  <!-- Save and Load Section -->
+  <section>
+    <h2>Game Management</h2>
+    <button onclick="saveProgress(firebase.auth().currentUser?.uid)">Save Game</button>
+    <button onclick="loadProgress(firebase.auth().currentUser?.uid)">Load Game</button>
+  </section>
+
+  <!-- Leaderboard Section -->
+  <section>
+    <h2>Leaderboard</h2>
+    <ul id="leaderboard-list"></ul>
+  </section>
+
   <!-- Script -->
   <script src="tinywars.js"></script>
 
@@ -66,7 +79,13 @@ w<!DOCTYPE html>
   <script>
     // Your Firebase config (replace with your actual Firebase config details)
     const firebaseConfig = {
-      // see firebase acount for  crudentials 
+      apiKey: "AIzaSyAPD0OqY3e6y3tbOT_cSKtUn-lNfO2KGyI",
+      authDomain: "pigeonplaygamesonline.firebaseapp.com",
+      projectId: "pigeonplaygamesonline",
+      storageBucket: "pigeonplaygamesonline.firebasestorage.app",
+      messagingSenderId: "172163872711",
+      appId: "1:172163872711:web:47af2e8e9c11d288bc0be2",
+      measurementId: "G-YB2Q3G3QZ3"
     };
 
     // Initialize Firebase
@@ -88,6 +107,7 @@ w<!DOCTYPE html>
       if (user) {
         console.log("User ID:", user.uid);
         loadProgress(user.uid);  // Load user progress from Firebase
+        fetchLeaderboard();     // Fetch leaderboard data on login
       }
     });
 
@@ -110,7 +130,10 @@ w<!DOCTYPE html>
     function saveProgress(userId) {
       const userRef = database.ref('users/' + userId + '/gameState');
       userRef.set(gameState)
-        .then(() => console.log("Progress saved!"))
+        .then(() => {
+          console.log("Progress saved!");
+          alert("Game progress saved successfully!");
+        })
         .catch((error) => console.error("Error saving progress:", error));
     }
 
@@ -135,7 +158,7 @@ w<!DOCTYPE html>
     // Upgrade building function (generic for all buildings)
     function upgradeBuilding(building) {
       let resource = building === 'lumber' ? 'wood' : building === 'quarry' ? 'stone' : 'gold';
-      let cost = gameState.buildings[building] * 50; // Correct cost based on building level
+      let cost = gameState.buildings[building] * 50;
 
       if (gameState.resources[resource] >= cost) {
         gameState.resources[resource] -= cost;
@@ -145,6 +168,39 @@ w<!DOCTYPE html>
       } else {
         alert("Not enough " + resource + "!");
       }
+    }
+
+    // Fetch leaderboard from Firebase
+    function fetchLeaderboard() {
+      const leaderboardRef = database.ref('users');
+
+      leaderboardRef.orderByChild('gameState/score').limitToLast(10).once('value')
+        .then((snapshot) => {
+          const leaderboard = [];
+          snapshot.forEach((child) => {
+            const user = child.val();
+            leaderboard.push({
+              username: child.key, // You can replace this with a username field if available
+              score: user.gameState?.score || 0
+            });
+          });
+
+          // Sort leaderboard in descending order
+          leaderboard.sort((a, b) => b.score - a.score);
+          displayLeaderboard(leaderboard);
+        })
+        .catch((error) => console.error("Error fetching leaderboard:", error));
+    }
+
+    // Display leaderboard on the UI
+    function displayLeaderboard(leaderboard) {
+      const leaderboardList = document.getElementById('leaderboard-list');
+      leaderboardList.innerHTML = ''; // Clear previous leaderboard
+      leaderboard.forEach((entry) => {
+        const listItem = document.createElement('li');
+        listItem.textContent = `User: ${entry.username}, Score: ${entry.score}`;
+        leaderboardList.appendChild(listItem);
+      });
     }
 
     // Update UI based on game state
@@ -163,7 +219,7 @@ w<!DOCTYPE html>
       document.getElementById('gold-cost').textContent = gameState.buildings.gold * 50;
     }
 
-    // Resource generation logic (every second)
+    // Resource generation logic
     function generateResources() {
       gameState.resources.wood += gameState.buildings.lumber;
       gameState.resources.stone += gameState.buildings.quarry;
@@ -172,7 +228,7 @@ w<!DOCTYPE html>
       saveProgress(firebase.auth().currentUser.uid);  // Save progress after generating resources
     }
 
-    // Initial call to update UI and start generating resources
+    // Initial setup
     updateUI();
     setInterval(generateResources, 1000); // Generate resources every second
   </script>
