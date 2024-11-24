@@ -9,9 +9,9 @@ function notify(message, color = "green") {
 
 // Utility: Update the game UI
 function updateUI() {
-  if (!gameState) {
+  if (!window.gameState) {
     console.error("Game state is undefined!");
-    return; // Prevent further execution
+    return;
   }
 
   // Update Resources
@@ -26,11 +26,24 @@ function updateUI() {
     document.getElementById(`${building}-rate`).textContent = b.rate;
     document.getElementById(`${building}-cost`).textContent = b.cost;
   });
+
+  // Update Score
+  gameState.score = calculateScore();
+  document.getElementById("score").textContent = gameState.score;
+}
+
+// Calculate total score as the sum of all resources
+function calculateScore() {
+  return (
+    gameState.resources.wood +
+    gameState.resources.stone +
+    gameState.resources.gold
+  );
 }
 
 // Upgrade a building and handle its resource cost
 function upgradeBuilding(building) {
-  if (!gameState) return;
+  if (!window.gameState) return;
 
   const b = gameState.buildings[building];
   const resourceType = building === "lumber" ? "wood" : building === "quarry" ? "stone" : "gold";
@@ -58,7 +71,7 @@ function upgradeBuilding(building) {
 
 // Generate resources periodically
 function generateResources() {
-  if (!gameState) return;
+  if (!window.gameState) return;
 
   // Increment resources based on building rates
   gameState.resources.wood += gameState.buildings.lumber.rate;
@@ -75,7 +88,7 @@ function generateResources() {
 
 // Save game progress to Firebase
 function saveProgress(userId) {
-  if (!userId || !gameState) return;
+  if (!userId || !window.gameState) return;
 
   const userRef = database.ref('users/' + userId + '/gameState');
   userRef
@@ -88,35 +101,19 @@ function saveProgress(userId) {
 function loadProgress(userId) {
   if (!userId) return;
 
-  const userRef = firebase.database().ref('users/' + userId + '/gameState');
+  const userRef = database.ref('users/' + userId + '/gameState');
   userRef
     .once("value")
     .then((snapshot) => {
       if (snapshot.exists()) {
         gameState = snapshot.val();
-        console.log("Loaded game state from Firebase:", gameState);
+        updateUI();
+        console.log("Game state loaded:", gameState);
       } else {
-        console.log("No saved game state found. Using default state.");
-        gameState = {
-          resources: {
-            wood: 0,
-            stone: 0,
-            gold: 0,
-          },
-          buildings: {
-            lumber: { level: 1, rate: 1, cost: 50 },
-            quarry: { level: 1, rate: 1, cost: 50 },
-            gold: { level: 1, rate: 1, cost: 50 },
-          },
-          score: 0,
-        };
+        console.log("No saved game state found for user:", userId);
       }
-      updateUI(); // Ensure UI is updated after loading
     })
-    .catch((error) => {
-      console.error("Error loading progress:", error);
-      notify("Failed to load progress!", "red");
-    });
+    .catch((error) => console.error("Error loading progress:", error));
 }
 
 // Fetch leaderboard from Firebase
@@ -158,13 +155,13 @@ function displayLeaderboard(leaderboard) {
 
 // Initialize Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyAPD0OqY3e6y3tbOT_cSKtUn-lNfO2KGyI",
-  authDomain: "pigeonplaygamesonline.firebaseapp.com",
-  projectId: "pigeonplaygamesonline",
-  storageBucket: "pigeonplaygamesonline.firebasestorage.app",
-  messagingSenderId: "172163872711",
-  appId: "1:172163872711:web:47af2e8e9c11d288bc0be2",
-  measurementId: "G-YB2Q3G3QZ3",
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_AUTH_DOMAIN",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_STORAGE_BUCKET",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID",
+  measurementId: "YOUR_MEASUREMENT_ID",
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -204,8 +201,4 @@ let gameState = {
 setInterval(generateResources, 1000); // Every second
 
 // Initial UI setup
-if (gameState) {
-  updateUI();
-} else {
-  console.error("Game state is undefined at initialization.");
-}
+updateUI();
