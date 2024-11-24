@@ -72,12 +72,8 @@
     <ul id="leaderboard-list"></ul>
   </section>
 
-  <!-- Script -->
-  <script src="tinywars.js"></script>
-
-  <!-- Firebase Initialization and Script -->
+  <!-- Firebase Initialization -->
   <script>
-    // Your Firebase config (replace with your actual Firebase config details)
     const firebaseConfig = {
       apiKey: "AIzaSyAPD0OqY3e6y3tbOT_cSKtUn-lNfO2KGyI",
       authDomain: "pigeonplaygamesonline.firebaseapp.com",
@@ -85,153 +81,15 @@
       storageBucket: "pigeonplaygamesonline.firebasestorage.app",
       messagingSenderId: "172163872711",
       appId: "1:172163872711:web:47af2e8e9c11d288bc0be2",
-      measurementId: "G-YB2Q3G3QZ3"
+      measurementId: "G-YB2Q3G3QZ3",
     };
 
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
-    const auth = firebase.auth();
-
-    // Sign in anonymously
-    auth.signInAnonymously()
-      .then(() => {
-        console.log("Player logged in anonymously");
-      })
-      .catch((error) => {
-        console.error("Authentication failed:", error);
-      });
-
-    // Listen for authentication state changes
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        console.log("User ID:", user.uid);
-        loadProgress(user.uid);  // Load user progress from Firebase
-        fetchLeaderboard();     // Fetch leaderboard data on login
-      }
-    });
-
-    // Game state (to be saved and loaded from Firebase)
-    let gameState = {
-      resources: {
-        wood: 0,
-        stone: 0,
-        gold: 0
-      },
-      buildings: {
-        lumber: 1,
-        quarry: 1,
-        gold: 1
-      },
-      score: 0
-    };
-
-    // Save game progress to Firebase
-    function saveProgress(userId) {
-      const userRef = database.ref('users/' + userId + '/gameState');
-      userRef.set(gameState)
-        .then(() => {
-          console.log("Progress saved!");
-          alert("Game progress saved successfully!");
-        })
-        .catch((error) => console.error("Error saving progress:", error));
-    }
-
-    // Load game progress from Firebase
-    function loadProgress(userId) {
-      const userRef = database.ref('users/' + userId + '/gameState');
-      userRef.once("value")
-        .then((snapshot) => {
-          if (snapshot.exists()) {
-            gameState = snapshot.val();
-            updateUI();
-            console.log("Game state loaded:", gameState);
-          } else {
-            console.log("No saved game state found.");
-          }
-        })
-        .catch((error) => {
-          console.error("Error loading progress:", error);
-        });
-    }
-
-    // Upgrade building function (generic for all buildings)
-    function upgradeBuilding(building) {
-      let resource = building === 'lumber' ? 'wood' : building === 'quarry' ? 'stone' : 'gold';
-      let cost = gameState.buildings[building] * 50;
-
-      if (gameState.resources[resource] >= cost) {
-        gameState.resources[resource] -= cost;
-        gameState.buildings[building]++;
-        updateUI();
-        saveProgress(firebase.auth().currentUser.uid);  // Save progress after upgrade
-      } else {
-        alert("Not enough " + resource + "!");
-      }
-    }
-
-    // Fetch leaderboard from Firebase
-    function fetchLeaderboard() {
-      const leaderboardRef = database.ref('users');
-
-      leaderboardRef.orderByChild('gameState/score').limitToLast(10).once('value')
-        .then((snapshot) => {
-          const leaderboard = [];
-          snapshot.forEach((child) => {
-            const user = child.val();
-            leaderboard.push({
-              username: child.key, // You can replace this with a username field if available
-              score: user.gameState?.score || 0
-            });
-          });
-
-          // Sort leaderboard in descending order
-          leaderboard.sort((a, b) => b.score - a.score);
-          displayLeaderboard(leaderboard);
-        })
-        .catch((error) => console.error("Error fetching leaderboard:", error));
-    }
-
-    // Display leaderboard on the UI
-    function displayLeaderboard(leaderboard) {
-      const leaderboardList = document.getElementById('leaderboard-list');
-      leaderboardList.innerHTML = ''; // Clear previous leaderboard
-      leaderboard.forEach((entry) => {
-        const listItem = document.createElement('li');
-        listItem.textContent = `User: ${entry.username}, Score: ${entry.score}`;
-        leaderboardList.appendChild(listItem);
-      });
-    }
-
-    // Update UI based on game state
-    function updateUI() {
-      document.getElementById('wood').textContent = gameState.resources.wood;
-      document.getElementById('stone').textContent = gameState.resources.stone;
-      document.getElementById('gold').textContent = gameState.resources.gold;
-      document.getElementById('lumber-level').textContent = gameState.buildings.lumber;
-      document.getElementById('lumber-rate').textContent = gameState.buildings.lumber;
-      document.getElementById('lumber-cost').textContent = gameState.buildings.lumber * 50;
-      document.getElementById('quarry-level').textContent = gameState.buildings.quarry;
-      document.getElementById('quarry-rate').textContent = gameState.buildings.quarry;
-      document.getElementById('quarry-cost').textContent = gameState.buildings.quarry * 50;
-      document.getElementById('gold-level').textContent = gameState.buildings.gold;
-      document.getElementById('gold-rate').textContent = gameState.buildings.gold;
-      document.getElementById('gold-cost').textContent = gameState.buildings.gold * 50;
-    }
-
-    // Resource generation logic
-    function generateResources() {
-      gameState.resources.wood += gameState.buildings.lumber;
-      gameState.resources.stone += gameState.buildings.quarry;
-      gameState.resources.gold += gameState.buildings.gold;
-      updateUI();
-      saveProgress(firebase.auth().currentUser.uid);  // Save progress after generating resources
-    }
-
-    // Initial setup
-    updateUI();
-    setInterval(generateResources, 1000); // Generate resources every second
   </script>
+
+  <!-- Game Script -->
+  <script src="tinywars.js"></script>
 </body>
 
 </html>
