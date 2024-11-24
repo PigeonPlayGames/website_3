@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tribal Wars Lite</title>
+</head>
+<body>
+  <h1>Tribal Wars Lite</h1>
+
+  <!-- Notifications -->
+  <div id="notifications" style="color: green;"></div>
+
+  <!-- Resources Section -->
+  <section>
+    <h2>Resources</h2>
+    <div>Wood: <span id="wood">0</span></div>
+    <div>Stone: <span id="stone">0</span></div>
+    <div>Gold: <span id="gold">0</span></div>
+  </section>
+
+  <!-- Buildings Section -->
+  <section>
+    <h2>Buildings</h2>
+
+    <!-- Lumber Mill -->
+    <div>
+      <h3>Lumber Mill</h3>
+      <p>Level: <span id="lumber-level">1</span></p>
+      <p>Generates: <span id="lumber-rate">1</span> wood/second</p>
+      <p>Upgrade Cost: <span id="lumber-cost">50</span> wood</p>
+      <button onclick="upgradeBuilding('lumber')">Upgrade Lumber Mill</button>
+    </div>
+
+    <!-- Quarry -->
+    <div>
+      <h3>Quarry</h3>
+      <p>Level: <span id="quarry-level">1</span></p>
+      <p>Generates: <span id="quarry-rate">1</span> stone/second</p>
+      <p>Upgrade Cost: <span id="quarry-cost">50</span> stone</p>
+      <button onclick="upgradeBuilding('quarry')">Upgrade Quarry</button>
+    </div>
+
+    <!-- Gold Mine -->
+    <div>
+      <h3>Gold Mine</h3>
+      <p>Level: <span id="gold-level">1</span></p>
+      <p>Generates: <span id="gold-rate">1</span> gold/second</p>
+      <p>Upgrade Cost: <span id="gold-cost">50</span> gold</p>
+      <button onclick="upgradeBuilding('gold')">Upgrade Gold Mine</button>
+    </div>
+  </section>
+
+  <!-- Script -->
+  <script src="game.js"></script>
+</body>
+</html>
