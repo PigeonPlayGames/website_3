@@ -80,7 +80,7 @@ function saveProgress(userId) {
   const userRef = database.ref('users/' + userId + '/gameState');
   userRef
     .set(gameState)
-    .then(() => notify("Game progress saved successfully!"))
+    //.then(() => notify("Game progress saved successfully!"))
     .catch((error) => console.error("Error saving progress:", error));
 }
 
