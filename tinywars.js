@@ -1,4 +1,4 @@
-// Notify the user with a message
+// Utility: Notify the user with a message
 function notify(message, color = "green") {
   const notifications = document.getElementById("notifications");
   notifications.textContent = message;
@@ -7,26 +7,11 @@ function notify(message, color = "green") {
   setTimeout(() => (notifications.textContent = ""), 3000); // Clear after 3 seconds
 }
 
-// Global Game State
-let gameState = {
-  resources: {
-    wood: 0,
-    stone: 0,
-    gold: 0,
-  },
-  buildings: {
-    lumber: { level: 1, rate: 1, cost: 50 },
-    quarry: { level: 1, rate: 1, cost: 50 },
-    gold: { level: 1, rate: 1, cost: 50 },
-  },
-  score: 0,
-};
-
-// Update the game UI
+// Utility: Update the game UI
 function updateUI() {
-  if (!window.gameState) {
+  if (!gameState) {
     console.error("Game state is undefined!");
-    return;
+    return; // Prevent further execution
   }
 
   // Update Resources
@@ -45,7 +30,7 @@ function updateUI() {
 
 // Upgrade a building and handle its resource cost
 function upgradeBuilding(building) {
-  if (!window.gameState) return;
+  if (!gameState) return;
 
   const b = gameState.buildings[building];
   const resourceType = building === "lumber" ? "wood" : building === "quarry" ? "stone" : "gold";
@@ -73,7 +58,7 @@ function upgradeBuilding(building) {
 
 // Generate resources periodically
 function generateResources() {
-  if (!window.gameState) return;
+  if (!gameState) return;
 
   // Increment resources based on building rates
   gameState.resources.wood += gameState.buildings.lumber.rate;
@@ -90,9 +75,9 @@ function generateResources() {
 
 // Save game progress to Firebase
 function saveProgress(userId) {
-  if (!userId || !window.gameState) return;
+  if (!userId || !gameState) return;
 
-  const userRef = firebase.database().ref('users/' + userId + '/gameState');
+  const userRef = database.ref('users/' + userId + '/gameState');
   userRef
     .set(gameState)
     .then(() => notify("Game progress saved successfully!"))
@@ -109,18 +94,34 @@ function loadProgress(userId) {
     .then((snapshot) => {
       if (snapshot.exists()) {
         gameState = snapshot.val();
-        updateUI();
-        console.log("Game state loaded:", gameState);
+        console.log("Loaded game state from Firebase:", gameState);
       } else {
-        console.log("No saved game state found for user:", userId);
+        console.log("No saved game state found. Using default state.");
+        gameState = {
+          resources: {
+            wood: 0,
+            stone: 0,
+            gold: 0,
+          },
+          buildings: {
+            lumber: { level: 1, rate: 1, cost: 50 },
+            quarry: { level: 1, rate: 1, cost: 50 },
+            gold: { level: 1, rate: 1, cost: 50 },
+          },
+          score: 0,
+        };
       }
+      updateUI(); // Ensure UI is updated after loading
     })
-    .catch((error) => console.error("Error loading progress:", error));
+    .catch((error) => {
+      console.error("Error loading progress:", error);
+      notify("Failed to load progress!", "red");
+    });
 }
 
 // Fetch leaderboard from Firebase
 function fetchLeaderboard() {
-  const leaderboardRef = firebase.database().ref('users');
+  const leaderboardRef = database.ref('users');
 
   leaderboardRef
     .orderByChild('gameState/score')
@@ -155,15 +156,28 @@ function displayLeaderboard(leaderboard) {
   });
 }
 
-// Firebase Initialization (already done in HTML file)
+// Initialize Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyAPD0OqY3e6y3tbOT_cSKtUn-lNfO2KGyI",
+  authDomain: "pigeonplaygamesonline.firebaseapp.com",
+  projectId: "pigeonplaygamesonline",
+  storageBucket: "pigeonplaygamesonline.firebasestorage.app",
+  messagingSenderId: "172163872711",
+  appId: "1:172163872711:web:47af2e8e9c11d288bc0be2",
+  measurementId: "G-YB2Q3G3QZ3",
+};
+
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+const auth = firebase.auth();
 
 // Sign in anonymously
-firebase.auth().signInAnonymously()
+auth.signInAnonymously()
   .then(() => console.log("Player logged in anonymously"))
   .catch((error) => console.error("Authentication failed:", error));
 
 // Authentication state change listener
-firebase.auth().onAuthStateChanged((user) => {
+auth.onAuthStateChanged((user) => {
   if (user) {
     console.log("User ID:", user.uid);
     loadProgress(user.uid); // Load user progress
@@ -171,8 +185,27 @@ firebase.auth().onAuthStateChanged((user) => {
   }
 });
 
+// Global Game State
+let gameState = {
+  resources: {
+    wood: 0,
+    stone: 0,
+    gold: 0,
+  },
+  buildings: {
+    lumber: { level: 1, rate: 1, cost: 50 },
+    quarry: { level: 1, rate: 1, cost: 50 },
+    gold: { level: 1, rate: 1, cost: 50 },
+  },
+  score: 0,
+};
+
 // Start periodic resource generation
 setInterval(generateResources, 1000); // Every second
 
 // Initial UI setup
-updateUI();
+if (gameState) {
+  updateUI();
+} else {
+  console.error("Game state is undefined at initialization.");
+}
