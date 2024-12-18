@@ -6,6 +6,19 @@ body, html {
     color: #2A2A2A; /* Dark gray for text */
 }
 
+.holiday-highlight {
+    color: #FF4500; /* Festive red */
+    font-weight: bold;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.holiday-message {
+    font-size: 1.5em;
+    color: #FFCC00; /* Gold */
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    margin-top: 10px;
+}
+
 h1, h2, h3, h4, h5, h6 {
     color: #FFFFFF; /* White for headers */
 }
