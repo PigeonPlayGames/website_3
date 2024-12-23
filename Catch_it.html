@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catch the Ball Game</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #282c34;
+            color: white;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        canvas {
+            border: 2px solid white;
+            background: #000;
+        }
+
+        .score {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="score">Score: 0</div>
+    <canvas id="gameCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreDisplay = document.querySelector('.score');
+
+        // Canvas dimensions
+        canvas.width = 600;
+        canvas.height = 400;
+
+        // Game objects
+        const paddle = {
+            width: 100,
+            height: 20,
+            x: canvas.width / 2 - 50,
+            y: canvas.height - 30,
+            speed: 8,
+            dx: 0
+        };
+
+        const ball = {
+            x: Math.random() * (canvas.width - 20) + 10,
+            y: 10,
+            radius: 10,
+            dy: 3
+        };
+
+        let score = 0;
+
+        // Draw paddle
+        function drawPaddle() {
+            ctx.fillStyle = 'white';
+            ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
+        }
+
+        // Draw ball
+        function drawBall() {
+            ctx.beginPath();
+            ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+            ctx.fillStyle = 'red';
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        // Move paddle
+        function movePaddle() {
+            paddle.x += paddle.dx;
+
+            // Wall detection
+            if (paddle.x < 0) {
+                paddle.x = 0;
+            }
+
+            if (paddle.x + paddle.width > canvas.width) {
+                paddle.x = canvas.width - paddle.width;
+            }
+        }
+
+        // Move ball
+        function moveBall() {
+            ball.y += ball.dy;
+
+            // Ball hits the paddle
+            if (
+                ball.y + ball.radius > paddle.y &&
+                ball.x > paddle.x &&
+                ball.x < paddle.x + paddle.width
+            ) {
+                ball.dy = -(Math.abs(ball.dy) + 0.5); // Increase speed
+                score++;
+                scoreDisplay.textContent = `Score: ${score}`;
+                resetBall();
+            }
+
+            // Ball falls off screen
+            if (ball.y - ball.radius > canvas.height) {
+                alert(`Game Over! Your score: ${score}`);
+                document.location.reload();
+            }
+        }
+
+        // Reset ball position
+        function resetBall() {
+            ball.x = Math.random() * (canvas.width - 20) + 10;
+            ball.y = 10;
+            ball.dy = Math.abs(ball.dy);
+        }
+
+        // Draw everything
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawPaddle();
+            drawBall();
+        }
+
+        // Update game objects
+        function update() {
+            movePaddle();
+            moveBall();
+
+            draw();
+
+            requestAnimationFrame(update);
+        }
+
+        // Keydown event
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                paddle.dx = -paddle.speed;
+            } else if (e.key === 'ArrowRight') {
+                paddle.dx = paddle.speed;
+            }
+        });
+
+        // Keyup event
+        document.addEventListener('keyup', (e) => {
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                paddle.dx = 0;
+            }
+        });
+
+        // Start the game
+        update();
+    </script>
+</body>
+</html>
