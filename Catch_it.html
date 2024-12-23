@@ -155,6 +155,28 @@
             }
         });
 
+        // Touch event handling for mobile devices
+        canvas.addEventListener('touchstart', handleTouch);
+        canvas.addEventListener('touchmove', handleTouch);
+
+        function handleTouch(e) {
+            const touch = e.touches[0];
+            const rect = canvas.getBoundingClientRect();
+            const touchX = touch.clientX - rect.left;
+
+            // Center paddle on touch position
+            paddle.x = touchX - paddle.width / 2;
+
+            // Prevent paddle from going out of bounds
+            if (paddle.x < 0) {
+                paddle.x = 0;
+            } else if (paddle.x + paddle.width > canvas.width) {
+                paddle.x = canvas.width - paddle.width;
+            }
+
+            e.preventDefault();
+        }
+
         // Start the game
         update();
     </script>
