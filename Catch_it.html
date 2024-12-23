@@ -11,7 +11,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            height: 60vh;
             background-color: #282c34;
             color: white;
             font-family: Arial, sans-serif;
@@ -19,7 +19,7 @@
         }
 
         canvas {
-            border: 2px solid white;
+            border: 5px solid white;
             background: #000;
         }
 
@@ -164,7 +164,7 @@
 
         // Draw everything
         function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.clearRect(0, 0, canvas.width - 100, canvas.height - 100);
             drawPaddle();
             drawBall();
         }
