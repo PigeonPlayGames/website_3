@@ -64,44 +64,41 @@
         const gameOverScreen = document.getElementById('gameOverScreen');
         const gameOverText = document.getElementById('gameOverText');
 
-        // Adjust canvas size to fit the screen
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-
-            // Recalculate paddle and ball positions to fit the new canvas size
-            paddle.y = canvas.height - 30;
-            if (paddle.x + paddle.width > canvas.width) {
-                paddle.x = canvas.width - paddle.width;
-            }
-
-            if (ball.x + ball.radius > canvas.width) {
-                ball.x = canvas.width - ball.radius;
-            }
-        }
-
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
         // Game objects
         const paddle = {
             width: 100,
             height: 20,
-            x: canvas.width / 2 - 50,
-            y: canvas.height - 30,
+            x: 0,
+            y: 0,
             speed: 8,
             dx: 0
         };
 
         const ball = {
-            x: Math.random() * (canvas.width - 20) + 10,
-            y: 10,
+            x: 0,
+            y: 0,
             radius: 10,
             dy: 3
         };
 
         let score = 0;
         let gameRunning = true;
+
+        // Adjust canvas size to fit the screen
+        function resizeCanvas() {
+            canvas.width = window.innerWidth * 0.5; // Half of the original width
+            canvas.height = window.innerHeight * 2; // Twice the original height
+
+            // Recalculate paddle and ball positions to fit the new canvas size
+            paddle.y = canvas.height - 30;
+            paddle.x = canvas.width / 2 - paddle.width / 2;
+
+            ball.x = Math.random() * (canvas.width - 20) + 10;
+            ball.y = 10;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
 
         // Draw paddle
         function drawPaddle() {
