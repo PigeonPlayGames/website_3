@@ -7,232 +7,162 @@
     <style>
         body {
             margin: 0;
-            padding: 0;
+            overflow: hidden;
+            background-color: #282c34;
+            font-family: Arial, sans-serif;
+            color: white;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 60vh;
-            background-color: #282c34;
-            color: white;
-            font-family: Arial, sans-serif;
-            overflow: hidden;
+            height: 100vh;
         }
-
         canvas {
-            border: 5px solid white;
-            background: #000;
+            border: 2px solid white;
         }
-
-        .score {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            font-size: 24px;
-        }
-
         .game-over {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 32px;
-            color: white;
             text-align: center;
-            display: none;
         }
-
         .game-over button {
-            margin-top: 20px;
             padding: 10px 20px;
             font-size: 18px;
+            background-color: white;
+            color: #282c34;
+            border: none;
             cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <div class="score">Score: 0</div>
-    <div class="game-over" id="gameOverScreen">
-        <p id="gameOverText">Game Over! Your score: 0</p>
-        <button onclick="restartGame()">Restart</button>
-    </div>
     <canvas id="gameCanvas"></canvas>
-
+    <div class="game-over" id="gameOver" style="display: none;">
+        <h1>Game Over!</h1>
+        <p>Your Score: <span id="score"></span></p>
+        <button onclick="startGame()">Restart</button>
+    </div>
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
-        const scoreDisplay = document.querySelector('.score');
-        const gameOverScreen = document.getElementById('gameOverScreen');
-        const gameOverText = document.getElementById('gameOverText');
+        const gameOverScreen = document.getElementById('gameOver');
+        const scoreDisplay = document.getElementById('score');
 
-        // Game objects
-        const paddle = {
-            width: 100,
-            height: 20,
-            x: 0,
-            y: 0,
-            speed: 8,
-            dx: 0
-        };
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
 
-        const ball = {
-            x: 0,
-            y: 0,
-            radius: 10,
-            dy: 3
-        };
+        let paddle, ball, isGameRunning, score;
 
-        let score = 0;
-        let gameRunning = true;
-
-        // Adjust canvas size to fit the screen
-        function resizeCanvas() {
-            canvas.width = window.innerWidth * 0.5; // Half of the original width
-            canvas.height = window.innerHeight * 2; // Twice the original height
-
-            // Recalculate paddle and ball positions to fit the new canvas size
-            paddle.y = canvas.height - 30;
-            paddle.x = canvas.width / 2 - paddle.width / 2;
-
-            ball.x = Math.random() * (canvas.width - 20) + 10;
-            ball.y = 10;
-        }
-
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-        // Draw paddle
-        function drawPaddle() {
-            ctx.fillStyle = 'white';
-            ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
-        }
-
-        // Draw ball
-        function drawBall() {
-            ctx.beginPath();
-            ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
-            ctx.fillStyle = 'red';
-            ctx.fill();
-            ctx.closePath();
-        }
-
-        // Move paddle
-        function movePaddle() {
-            paddle.x += paddle.dx;
-
-            // Wall detection
-            if (paddle.x < 0) {
-                paddle.x = 0;
+        class Paddle {
+            constructor() {
+                this.width = 150;
+                this.height = 20;
+                this.x = (canvas.width - this.width) / 2;
+                this.y = canvas.height - this.height - 10;
+                this.speed = 10;
             }
 
-            if (paddle.x + paddle.width > canvas.width) {
-                paddle.x = canvas.width - paddle.width;
+            draw() {
+                ctx.fillStyle = 'white';
+                ctx.fillRect(this.x, this.y, this.width, this.height);
+            }
+
+            move(direction) {
+                if (direction === 'left' && this.x > 0) {
+                    this.x -= this.speed;
+                } else if (direction === 'right' && this.x + this.width < canvas.width) {
+                    this.x += this.speed;
+                }
             }
         }
 
-        // Move ball
-        function moveBall() {
-            if (!gameRunning) return;
-
-            ball.y += ball.dy;
-
-            // Ball hits the paddle
-            if (
-                ball.y + ball.radius > paddle.y &&
-                ball.x > paddle.x &&
-                ball.x < paddle.x + paddle.width
-            ) {
-                ball.dy = -(Math.abs(ball.dy) + 0.5); // Increase speed
-                score++;
-                scoreDisplay.textContent = `Score: ${score}`;
-                resetBall();
+        class Ball {
+            constructor() {
+                this.radius = 15;
+                this.x = Math.random() * (canvas.width - this.radius * 2) + this.radius;
+                this.y = 0;
+                this.speed = 3;
             }
 
-            // Ball falls off screen
-            if (ball.y - ball.radius > canvas.height) {
-                gameRunning = false;
-                gameOverText.textContent = `Game Over! Your score: ${score}`;
-                gameOverScreen.style.display = 'block';
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'red';
+                ctx.fill();
+                ctx.closePath();
+            }
+
+            update() {
+                this.y += this.speed;
+                if (this.y - this.radius > canvas.height) {
+                    isGameRunning = false;
+                }
             }
         }
 
-        // Reset ball position
-        function resetBall() {
-            ball.x = Math.random() * (canvas.width - 20) + 10;
-            ball.y = 10;
-            ball.dy = Math.abs(ball.dy);
-        }
-
-        // Draw everything
-        function draw() {
-            ctx.clearRect(0, 0, canvas.width - 100, canvas.height - 100);
-            drawPaddle();
-            drawBall();
-        }
-
-        // Update game objects
-        function update() {
-            if (!gameRunning) return;
-
-            movePaddle();
-            moveBall();
-
-            draw();
-
-            requestAnimationFrame(update);
-        }
-
-        // Keydown event
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowLeft') {
-                paddle.dx = -paddle.speed;
-            } else if (e.key === 'ArrowRight') {
-                paddle.dx = paddle.speed;
-            }
-        });
-
-        // Keyup event
-        document.addEventListener('keyup', (e) => {
-            if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-                paddle.dx = 0;
-            }
-        });
-
-        // Touch event handling for mobile devices
-        canvas.addEventListener('touchstart', handleTouch);
-        canvas.addEventListener('touchmove', handleTouch);
-
-        function handleTouch(e) {
-            const touch = e.touches[0];
-            const rect = canvas.getBoundingClientRect();
-            const touchX = touch.clientX - rect.left;
-
-            // Center paddle on touch position
-            paddle.x = touchX - paddle.width / 2;
-
-            // Prevent paddle from going out of bounds
-            if (paddle.x < 0) {
-                paddle.x = 0;
-            } else if (paddle.x + paddle.width > canvas.width) {
-                paddle.x = canvas.width - paddle.width;
-            }
-
-            e.preventDefault();
-        }
-
-        // Restart game
-        function restartGame() {
-            gameRunning = true;
+        function initGame() {
+            paddle = new Paddle();
+            ball = new Ball();
             score = 0;
-            scoreDisplay.textContent = "Score: 0";
-            ball.x = Math.random() * (canvas.width - 20) + 10;
-            ball.y = 10;
-            ball.dy = 3;
-            gameOverScreen.style.display = 'none';
-            update();
+            isGameRunning = true;
         }
 
-        // Start the game
-        update();
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            paddle.draw();
+            ball.draw();
+        }
+
+        function update() {
+            ball.update();
+
+            // Check collision with paddle
+            if (
+                ball.y + ball.radius >= paddle.y &&
+                ball.x >= paddle.x &&
+                ball.x <= paddle.x + paddle.width
+            ) {
+                ball.speed += 0.5; // Increase speed
+                ball.y = paddle.y - ball.radius;
+                score++;
+            }
+        }
+
+        function gameLoop() {
+            if (isGameRunning) {
+                draw();
+                update();
+                requestAnimationFrame(gameLoop);
+            } else {
+                endGame();
+            }
+        }
+
+        function endGame() {
+            gameOverScreen.style.display = 'block';
+            scoreDisplay.textContent = score;
+        }
+
+        function startGame() {
+            initGame();
+            gameOverScreen.style.display = 'none';
+            gameLoop();
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') paddle.move('left');
+            if (e.key === 'ArrowRight') paddle.move('right');
+        });
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            paddle.x = (canvas.width - paddle.width) / 2;
+            paddle.y = canvas.height - paddle.height - 10;
+        });
+
+        startGame();
     </script>
 </body>
 </html>
