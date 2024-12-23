@@ -68,7 +68,16 @@
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
+
+            // Recalculate paddle and ball positions to fit the new canvas size
             paddle.y = canvas.height - 30;
+            if (paddle.x + paddle.width > canvas.width) {
+                paddle.x = canvas.width - paddle.width;
+            }
+
+            if (ball.x + ball.radius > canvas.width) {
+                ball.x = canvas.width - ball.radius;
+            }
         }
 
         window.addEventListener('resize', resizeCanvas);
