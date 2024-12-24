@@ -32,22 +32,41 @@
   <script>
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
-    const tileSize = 40;
-    const smallTileSize = tileSize / 2;
-
     const messageBox = document.getElementById('messageBox');
 
+    // Map configuration
+    const tileSize = 40;
     let map, mapWidth, mapHeight, pathCount, maxPaths;
+
+    // Game state
     let level = 1;
     let redFound = false;
     let blueFound = false;
 
+    // Message system
+    let currentMessage = '';
+    let messageTimer = 0;
+
     function showMessage(message, duration = 120) {
+      currentMessage = message;
       messageBox.textContent = message;
       messageBox.style.display = 'block';
-      setTimeout(() => {
-        messageBox.style.display = 'none';
-      }, duration * 50);
+      messageTimer = duration; // Show for the specified duration
+    }
+
+    function updateMessage() {
+      if (messageTimer > 0) {
+        messageTimer--;
+        if (messageTimer === 0) {
+          messageBox.style.display = 'none';
+          currentMessage = '';
+        }
+      }
+    }
+
+    function resetGame() {
+      level = 1;
+      startLevel();
     }
 
     function startLevel() {
@@ -72,56 +91,90 @@
       ];
     }
 
+    function endLevel(success) {
+      const message = success ? 'Level Completed!' : 'Level Failed!';
+      showMessage(`${message} Starting next level in 5 seconds...`, 300);
+
+      setTimeout(() => {
+        if (success) {
+          level++;
+          startLevel();
+        } else {
+          resetGame();
+        }
+      }, 5000); // 5-second countdown
+    }
+
+    // Ant configuration
     class Ant {
-      constructor(x, y, color, type, size = tileSize) {
+      constructor(x, y, color, type) {
         this.x = x;
         this.y = y;
         this.color = color;
-        this.type = type;
-        this.size = size;
-        this.moveDelay = type === 'scavenger' ? 3 : 5;
-        this.moveCounter = 0;
-        this.hidden = type !== 'pathmaker';
+        this.type = type; // "scavenger", "default", or "pathmaker"
+        this.direction = 'down'; // initial direction
+        this.moveDelay = type === 'scavenger' ? 3 : 5; // Delay for movement
+        this.moveCounter = 0; // Counter to slow down movement
+        this.hidden = type !== 'pathmaker'; // Red and blue ants start hidden
       }
 
+      // Move the ant
       move() {
-        if (this.hidden) return;
+        if (this.hidden) return; // Hidden ants don't move
 
         this.moveCounter++;
-        if (this.moveCounter < this.moveDelay) return;
-        this.moveCounter = 0;
+        if (this.moveCounter < this.moveDelay) return; // Skip frames
+        this.moveCounter = 0; // Reset counter
 
-        if (this.type === 'pathmaker' || this.type === 'purple') {
+        if (this.type === 'pathmaker') {
           this.createPath();
         } else {
           this.followPath();
         }
       }
 
+      // Green ants create paths
       createPath() {
         if (pathCount >= maxPaths) {
+          // Stop creating paths if the limit is reached
+          if (!redFound || !blueFound) {
+            endLevel(false); // Fail the level
+          }
           this.followPath();
           return;
         }
 
+        // Turn current tile into a path
         if (map[this.y][this.x] === 0) {
           map[this.y][this.x] = 1;
           pathCount++;
         }
 
+        // Check for hidden ants to unlock
         ants.forEach(ant => {
-          if (ant !== this && ant.x === this.x && ant.y === this.y) {
-            if (this.color === 'red' && ant.color === 'blue') {
-              createPurpleAnt(this.x, this.y);
+          if (ant.hidden && ant.x === this.x && ant.y === this.y) {
+            ant.hidden = false; // Unlock the ant
+            if (ant.type === 'scavenger') {
+              redFound = true;
+              showMessage('You Found Red!');
+            } else if (ant.type === 'default') {
+              blueFound = true;
+              showMessage('You Found Bluey!');
+            }
+
+            if (redFound && blueFound) {
+              endLevel(true); // Complete the level
             }
           }
         });
 
-        const possibleDirections = this.getPossibleDirections(true);
+        // Randomly decide next direction
+        const possibleDirections = this.getPossibleDirections(true); // Allow moving into empty tiles
         if (possibleDirections.length > 0) {
           this.direction = possibleDirections[Math.floor(Math.random() * possibleDirections.length)];
         }
 
+        // Move in the chosen direction
         switch (this.direction) {
           case 'up': this.y -= 1; break;
           case 'down': this.y += 1; break;
@@ -130,8 +183,9 @@
         }
       }
 
+      // Blue and red ants follow paths
       followPath() {
-        const possibleDirections = this.getPossibleDirections(false);
+        const possibleDirections = this.getPossibleDirections(false); // Only move on paths
         if (possibleDirections.length > 0) {
           this.direction = possibleDirections[Math.floor(Math.random() * possibleDirections.length)];
         }
@@ -144,27 +198,25 @@
         }
       }
 
+      // Get possible directions based on the map
       getPossibleDirections(allowEmpty) {
         const directions = [];
-        if (this.y > 0 && (map[this.y - 1][this.x] === 1 || (allowEmpty && map[this.y - 1][this.x] === 0))) directions.push('up');
-        if (this.y < mapHeight - 1 && (map[this.y + 1][this.x] === 1 || (allowEmpty && map[this.y + 1][this.x] === 0))) directions.push('down');
-        if (this.x > 0 && (map[this.y][this.x - 1] === 1 || (allowEmpty && map[this.y][this.x - 1] === 0))) directions.push('left');
-        if (this.x < mapWidth - 1 && (map[this.y][this.x + 1] === 1 || (allowEmpty && map[this.y][this.x + 1] === 0))) directions.push('right');
+        if (this.y > 0 && (map[this.y - 1]?.[this.x] === 1 || (allowEmpty && map[this.y - 1]?.[this.x] === 0))) directions.push('up');
+        if (this.y < mapHeight - 1 && (map[this.y + 1]?.[this.x] === 1 || (allowEmpty && map[this.y + 1]?.[this.x] === 0))) directions.push('down');
+        if (this.x > 0 && (map[this.y]?.[this.x - 1] === 1 || (allowEmpty && map[this.y]?.[this.x - 1] === 0))) directions.push('left');
+        if (this.x < mapWidth - 1 && (map[this.y]?.[this.x + 1] === 1 || (allowEmpty && map[this.y]?.[this.x + 1] === 0))) directions.push('right');
         return directions;
       }
 
+      // Draw the ant
       draw() {
-        if (this.hidden) return;
+        if (this.hidden) return; // Don't draw hidden ants
         ctx.fillStyle = this.color;
-        ctx.fillRect(this.x * tileSize + (tileSize - this.size) / 2, this.y * tileSize + (tileSize - this.size) / 2, this.size, this.size);
+        ctx.fillRect(this.x * tileSize, this.y * tileSize, tileSize, tileSize);
       }
     }
 
-    function createPurpleAnt(x, y) {
-      showMessage('A Purple Ant is Born!');
-      ants.push(new Ant(x, y, 'purple', 'purple', smallTileSize));
-    }
-
+    // Random position generator near the green ant
     function getRandomPositionNear(centerX, centerY, range = 3) {
       const x = Math.max(0, Math.min(mapWidth - 1, centerX + Math.floor(Math.random() * (range * 2 + 1)) - range));
       const y = Math.max(0, Math.min(mapHeight - 1, centerY + Math.floor(Math.random() * (range * 2 + 1)) - range));
@@ -174,9 +226,12 @@
     let ants = [];
     startLevel();
 
+    // Game loop
     function gameLoop() {
+      // Clear canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+      // Draw map
       for (let y = 0; y < mapHeight; y++) {
         for (let x = 0; x < mapWidth; x++) {
           ctx.fillStyle = map[y][x] === 1 ? '#ccc' : '#000';
@@ -184,11 +239,16 @@
         }
       }
 
+      // Move and draw ants
       ants.forEach(ant => {
         ant.move();
         ant.draw();
       });
 
+      // Update and display messages
+      updateMessage();
+
+      // Loop
       requestAnimationFrame(gameLoop);
     }
 
