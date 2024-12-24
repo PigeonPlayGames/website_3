@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pedestrian Path Game</title>
+  <style>
+    canvas {
+      border: 1px solid black;
+      display: block;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="gameCanvas" width="800" height="600"></canvas>
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Map configuration
+    const tileSize = 40;
+    const map = [
+      [0, 0, 1, 1, 1, 0, 0],
+      [0, 0, 1, 0, 1, 0, 0],
+      [1, 1, 1, 0, 1, 1, 1],
+      [1, 0, 0, 0, 0, 0, 1],
+      [1, 1, 1, 1, 1, 1, 1]
+    ];
+    const mapWidth = map[0].length;
+    const mapHeight = map.length;
+
+    // Pedestrian configuration
+    class Pedestrian {
+      constructor(x, y, color) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        this.direction = 'down'; // initial direction
+      }
+
+      // Move the pedestrian
+      move() {
+        const possibleDirections = this.getPossibleDirections();
+        if (possibleDirections.length > 0) {
+          this.direction = possibleDirections[Math.floor(Math.random() * possibleDirections.length)];
+        }
+
+        switch (this.direction) {
+          case 'up': this.y -= 1; break;
+          case 'down': this.y += 1; break;
+          case 'left': this.x -= 1; break;
+          case 'right': this.x += 1; break;
+        }
+      }
+
+      // Get possible directions based on the map
+      getPossibleDirections() {
+        const directions = [];
+        if (this.y > 0 && map[this.y - 1][this.x] === 1) directions.push('up');
+        if (this.y < mapHeight - 1 && map[this.y + 1][this.x] === 1) directions.push('down');
+        if (this.x > 0 && map[this.y][this.x - 1] === 1) directions.push('left');
+        if (this.x < mapWidth - 1 && map[this.y][this.x + 1] === 1) directions.push('right');
+        return directions;
+      }
+
+      // Draw the pedestrian
+      draw() {
+        ctx.fillStyle = this.color;
+        ctx.fillRect(this.x * tileSize, this.y * tileSize, tileSize, tileSize);
+      }
+    }
+
+    // Create pedestrians
+    const pedestrians = [
+      new Pedestrian(2, 0, 'red'),
+      new Pedestrian(4, 0, 'blue'),
+      new Pedestrian(0, 2, 'green')
+    ];
+
+    // Game loop
+    function gameLoop() {
+      // Clear canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw map
+      for (let y = 0; y < mapHeight; y++) {
+        for (let x = 0; x < mapWidth; x++) {
+          ctx.fillStyle = map[y][x] === 1 ? '#ccc' : '#000';
+          ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+        }
+      }
+
+      // Move and draw pedestrians
+      pedestrians.forEach(pedestrian => {
+        pedestrian.move();
+        pedestrian.draw();
+      });
+
+      // Loop
+      requestAnimationFrame(gameLoop);
+    }
+
+    gameLoop();
+  </script>
+</body>
+</html>
