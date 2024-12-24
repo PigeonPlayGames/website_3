@@ -18,7 +18,7 @@
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
 
-    // Map configuration (mostly empty to start)
+    // Map configuration
     const tileSize = 40;
     const map = Array.from({ length: 20 }, () => Array(20).fill(0));
     map[10][10] = 1; // Start with a single path tile in the center
@@ -38,10 +38,13 @@
         this.direction = 'down'; // initial direction
         this.moveDelay = type === 'scavenger' ? 3 : 5; // Delay for movement
         this.moveCounter = 0; // Counter to slow down movement
+        this.hidden = type !== 'pathmaker'; // Red and blue ants start hidden
       }
 
       // Move the ant
       move() {
+        if (this.hidden) return; // Hidden ants don't move
+
         this.moveCounter++;
         if (this.moveCounter < this.moveDelay) return; // Skip frames
         this.moveCounter = 0; // Reset counter
@@ -66,6 +69,13 @@
           map[this.y][this.x] = 1;
           pathCount++;
         }
+
+        // Check for hidden ants to unlock
+        ants.forEach(ant => {
+          if (ant.hidden && ant.x === this.x && ant.y === this.y) {
+            ant.hidden = false; // Unlock the ant
+          }
+        });
 
         // Randomly decide next direction
         const possibleDirections = this.getPossibleDirections(true); // Allow moving into empty tiles
@@ -109,16 +119,27 @@
 
       // Draw the ant
       draw() {
+        if (this.hidden) return; // Don't draw hidden ants
         ctx.fillStyle = this.color;
         ctx.fillRect(this.x * tileSize, this.y * tileSize, tileSize, tileSize);
       }
     }
 
+    // Random position generator near the green ant
+    function getRandomPositionNear(centerX, centerY, range = 3) {
+      const x = Math.max(0, Math.min(mapWidth - 1, centerX + Math.floor(Math.random() * (range * 2 + 1)) - range));
+      const y = Math.max(0, Math.min(mapHeight - 1, centerY + Math.floor(Math.random() * (range * 2 + 1)) - range));
+      return { x, y };
+    }
+
     // Create ants with different types
+    const greenAnt = new Ant(10, 10, 'green', 'pathmaker');
+    const redAntPosition = getRandomPositionNear(10, 10);
+    const blueAntPosition = getRandomPositionNear(10, 10);
     const ants = [
-      new Ant(10, 10, 'green', 'pathmaker'), // Green ant starts in the center
-      new Ant(15, 15, 'red', 'scavenger'),
-      new Ant(5, 5, 'blue', 'default')
+      greenAnt,
+      new Ant(redAntPosition.x, redAntPosition.y, 'red', 'scavenger'),
+      new Ant(blueAntPosition.x, blueAntPosition.y, 'blue', 'default')
     ];
 
     // Game loop
