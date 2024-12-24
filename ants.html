@@ -36,23 +36,22 @@
 
     // Map configuration
     const tileSize = 40;
-    const map = Array.from({ length: 20 }, () => Array(20).fill(0));
-    map[10][10] = 1; // Start with a single path tile in the center
-    const mapWidth = map[0].length;
-    const mapHeight = map.length;
+    let map, mapWidth, mapHeight, pathCount, maxPaths;
 
-    let pathCount = 1; // Start with 1 path tile
-    const maxPaths = Math.floor((mapWidth * mapHeight) * 0.5); // 50% of the map
+    // Game state
+    let level = 1;
+    let redFound = false;
+    let blueFound = false;
 
     // Message system
     let currentMessage = '';
     let messageTimer = 0;
 
-    function showMessage(message) {
+    function showMessage(message, duration = 120) {
       currentMessage = message;
       messageBox.textContent = message;
       messageBox.style.display = 'block';
-      messageTimer = 120; // Show for 2 seconds (assuming 60 FPS)
+      messageTimer = duration; // Show for the specified duration
     }
 
     function updateMessage() {
@@ -63,6 +62,47 @@
           currentMessage = '';
         }
       }
+    }
+
+    function resetGame() {
+      level = 1;
+      startLevel();
+    }
+
+    function startLevel() {
+      mapWidth = 20;
+      mapHeight = 20;
+      map = Array.from({ length: mapHeight }, () => Array(mapWidth).fill(0));
+      map[10][10] = 1; // Start with a single path tile in the center
+      pathCount = 1;
+      maxPaths = Math.floor((mapWidth * mapHeight) * 0.5);
+
+      redFound = false;
+      blueFound = false;
+
+      const greenAnt = new Ant(10, 10, 'green', 'pathmaker');
+      const redAntPosition = getRandomPositionNear(10, 10, level + 3);
+      const blueAntPosition = getRandomPositionNear(10, 10, level + 3);
+
+      ants = [
+        greenAnt,
+        new Ant(redAntPosition.x, redAntPosition.y, 'red', 'scavenger'),
+        new Ant(blueAntPosition.x, blueAntPosition.y, 'blue', 'default')
+      ];
+    }
+
+    function endLevel(success) {
+      const message = success ? 'Level Completed!' : 'Level Failed!';
+      showMessage(`${message} Starting next level in 5 seconds...`, 300);
+
+      setTimeout(() => {
+        if (success) {
+          level++;
+          startLevel();
+        } else {
+          resetGame();
+        }
+      }, 5000); // 5-second countdown
     }
 
     // Ant configuration
@@ -97,6 +137,9 @@
       createPath() {
         if (pathCount >= maxPaths) {
           // Stop creating paths if the limit is reached
+          if (!redFound || !blueFound) {
+            endLevel(false); // Fail the level
+          }
           this.followPath();
           return;
         }
@@ -112,9 +155,15 @@
           if (ant.hidden && ant.x === this.x && ant.y === this.y) {
             ant.hidden = false; // Unlock the ant
             if (ant.type === 'scavenger') {
+              redFound = true;
               showMessage('You Found Red!');
             } else if (ant.type === 'default') {
+              blueFound = true;
               showMessage('You Found Bluey!');
+            }
+
+            if (redFound && blueFound) {
+              endLevel(true); // Complete the level
             }
           }
         });
@@ -174,15 +223,8 @@
       return { x, y };
     }
 
-    // Create ants with different types
-    const greenAnt = new Ant(10, 10, 'green', 'pathmaker');
-    const redAntPosition = getRandomPositionNear(10, 10);
-    const blueAntPosition = getRandomPositionNear(10, 10);
-    const ants = [
-      greenAnt,
-      new Ant(redAntPosition.x, redAntPosition.y, 'red', 'scavenger'),
-      new Ant(blueAntPosition.x, blueAntPosition.y, 'blue', 'default')
-    ];
+    let ants = [];
+    startLevel();
 
     // Game loop
     function gameLoop() {
