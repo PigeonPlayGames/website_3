@@ -18,27 +18,15 @@
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
 
-    // Map configuration (larger map)
+    // Map configuration (mostly empty to start)
     const tileSize = 40;
-    const map = [
-      [0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1],
-      [0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0],
-      [1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0],
-      [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0],
-      [1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1],
-      [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
-      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-      [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0],
-      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-      [0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-      [0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-    ];
+    const map = Array.from({ length: 20 }, () => Array(20).fill(0));
+    map[10][10] = 1; // Start with a single path tile in the center
     const mapWidth = map[0].length;
     const mapHeight = map.length;
+
+    let pathCount = 1; // Start with 1 path tile
+    const maxPaths = Math.floor((mapWidth * mapHeight) * 0.5); // 50% of the map
 
     // Ant configuration
     class Ant {
@@ -46,7 +34,7 @@
         this.x = x;
         this.y = y;
         this.color = color;
-        this.type = type; // "scavenger" or "default"
+        this.type = type; // "scavenger", "default", or "pathmaker"
         this.direction = 'down'; // initial direction
         this.moveDelay = type === 'scavenger' ? 3 : 5; // Delay for movement
         this.moveCounter = 0; // Counter to slow down movement
@@ -58,7 +46,45 @@
         if (this.moveCounter < this.moveDelay) return; // Skip frames
         this.moveCounter = 0; // Reset counter
 
-        const possibleDirections = this.getPossibleDirections();
+        if (this.type === 'pathmaker') {
+          this.createPath();
+        } else {
+          this.followPath();
+        }
+      }
+
+      // Green ants create paths
+      createPath() {
+        if (pathCount >= maxPaths) {
+          // Stop creating paths if the limit is reached
+          this.followPath();
+          return;
+        }
+
+        // Turn current tile into a path
+        if (map[this.y][this.x] === 0) {
+          map[this.y][this.x] = 1;
+          pathCount++;
+        }
+
+        // Randomly decide next direction
+        const possibleDirections = this.getPossibleDirections(true); // Allow moving into empty tiles
+        if (possibleDirections.length > 0) {
+          this.direction = possibleDirections[Math.floor(Math.random() * possibleDirections.length)];
+        }
+
+        // Move in the chosen direction
+        switch (this.direction) {
+          case 'up': this.y -= 1; break;
+          case 'down': this.y += 1; break;
+          case 'left': this.x -= 1; break;
+          case 'right': this.x += 1; break;
+        }
+      }
+
+      // Blue and red ants follow paths
+      followPath() {
+        const possibleDirections = this.getPossibleDirections(false); // Only move on paths
         if (possibleDirections.length > 0) {
           this.direction = possibleDirections[Math.floor(Math.random() * possibleDirections.length)];
         }
@@ -72,12 +98,12 @@
       }
 
       // Get possible directions based on the map
-      getPossibleDirections() {
+      getPossibleDirections(allowEmpty) {
         const directions = [];
-        if (this.y > 0 && map[this.y - 1]?.[this.x] === 1) directions.push('up'); // Check bounds
-        if (this.y < mapHeight - 1 && map[this.y + 1]?.[this.x] === 1) directions.push('down');
-        if (this.x > 0 && map[this.y]?.[this.x - 1] === 1) directions.push('left');
-        if (this.x < mapWidth - 1 && map[this.y]?.[this.x + 1] === 1) directions.push('right');
+        if (this.y > 0 && (map[this.y - 1]?.[this.x] === 1 || (allowEmpty && map[this.y - 1]?.[this.x] === 0))) directions.push('up');
+        if (this.y < mapHeight - 1 && (map[this.y + 1]?.[this.x] === 1 || (allowEmpty && map[this.y + 1]?.[this.x] === 0))) directions.push('down');
+        if (this.x > 0 && (map[this.y]?.[this.x - 1] === 1 || (allowEmpty && map[this.y]?.[this.x - 1] === 0))) directions.push('left');
+        if (this.x < mapWidth - 1 && (map[this.y]?.[this.x + 1] === 1 || (allowEmpty && map[this.y]?.[this.x + 1] === 0))) directions.push('right');
         return directions;
       }
 
@@ -90,11 +116,9 @@
 
     // Create ants with different types
     const ants = [
-      new Ant(2, 0, 'red', 'scavenger'),
-      new Ant(4, 0, 'blue', 'default'),
-      new Ant(0, 2, 'green', 'default'),
-      new Ant(9, 6, 'red', 'scavenger'),
-      new Ant(6, 4, 'blue', 'default')
+      new Ant(10, 10, 'green', 'pathmaker'), // Green ant starts in the center
+      new Ant(15, 15, 'red', 'scavenger'),
+      new Ant(5, 5, 'blue', 'default')
     ];
 
     // Game loop
