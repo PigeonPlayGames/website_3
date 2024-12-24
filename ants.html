@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Enhanced Pedestrian Path Game</title>
+  <title>Ant Simulation</title>
   <style>
     canvas {
       border: 1px solid black;
@@ -32,8 +32,8 @@
     const mapWidth = map[0].length;
     const mapHeight = map.length;
 
-    // Pedestrian configuration
-    class Pedestrian {
+    // Ant configuration
+    class Ant {
       constructor(x, y, color, type) {
         this.x = x;
         this.y = y;
@@ -42,20 +42,12 @@
         this.direction = 'down'; // initial direction
       }
 
-      // Move the pedestrian
+      // Move the ant
       move() {
         const possibleDirections = this.getPossibleDirections();
 
-        // Different logic for scavengers
-        if (this.type === 'scavenger') {
-          if (possibleDirections.length > 0) {
-            this.direction = possibleDirections[Math.floor(Math.random() * possibleDirections.length)];
-          }
-        } else {
-          // Default behavior (less random)
-          if (Math.random() < 0.5 && possibleDirections.length > 0) {
-            this.direction = possibleDirections[Math.floor(Math.random() * possibleDirections.length)];
-          }
+        if (possibleDirections.length > 0) {
+          this.direction = possibleDirections[Math.floor(Math.random() * possibleDirections.length)];
         }
 
         switch (this.direction) {
@@ -69,27 +61,27 @@
       // Get possible directions based on the map
       getPossibleDirections() {
         const directions = [];
-        if (this.y > 0 && map[this.y - 1][this.x] === 1) directions.push('up');
-        if (this.y < mapHeight - 1 && map[this.y + 1][this.x] === 1) directions.push('down');
-        if (this.x > 0 && map[this.y][this.x - 1] === 1) directions.push('left');
-        if (this.x < mapWidth - 1 && map[this.y][this.x + 1] === 1) directions.push('right');
+        if (this.y > 0 && map[this.y - 1]?.[this.x] === 1) directions.push('up'); // Check bounds
+        if (this.y < mapHeight - 1 && map[this.y + 1]?.[this.x] === 1) directions.push('down');
+        if (this.x > 0 && map[this.y]?.[this.x - 1] === 1) directions.push('left');
+        if (this.x < mapWidth - 1 && map[this.y]?.[this.x + 1] === 1) directions.push('right');
         return directions;
       }
 
-      // Draw the pedestrian
+      // Draw the ant
       draw() {
         ctx.fillStyle = this.color;
         ctx.fillRect(this.x * tileSize, this.y * tileSize, tileSize, tileSize);
       }
     }
 
-    // Create pedestrians with different types
-    const pedestrians = [
-      new Pedestrian(2, 0, 'red', 'scavenger'),
-      new Pedestrian(4, 0, 'blue', 'default'),
-      new Pedestrian(0, 2, 'green', 'default'),
-      new Pedestrian(9, 6, 'red', 'scavenger'),
-      new Pedestrian(6, 4, 'blue', 'default')
+    // Create ants with different types
+    const ants = [
+      new Ant(2, 0, 'red', 'scavenger'),
+      new Ant(4, 0, 'blue', 'default'),
+      new Ant(0, 2, 'green', 'default'),
+      new Ant(9, 6, 'red', 'scavenger'),
+      new Ant(6, 4, 'blue', 'default')
     ];
 
     // Game loop
@@ -105,10 +97,10 @@
         }
       }
 
-      // Move and draw pedestrians
-      pedestrians.forEach(pedestrian => {
-        pedestrian.move();
-        pedestrian.draw();
+      // Move and draw ants
+      ants.forEach(ant => {
+        ant.move();
+        ant.draw();
       });
 
       // Loop
