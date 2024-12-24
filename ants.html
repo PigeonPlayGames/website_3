@@ -13,21 +13,29 @@
   </style>
 </head>
 <body>
-  <canvas id="gameCanvas" width="800" height="600"></canvas>
+  <canvas id="gameCanvas" width="800" height="800"></canvas>
   <script>
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
 
-    // Map configuration (expanded paths)
+    // Map configuration (larger map)
     const tileSize = 40;
     const map = [
-      [0, 0, 1, 1, 1, 0, 0, 0, 1, 1],
-      [0, 0, 1, 0, 1, 0, 0, 0, 1, 0],
-      [1, 1, 1, 0, 1, 1, 1, 1, 1, 0],
-      [1, 0, 0, 0, 0, 0, 0, 0, 1, 0],
-      [1, 1, 1, 1, 1, 1, 0, 0, 1, 1],
-      [0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
-      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+      [0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1],
+      [0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0],
+      [1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0],
+      [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+      [1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1],
+      [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     ];
     const mapWidth = map[0].length;
     const mapHeight = map.length;
@@ -40,12 +48,17 @@
         this.color = color;
         this.type = type; // "scavenger" or "default"
         this.direction = 'down'; // initial direction
+        this.moveDelay = type === 'scavenger' ? 3 : 5; // Delay for movement
+        this.moveCounter = 0; // Counter to slow down movement
       }
 
       // Move the ant
       move() {
-        const possibleDirections = this.getPossibleDirections();
+        this.moveCounter++;
+        if (this.moveCounter < this.moveDelay) return; // Skip frames
+        this.moveCounter = 0; // Reset counter
 
+        const possibleDirections = this.getPossibleDirections();
         if (possibleDirections.length > 0) {
           this.direction = possibleDirections[Math.floor(Math.random() * possibleDirections.length)];
         }
