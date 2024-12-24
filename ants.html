@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pedestrian Path Game</title>
+  <title>Enhanced Pedestrian Path Game</title>
   <style>
     canvas {
       border: 1px solid black;
@@ -18,32 +18,44 @@
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
 
-    // Map configuration
+    // Map configuration (expanded paths)
     const tileSize = 40;
     const map = [
-      [0, 0, 1, 1, 1, 0, 0],
-      [0, 0, 1, 0, 1, 0, 0],
-      [1, 1, 1, 0, 1, 1, 1],
-      [1, 0, 0, 0, 0, 0, 1],
-      [1, 1, 1, 1, 1, 1, 1]
+      [0, 0, 1, 1, 1, 0, 0, 0, 1, 1],
+      [0, 0, 1, 0, 1, 0, 0, 0, 1, 0],
+      [1, 1, 1, 0, 1, 1, 1, 1, 1, 0],
+      [1, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+      [1, 1, 1, 1, 1, 1, 0, 0, 1, 1],
+      [0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     ];
     const mapWidth = map[0].length;
     const mapHeight = map.length;
 
     // Pedestrian configuration
     class Pedestrian {
-      constructor(x, y, color) {
+      constructor(x, y, color, type) {
         this.x = x;
         this.y = y;
         this.color = color;
+        this.type = type; // "scavenger" or "default"
         this.direction = 'down'; // initial direction
       }
 
       // Move the pedestrian
       move() {
         const possibleDirections = this.getPossibleDirections();
-        if (possibleDirections.length > 0) {
-          this.direction = possibleDirections[Math.floor(Math.random() * possibleDirections.length)];
+
+        // Different logic for scavengers
+        if (this.type === 'scavenger') {
+          if (possibleDirections.length > 0) {
+            this.direction = possibleDirections[Math.floor(Math.random() * possibleDirections.length)];
+          }
+        } else {
+          // Default behavior (less random)
+          if (Math.random() < 0.5 && possibleDirections.length > 0) {
+            this.direction = possibleDirections[Math.floor(Math.random() * possibleDirections.length)];
+          }
         }
 
         switch (this.direction) {
@@ -71,11 +83,13 @@
       }
     }
 
-    // Create pedestrians
+    // Create pedestrians with different types
     const pedestrians = [
-      new Pedestrian(2, 0, 'red'),
-      new Pedestrian(4, 0, 'blue'),
-      new Pedestrian(0, 2, 'green')
+      new Pedestrian(2, 0, 'red', 'scavenger'),
+      new Pedestrian(4, 0, 'blue', 'default'),
+      new Pedestrian(0, 2, 'green', 'default'),
+      new Pedestrian(9, 6, 'red', 'scavenger'),
+      new Pedestrian(6, 4, 'blue', 'default')
     ];
 
     // Game loop
